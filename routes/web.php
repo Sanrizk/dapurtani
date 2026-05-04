@@ -84,9 +84,41 @@ Route::get('/videos', function () {
 })->name('videos');
 
 
+Route::get('/dashboard2', function () {
+    return view('pages.dashboard_.dashboard', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
 
+Route::get('/plants', function () {
+    return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
 
+Route::get('/plots', function () {
+    return view('pages.plots.plots', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
 
+Route::get('/users', function () {
+    return view('pages.users.users', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
+
+Route::get('/cultivates', function () {
+    return view('pages.cultivates.cultivates', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
+
+Route::get('/fertilizes', function () {
+    return view('pages.fertilizes.fertilizes', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
+
+Route::get('/waters', function () {
+    return view('pages.waters.waters', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
+
+Route::get('/harvests', function () {
+    return view('pages.harvests.harvests', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
+
+Route::get('/consumes', function () {
+    return view('pages.consumes.consumes', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
 
 
 

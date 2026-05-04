@@ -15,7 +15,7 @@
         <x-common.component-card title="Basic Table 4">
             <x-tables.basic-tables.basic-tables-four />
         </x-common.component-card>
-        <x-common.component-card title="Basic Table 5">
+        <x-common.component-card title="Basic Table 588">
             <x-tables.basic-tables.basic-tables-five />
         </x-common.component-card>
     </div>
