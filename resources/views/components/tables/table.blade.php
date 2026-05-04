@@ -1,160 +1,52 @@
+@php
+
+  $columns = ['Nama Pohon', 'Satuan', 'Waktu Panen'];
+
+  $data = App\Models\Plant::all();
+
+  $parse = json_encode($data);
+
+@endphp
+
 <div x-data="{
-    transactions: [
-        {
-            id: 1,
-            name: 'Bought PYPL',
-            image: '/images/brand/brand-08.svg',
-            date: 'Nov 23, 01:00 PM',
-            price: '$2,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 2,
-            name: 'Bought AAPL',
-            image: '/images/brand/brand-07.svg',
-            date: 'Nov 23, 01:00 PM',
-            price: '$2,567.88',
-            category: 'Finance',
-            status: 'Pending',
-        },
-        {
-            id: 3,
-            name: 'Sell KKST',
-            image: '/images/brand/brand-15.svg',
-            date: 'Nov 23, 01:00 PM',
-            price: '$2,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 4,
-            name: 'Bought FB',
-            image: '/images/brand/brand-02.svg',
-            date: 'Nov 23, 01:00 PM',
-            price: '$2,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 5,
-            name: 'Sell AMZN',
-            image: '/images/brand/brand-10.svg',
-            date: 'Nov 23, 01:00 PM',
-            price: '$2,567.88',
-            category: 'Finance',
-            status: 'Failed',
-        },
-        {
-            id: 6,
-            name: 'Bought MSFT',
-            image: '/images/brand/brand-09.svg',
-            date: 'Nov 22, 01:00 PM',
-            price: '$1,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 7,
-            name: 'Bought GOOG',
-            image: '/images/brand/brand-01.svg',
-            date: 'Nov 22, 01:00 PM',
-            price: '$3,567.88',
-            category: 'Finance',
-            status: 'Pending',
-        },
-        {
-            id: 8,
-            name: 'Sell TSLA',
-            image: '/images/brand/brand-12.svg',
-            date: 'Nov 22, 01:00 PM',
-            price: '$4,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 9,
-            name: 'Bought NVDA',
-            image: '/images/brand/brand-11.svg',
-            date: 'Nov 22, 01:00 PM',
-            price: '$5,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 10,
-            name: 'Sell META',
-            image: '/images/brand/brand-03.svg',
-            date: 'Nov 22, 01:00 PM',
-            price: '$6,567.88',
-            category: 'Finance',
-            status: 'Failed',
-        },
-        {
-            id: 11,
-            name: 'Bought DIS',
-            image: '/images/brand/brand-04.svg',
-            date: 'Nov 21, 01:00 PM',
-            price: '$7,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 12,
-            name: 'Bought NFLX',
-            image: '/images/brand/brand-05.svg',
-            date: 'Nov 21, 01:00 PM',
-            price: '$8,567.88',
-            category: 'Finance',
-            status: 'Pending',
-        },
-        {
-            id: 13,
-            name: 'Sell CRM',
-            image: '/images/brand/brand-06.svg',
-            date: 'Nov 21, 01:00 PM',
-            price: '$9,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 14,
-            name: 'Bought TSLA',
-            image: '/images/brand/brand-13.svg',
-            date: 'Nov 21, 01:00 PM',
-            price: '$10,567.88',
-            category: 'Finance',
-            status: 'Success',
-        },
-        {
-            id: 15,
-            name: 'Sell AAPL',
-            image: '/images/brand/brand-14.svg',
-            date: 'Nov 21, 01:00 PM',
-            price: '$11,567.88',
-            category: 'Finance',
-            status: 'Failed',
-        },
-    ],
+    transactions: {{ $parse }},
     itemsPerPage: 5,
     currentPage: 1,
     dropdownOpen: null,
-    get totalPages() {
-        return Math.ceil(this.transactions.length / this.itemsPerPage);
+    search: '',
+    
+    init() {
+        // Reset halaman ke-1 setiap kali user mengetik pencarian
+        this.$watch('search', value => {
+            this.currentPage = 1;
+        })
     },
+
+    get filteredTransactions() {
+        if (this.search === '') return this.transactions;
+        
+        return this.transactions.filter(t => 
+            t.name.toLowerCase().includes(this.search.toLowerCase()) ||
+            t.status.toLowerCase().includes(this.search.toLowerCase())
+        );
+    },
+
+    get totalPages() {
+        // Hitung total halaman berdasarkan data yang SUDAH difilter
+        return Math.max(1, Math.ceil(this.filteredTransactions.length / this.itemsPerPage));
+    },
+
     get paginatedTransactions() {
+        // Potong data berdasarkan data yang SUDAH difilter
         const start = (this.currentPage - 1) * this.itemsPerPage;
         const end = start + this.itemsPerPage;
-        return this.transactions.slice(start, end);
+        return this.filteredTransactions.slice(start, end);
     },
+
     get displayedPages() {
         const range = [];
         for (let i = 1; i <= this.totalPages; i++) {
-            if (
-                i === 1 ||
-                i === this.totalPages ||
-                (i >= this.currentPage - 1 && i <= this.currentPage + 1)
-            ) {
+            if (i === 1 || i === this.totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
                 range.push(i);
             } else if (range[range.length - 1] !== '...') {
                 range.push('...');
@@ -162,21 +54,25 @@
         }
         return range;
     },
+    
     prevPage() {
         if (this.currentPage > 1) {
             this.currentPage--;
         }
     },
+    
     nextPage() {
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
         }
     },
+    
     goToPage(page) {
         if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
             this.currentPage = page;
         }
     },
+    
     getStatusClass(status) {
         const classes = {
             'Success': 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500',
@@ -185,6 +81,7 @@
         };
         return classes[status] || '';
     },
+    
     toggleDropdown(id) {
         this.dropdownOpen = this.dropdownOpen === id ? null : id;
     }
@@ -193,10 +90,10 @@
     <!-- Header -->
     <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <div>
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Latest Transactions</h3>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Data Pohon</h3>
       </div>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <form>
+        <form @submit.prevent>
           <div class="relative">
             <button type="button" class="absolute -translate-y-1/2 left-4 top-1/2">
               <svg class="fill-gray-500 dark:fill-gray-400" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -206,7 +103,7 @@
                   fill="" />
               </svg>
             </button>
-            <input type="text" placeholder="Search..."
+            <input type="text" x-model="search" placeholder="Search by name or status..."
               class="h-[42px] w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pl-[42px] pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-blue-800 xl:w-[300px]" />
           </div>
         </form>
@@ -219,53 +116,52 @@
         <table class="min-w-full">
           <thead>
             <tr class="border-gray-200 border-y dark:border-gray-700">
-              <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                Name</th>
-              <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                Date</th>
-              <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                Price</th>
-              <th scope="col" class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 capitalize">
-                Category</th>
-              <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                Status</th>
-              <th scope="col" class="relative px-4 py-3 capitalize">
-                <span class="sr-only">Actions</span>
+              <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">No
               </th>
+              @foreach ($columns as $col)
+                <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {{ $col }}</th>
+              @endforeach
+              <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                Action</th>
             </tr>
           </thead>
+          </tr>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-            <template x-for="transaction in paginatedTransactions" :key="transaction.id">
+            <!-- Tampilkan pesan jika data kosong -->
+            <tr x-show="paginatedTransactions.length === 0">
+              <td colspan="6" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                No transactions found for "<span x-text="search" class="font-semibold"></span>".
+              </td>
+            </tr>
+
+            <!-- Loop data hasil filter -->
+            <template x-for="(transaction, index) in paginatedTransactions" :key="index">
               <tr>
+                <td class="px-4 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="(currentPage-1)*5+index+1"></div>
+                </td>
                 <td class="py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="shrink-0 w-8 h-8">
-                      <img class="w-8 h-8 rounded-full" :src="transaction.image" alt="">
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="transaction.name"></div>
-                    </div>
-                  </div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="transaction.plant_name"></div>
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.date"></div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.unit"></div>
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.price"></div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.harvest_time+' Hari'"></div>
                 </td>
-                <td class="px-4 py-4 whitespace-nowrap">
+                {{-- <td class="px-4 py-4 whitespace-nowrap">
                   <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.category"></div>
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap">
                   <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                     :class="getStatusClass(transaction.status)" x-text="transaction.status"></span>
-                </td>
+                </td> --}}
                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
-                  <div class="flex justify-center relative">
+                  <div class="flex relative">
                     <x-common.table-dropdown>
                       <x-slot name="button">
-                        <button type="button" id="options-menu" aria-haspopup="true" aria-expanded="true"
-                          class="text-gray-500 dark:text-gray-400'">
+                        <button type="button" class="text-gray-500 dark:text-gray-400">
                           <svg class="fill-current" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -274,18 +170,12 @@
                           </svg>
                         </button>
                       </x-slot>
-
                       <x-slot name="content">
                         <a href="#"
-                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                          role="menuitem">
-                          View More
-                        </a>
+                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">View
+                          More</a>
                         <a href="#"
-                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                          role="menuitem">
-                          Delete
-                        </a>
+                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">Delete</a>
                       </x-slot>
                     </x-common.table-dropdown>
                   </div>
@@ -298,7 +188,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]">
+    <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]" x-show="filteredTransactions.length > 0">
       <div class="flex items-center justify-between">
         <button @click="prevPage" :disabled="currentPage === 1"
           :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''"
