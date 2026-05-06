@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PlantController;
 
 // dashboard pages
 Route::get('/', function () {
@@ -88,9 +89,10 @@ Route::get('/dashboard2', function () {
     return view('pages.dashboard_.dashboard', ['title' => 'E-commerce Dashboard']);
 })->name('dashboard');
 
-Route::get('/plants', function () {
-    return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
-})->name('dashboard');
+// Route::get('/plants', function () {
+//     return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
+// })->name('dashboard');
+Route::resource('plants', PlantController::class);
 
 Route::get('/plots', function () {
     return view('pages.plots.plots', ['title' => 'E-commerce Dashboard']);

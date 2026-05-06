@@ -1,6 +1,7 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 // flatpickr
 import flatpickr from 'flatpickr';

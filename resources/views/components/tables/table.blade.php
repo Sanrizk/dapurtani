@@ -6,6 +6,8 @@
   $data = App\Models\Plant::all();
 
   $parse = json_encode($data);
+
+  $icon = json_encode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"/></svg>')
 @endphp
 
 <div x-data="{
@@ -88,7 +90,8 @@
     <div class="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
       <div class="flex items-center justify-between gap-4">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Data Pohon</h3>
-        <x-ui.button @click="$dispatch('open-form-modal')" size="sm" variant="primary">Tambah Data</x-ui.button>
+        <x-ui.button className="btn" @click="$dispatch('open-form-modal')" size="sm" variant="primary"><i
+            class="fa-solid fa-plus"></i> Tambah Data</x-ui.button>
       </div>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
         <form @submit.prevent>
@@ -165,10 +168,11 @@
                       </x-slot>
                       <x-slot name="content">
                         <button @click="$dispatch('open-form-modal', transaction)" href="#"
-                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">View
-                          More</button>
-                        <a href="#"
-                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">Delete</a>
+                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"><i class="fa-solid fa-pencil mx-2"></i>Edit</button>
+                        <button x-data @click="$dispatch('open-modal', 'confirm-delete-user')"
+                          class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                          <i class="fa-solid fa-trash mx-2"></i>Hapus Data
+                        </button>
                       </x-slot>
                     </x-common.table-dropdown>
                   </div>
@@ -225,68 +229,6 @@
     </div>
 
   </div>
-
-  <x-ui.modal x-data="{ open: false }" @open-profile-info-modal.window="open = true" :isOpen="false"
-    class="max-w-[700px]">
-    <div
-      class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
-      <div class="px-2 pr-14">
-        <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-          Form Data Pohon
-        </h4>
-        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-          Masukkan informasi detail mengenai pohon, satuan, dan waktu panen.
-        </p>
-      </div>
-
-      <form class="flex flex-col">
-        <div class="custom-scrollbar overflow-y-auto p-2">
-          <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-
-            <!-- Input Nama Pohon (Lebar Penuh) -->
-            <div class="col-span-2">
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Nama Pohon
-              </label>
-              <input type="text" placeholder="Masukkan nama pohon..."
-                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-            </div>
-
-            <!-- Input Satuan (Setengah Lebar) -->
-            <div class="col-span-2 lg:col-span-1">
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Satuan
-              </label>
-              <input type="text" placeholder="Misal: Kg, Batang, Pohon..."
-                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-            </div>
-
-            <!-- Input Waktu Panen (Setengah Lebar) -->
-            <div class="col-span-2 lg:col-span-1">
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Waktu Panen
-              </label>
-              <input type="text" placeholder="Misal: 90 Hari..."
-                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-          <button @click="open = false" type="button"
-            class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
-            Batal
-          </button>
-          <button type="submit"
-            class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto">
-            Simpan Data
-          </button>
-        </div>
-      </form>
-    </div>
-  </x-ui.modal>
 
   <x-ui.modal :isOpen="false" class="max-w-[700px]">
 
@@ -384,5 +326,25 @@
       </form>
     </div>
   </x-ui.modal>
+
+  <x-ui.confirm-dialog name="confirm-delete-user" title="Hapus Pengguna?"
+    message="Tindakan ini tidak dapat dibatalkan. Semua data pengguna akan dihapus permanen." confirmTheme="danger">
+
+    <x-slot:actions>
+      <form action="/users/1" method="POST" class="inline-block">
+        @csrf
+        @method('DELETE')
+        <button type="submit"
+          class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700">
+          Ya, Hapus Permanen
+        </button>
+      </form>
+      <button x-data @click="$dispatch('close-modal', 'confirm-delete-user')" type="button"
+        class="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600">
+        Batal
+      </button>
+    </x-slot:actions>
+  </x-ui.confirm-dialog>
+
 
 </div>

@@ -9,7 +9,7 @@
 
 
 
-  <title>{{ $title ?? 'Dashboard' }} | TailAdmin - Laravel Tailwind CSS Admin Dashboard Template</title>
+  <title>{{ $title ?? 'Dashboard' }}</title>
 
   <!-- Scripts -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
