@@ -1,17 +1,12 @@
-@php
-  use Illuminate\Support\HtmlString;
-
-  $columns = ['Nama Pohon', 'Satuan', 'Waktu Panen'];
-
-  $data = App\Models\Plant::all();
-
-  $parse = json_encode($data);
-
-  $icon = json_encode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"/></svg>')
-@endphp
+@props([
+    'attrib' => [],
+    'rows' => [],
+    'url' => '',
+    'method' => '',
+])
 
 <div x-data="{
-    transactions: {{ $parse }},
+    rows: {{ json_encode($rows) }},
     itemsPerPage: 5,
     currentPage: 1,
     dropdownOpen: null,
@@ -24,12 +19,12 @@
         })
     },
 
-    get filteredTransactions() {
-        if (this.search.trim() === '') return this.transactions;
+    get filteredrows() {
+        if (this.search.trim() === '') return this.rows;
         
         const searchTerm = this.search.toLowerCase();
     
-        return this.transactions.filter(t => {
+        return this.rows.filter(t => {
             // Gunakan String() agar tidak error jika data berupa angka (integer)
             const name = t.plant_name ? String(t.plant_name).toLowerCase() : '';
             const unit = t.unit ? String(t.unit).toLowerCase() : '';
@@ -42,13 +37,13 @@
     },
 
     get totalPages() {
-        return Math.max(1, Math.ceil(this.filteredTransactions.length / this.itemsPerPage));
+        return Math.max(1, Math.ceil(this.filteredrows.length / this.itemsPerPage));
     },
 
-    get paginatedTransactions() {
+    get paginatedrows() {
         const start = (this.currentPage - 1) * this.itemsPerPage;
         const end = start + this.itemsPerPage;
-        return this.filteredTransactions.slice(start, end);
+        return this.filteredrows.slice(start, end);
     },
 
     get displayedPages() {
@@ -119,38 +114,38 @@
             <tr class="border-gray-200 border-y dark:border-gray-700">
               <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">No
               </th>
-              @foreach ($columns as $col)
+              @foreach ($attrib as $att)
                 <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {{ $col }}
+                  {{ $att['columns'] }}
                 </th>
               @endforeach
               <th scope="col" class="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                Action</th>
+                Aksi</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
             <!-- Tampilkan pesan jika data kosong -->
-            <tr x-show="filteredTransactions.length === 0" x-cloak>
+            <tr x-show="filteredrows.length === 0" x-cloak>
               <td colspan="5" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                 Data tidak ditemukan untuk pencarian "<span x-text="search" class="font-semibold"></span>".
               </td>
             </tr>
 
             <!-- Loop data hasil filter -->
-            <template x-for="(transaction, index) in paginatedTransactions" :key="index">
+            <template x-for="(row, index) in paginatedrows" :key="index">
               <tr>
                 <td class="px-4 py-4 whitespace-nowrap">
                   <div class="text-sm text-gray-500 dark:text-gray-400" x-text="(currentPage-1)*itemsPerPage+index+1">
                   </div>
                 </td>
                 <td class="py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="transaction.plant_name"></div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white" x-text="row.plant_name"></div>
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.unit"></div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="row.unit"></div>
                 </td>
                 <td class="px-4 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="transaction.harvest_time + ' Hari'">
+                  <div class="text-sm text-gray-500 dark:text-gray-400" x-text="row.harvest_time + ' Hari'">
                   </div>
                 </td>
                 <td class="px-4 py-4 text-sm font-medium text-right whitespace-nowrap">
@@ -167,12 +162,13 @@
                         </button>
                       </x-slot>
                       <x-slot name="content">
-                        <button @click="$dispatch('open-form-modal', transaction)" href="#"
+                        <button @click="$dispatch('open-form-modal', row)" href="#"
                           class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"><i class="fa-solid fa-pencil mx-2"></i>Edit</button>
-                        <button x-data @click="$dispatch('open-modal', 'confirm-delete-user')"
+                        <button type="button" 
+                          @click="$dispatch('set-delete-data', { id: row.id, name: row.plant_name }); $dispatch('open-modal', 'confirm-delete-user')"
                           class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
                           <i class="fa-solid fa-trash mx-2"></i>Hapus Data
-                        </button>
+                        </button>                      
                       </x-slot>
                     </x-common.table-dropdown>
                   </div>
@@ -185,7 +181,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]" x-show="filteredTransactions.length > 0"
+    <div class="px-6 py-4 border-t border-gray-200 dark:border-white/[0.05]" x-show="filteredrows.length > 0"
       x-cloak>
       <div class="flex items-center justify-between">
         <button @click="prevPage" :disabled="currentPage === 1"
@@ -243,7 +239,6 @@
       }
     }" @open-form-modal.window="
       let data = $event.detail;
-      
       // Cek apakah ada data yang dikirim (Mode Edit)
       if (data && data.id) {
           isEdit = true;
@@ -277,36 +272,24 @@
       </div>
 
       <!-- Tambahkan action form atau @submit.prevent sesuai kebutuhan backend Anda -->
-      <form class="flex flex-col" @submit.prevent="console.log(form)">
+      {{-- <form class="flex flex-col" :action="isEdit ? '{{ $url }}/edit/'data.id : '{{ $url . 'add' }}'" method="{{ $method }}"> --}}
+      <form class="flex flex-col" :action="isEdit ? '{{ $url }}/edit/' + form.id : '{{ $url }}/add'" method="POST">
         <div class="custom-scrollbar overflow-y-auto p-2">
           <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
 
-            <!-- Input Nama Pohon (Lebar Penuh) -->
-            <div class="col-span-2">
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Nama Pohon
-              </label>
-              <input type="text" x-model="form.plant_name" placeholder="Masukkan nama pohon..." required
-                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-            </div>
+          @csrf
+          <!-- Jika isEdit false, input ini di-disable sehingga tidak ikut terkirim (Aman untuk Tambah Data) -->
+          <input type="hidden" name="_method" value="PUT" x-bind:disabled="!isEdit">
 
-            <!-- Input Satuan (Setengah Lebar) -->
-            <div class="col-span-2 lg:col-span-1">
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Satuan
-              </label>
-              <input type="text" x-model="form.unit" placeholder="Misal: Kg, Batang, Pohon..." required
-                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-            </div>
-
-            <!-- Input Waktu Panen (Setengah Lebar) -->
-            <div class="col-span-2 lg:col-span-1">
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Waktu Panen
-              </label>
-              <input type="text" x-model="form.harvest_time" placeholder="Misal: 90 Hari..." required
-                class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-            </div>
+            @foreach ( $attrib as $att )
+              <div class="{{ $att['className'] }}">
+                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  {{ $att['columns'] }}
+                </label>
+                <input type="text" name="{{ $att['inputName'] }}" x-model="form.{{ $att['inputName'] }}" placeholder="{{ $att['placeholder'] }}" required
+                  class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+              </div>              
+            @endforeach
 
           </div>
         </div>
@@ -327,24 +310,38 @@
     </div>
   </x-ui.modal>
 
-  <x-ui.confirm-dialog name="confirm-delete-user" title="Hapus Pengguna?"
-    message="Tindakan ini tidak dapat dibatalkan. Semua data pengguna akan dihapus permanen." confirmTheme="danger">
+  <!-- Tangkap id dan name dari event -->
+  <div x-data="{ deleteId: null, deleteName: '' }" @set-delete-data.window="deleteId = $event.detail.id; deleteName = $event.detail.name">
+    
+    <!-- Title biarkan statis, kita mainkan teksnya di dalam konten/slot -->
+    <x-ui.confirm-dialog name="confirm-delete-user" title="Hapus Data?" confirmTheme="danger">
 
-    <x-slot:actions>
-      <form action="/users/1" method="POST" class="inline-block">
-        @csrf
-        @method('DELETE')
-        <button type="submit"
-          class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700">
-          Ya, Hapus Permanen
+      <!-- Konten Pesan Dinamis -->
+      <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+        Apakah Anda yakin ingin menghapus data <strong class="text-gray-800 dark:text-white text-base" x-text="deleteName"></strong>? 
+        <br>
+        Tindakan ini tidak dapat dibatalkan.
+      </div>
+
+      <x-slot:actions>
+        <form :action="'{{ $url }}/delete/' + deleteId" method="POST" class="inline-block">
+          @csrf
+          <input type="hidden" name="_method" value="DELETE">
+          
+          <button type="submit"
+            class="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700">
+            Ya, Hapus Permanen
+          </button>
+        </form>
+        
+        <button @click="$dispatch('close-modal', 'confirm-delete-user')" type="button"
+          class="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600">
+          Batal
         </button>
-      </form>
-      <button x-data @click="$dispatch('close-modal', 'confirm-delete-user')" type="button"
-        class="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600">
-        Batal
-      </button>
-    </x-slot:actions>
-  </x-ui.confirm-dialog>
+      </x-slot:actions>
+      
+    </x-ui.confirm-dialog>
 
+  </div>
 
 </div>

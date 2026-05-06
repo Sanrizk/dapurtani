@@ -92,7 +92,10 @@ Route::get('/dashboard2', function () {
 // Route::get('/plants', function () {
 //     return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
 // })->name('dashboard');
-Route::resource('plants', PlantController::class);
+Route::get('/plants', [PlantController::class, 'index'])->name('plants');
+Route::post('/plants/add', [PlantController::class, 'store']);
+Route::put('/plants/edit/{plant}', [PlantController::class,'update']);
+Route::delete('/plants/delete/{plant}', [PlantController::class,'destroy']);
 
 Route::get('/plots', function () {
     return view('pages.plots.plots', ['title' => 'E-commerce Dashboard']);

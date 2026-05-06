@@ -42,8 +42,9 @@ class PlantController extends Controller
     // Simpan ke database
     Plant::create($request->all());
 
-    return redirect()->route('plants.index')
+    return redirect()->route('plants')
       ->with('success', 'Data tanaman berhasil ditambahkan.');
+
   }
 
   /**
@@ -77,7 +78,7 @@ class PlantController extends Controller
     // Update database
     $plant->update($request->all());
 
-    return redirect()->route('plants.index')
+    return redirect()->route('plants')
       ->with('success', 'Data tanaman berhasil diperbarui.');
   }
 
@@ -88,7 +89,7 @@ class PlantController extends Controller
   {
     $plant->delete();
 
-    return redirect()->route('plants.index')
+    return redirect()->route('plants')
       ->with('success', 'Data tanaman berhasil dihapus.');
   }
 }
