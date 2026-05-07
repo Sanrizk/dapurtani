@@ -8,8 +8,11 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-
 @custom-variant dark (&:is(.dark *));
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @theme {
   --font-*: initial;
@@ -47,7 +50,7 @@
   --color-white: #ffffff;
   --color-black: #101828;
 
-  --color-brand-25: #f2f7ff;
+  /* --color-brand-25: #f2f7ff;
   --color-brand-50: #ecf3ff;
   --color-brand-100: #dde9ff;
   --color-brand-200: #c2d6ff;
@@ -58,7 +61,24 @@
   --color-brand-700: #2a31d8;
   --color-brand-800: #252dae;
   --color-brand-900: #262e89;
-  --color-brand-950: #161950;
+  --color-brand-950: #161950; */
+
+  /* --- Tema Hijau DapurTani (Menggantikan Biru Bawaan) --- */
+  --color-brand-25: #f6fcf5;
+  --color-brand-50: #eef9eb;
+  --color-brand-100: #d6f0ce;
+  --color-brand-200: #b0e1a3;
+  --color-brand-300: #7fca6e;
+  --color-brand-400: #55b242;
+  --color-brand-500: #48a111; /* warna2: Terang / Hover State */
+  --color-brand-600: #358215;
+  --color-brand-700: #25671e; /* warna1: Primary Default */
+  --color-brand-800: #20531b;
+  --color-brand-900: #1a4417;
+  --color-brand-950: #0d250c;
+  --color-brand-white: #F7F0F0;
+  --color-brand-green-bg: rgb(37, 103, 30, 0.3);
+  --color-brand-orange-bg: rgb(242, 181, 11, 0.2);
 
   --color-blue-light-25: #f5fbff;
   --color-blue-light-50: #f0f9ff;

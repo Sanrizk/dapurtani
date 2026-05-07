@@ -93,12 +93,13 @@ Route::get('/dashboard2', function () {
 //     return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
 // })->name('dashboard');
 Route::get('/plants', [PlantController::class, 'index'])->name('plants');
+Route::get('/plants2', [PlantController::class, 'index2'])->name('plants');
 Route::post('/plants/add', [PlantController::class, 'store']);
 Route::put('/plants/edit/{plant}', [PlantController::class,'update']);
 Route::delete('/plants/delete/{plant}', [PlantController::class,'destroy']);
 
 Route::get('/plots', function () {
-    return view('pages.plots.plots', ['title' => 'E-commerce Dashboard']);
+    return view('pages.plots.plots2', ['title' => 'E-commerce Dashboard']);
 })->name('dashboard');
 
 Route::get('/users', function () {
@@ -106,7 +107,7 @@ Route::get('/users', function () {
 })->name('dashboard');
 
 Route::get('/cultivates', function () {
-    return view('pages.cultivates.cultivates', ['title' => 'E-commerce Dashboard']);
+    return view('pages.cultivates.cultivates2', ['title' => 'E-commerce Dashboard']);
 })->name('dashboard');
 
 Route::get('/fertilizes', function () {
@@ -118,7 +119,7 @@ Route::get('/waters', function () {
 })->name('dashboard');
 
 Route::get('/harvests', function () {
-    return view('pages.harvests.harvests', ['title' => 'E-commerce Dashboard']);
+    return view('pages.harvests.harvests2', ['title' => 'E-commerce Dashboard']);
 })->name('dashboard');
 
 Route::get('/consumes', function () {
