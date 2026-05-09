@@ -9,7 +9,7 @@
 
       <button @click="$dispatch('open-modal-modal-plants', { mode: 'add', action: '/plants' })"
         class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 transition">
-        + Tambah Pohon
+        <i class="fa-solid fa-plus"></i> Tambah Pohon
       </button>
     </div>
 
@@ -49,11 +49,11 @@
                                     action: '/plants/1', 
                                     data: { nama: 'Sawi Hijau', waktu_panen: 30, satuan: 'Ikat', status: 'aktif' } 
                                 }); open = false"
-              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-400 dark:hover:bg-gray-700 dark:text-white">
+              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
               ✏️ Edit
             </button>
             <button
-              class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-50 hover:bg-error-900/20">
+              class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:hover:bg-error-900/20">
               🗑️ Hapus
             </button>
           </div>

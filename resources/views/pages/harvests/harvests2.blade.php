@@ -9,10 +9,10 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">Kelola hasil panen dan catat pengeluaran stok.</p>
       </div>
 
-      <button @click="$dispatch('open-modal-modal-panen', { mode: 'add', action: '/harvests' })"
+      {{-- <button @click="$dispatch('open-modal-modal-panen', { mode: 'add', action: '/harvests' })"
         class="rounded bg-brand-600 px-5 py-2.5 font-medium text-white shadow-sm hover:bg-brand-700 transition">
-        + Catat Panen Baru
-      </button>
+        <i class="fa-solid fa-plus"></i> Catat Panen Baru
+      </button> --}}
     </div>
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -45,7 +45,7 @@
                                               action: '/harvests/1', 
                                               data: { tanaman_id: '1', bedengan_id: '1', tanggal_panen: '2026-05-12', jumlah_hasil: 100 } 
                                           }); open = false"
-                  class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
+                  class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
                   ✏️ Edit Panen
                 </button>
                 <form action="/harvests/1" method="POST" class="m-0 border-t border-stroke dark:border-strokedark"

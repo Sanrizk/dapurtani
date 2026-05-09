@@ -12,7 +12,7 @@
 
       <button @click="$dispatch('open-modal-modal-bedengan', { mode: 'add', action: '/plots' })"
         class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 transition shadow-sm">
-        + Tambah Bedengan
+        <i class="fa-solid fa-plus"></i> Tambah Bedengan
       </button>
     </div>
 
@@ -25,7 +25,7 @@
         <!-- Menu Dropdown -->
         <div x-data="{ open: false }" class="absolute right-3 top-3 z-10">
           <button @click="open = !open" @click.outside="open = false"
-            class="text-gray-900 hover:text-gray-900 dark:hover:text-gray-500 pb-1 px-2 text-xl font-bold border rounded-full bg-white dark:bg-gray-900 dark:text-gray-200 border-gray-dark">⋮</button>
+            class="text-gray-900 hover:text-gray-900 dark:hover:text-gray-500 pb-1 px-2 text-xl font-bold border rounded-full bg-white dark:bg-gray-900 dark:text-gray-200 border-gray-400">⋮</button>
 
           <div x-show="open" x-transition
             class="absolute right-0 mt-1 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20"
@@ -35,7 +35,7 @@
                                             action: '/plots/1', 
                                             data: { nama: 'Blok A1', ukuran: '1.5 x 10m', kapasitas: 50, status: 'terisi' } 
                                         }); open = false"
-              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
+              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
               ✏️ Edit
             </button>
             <button
@@ -81,7 +81,7 @@
         <!-- Dropdown (Sama seperti di atas, disingkat) -->
         <div x-data="{ open: false }" class="absolute right-3 top-3 z-10">
           <button @click="open = !open" @click.outside="open = false"
-            class="text-gray-900 hover:text-gray-900 dark:hover:text-gray-500 pb-1 px-2 text-xl font-bold border rounded-full bg-white dark:bg-gray-900 dark:text-gray-200 border-gray-dark">⋮</button>
+            class="text-gray-900 hover:text-gray-900 dark:hover:text-gray-500 pb-1 px-2 text-xl font-bold border rounded-full bg-white dark:bg-gray-900 dark:text-gray-200 border-gray-400">⋮</button>
 
           <div x-show="open" x-transition
             class="absolute right-0 mt-1 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20"
@@ -91,7 +91,7 @@
                                             action: '/plots/1', 
                                             data: { nama: 'Blok A1', ukuran: '1.5 x 10m', kapasitas: 50, status: 'terisi' } 
                                         }); open = false"
-              class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
+              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
               ✏️ Edit
             </button>
             <button

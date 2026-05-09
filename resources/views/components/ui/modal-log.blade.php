@@ -51,6 +51,14 @@
               placeholder="{{ $field['placeholder'] ?? '' }}"
               class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-strokedark dark:bg-form-input dark:text-white"
               required>
+            @if(isset($field['number']) && $field['number'])
+              <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Jumlah Panen
+              </label>
+              <input type="number" name="qty" x-model="formData.qty" placeholder="Isi jumlah..."
+                class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-strokedark dark:bg-form-input dark:text-white"
+                required>
+            @endif
           </div>
         @endforeach
       </div>
@@ -67,6 +75,7 @@
       </div>
     </form>
 
+
     <hr class="my-6 border-t border-dashed border-gray-300 dark:border-strokedark">
 
     <div>
@@ -76,9 +85,16 @@
 
       <div class="max-h-40 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
         <template x-for="(log, index) in logs" :key="index">
-          <div class="flex items-center gap-3 rounded-lg px-4 py-3 {{ $theme['logBg'] }} dark:bg-gray-800">
-            <span class="font-bold {{ $theme['logIcon'] }}" x-text="log.icon"></span>
-            <span class="text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.text"></span>
+          <div
+            class="flex items-center justify-between gap-3 rounded-lg px-4 py-3 {{ $theme['logBg'] }} dark:bg-gray-800">
+            <div>
+              <span class="font-bold {{ $theme['logIcon'] }}" x-text="log.icon"></span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.text"></span>
+            </div>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.qty"></span>
+            <button class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1 rounded-sm">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>
         </template>
 
@@ -89,5 +105,6 @@
         </template>
       </div>
     </div>
+
   </div>
 </div>
