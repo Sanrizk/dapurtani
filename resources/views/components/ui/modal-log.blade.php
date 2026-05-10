@@ -31,7 +31,7 @@
     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="transition ease-in duration-150"
     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    class="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-xl dark:bg-boxdark">
+    class="relative z-10 w-full max-w-md rounded-2xl bg-white dark:bg-gray-800 p-6 sm:p-8 shadow-xl dark:bg-boxdark">
     <div class="mb-3 flex items-center gap-3">
       <span class="text-2xl">{{ $icon }}</span>
       <h2 class="text-2xl font-bold {{ $theme['text'] }} dark:text-white">{{ $title }}</h2>
@@ -49,7 +49,8 @@
             </label>
             <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
               placeholder="{{ $field['placeholder'] ?? '' }}"
-              class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-strokedark dark:bg-form-input dark:text-white"
+              class="w-full rounded-lg border border-gray-200 bg-transparent dark:bg-dark-900 dark:bg-white/3 h-11 py-2.5 px-4 text-sm text-gray-800 dark:text-white/90 shadow-theme-xs outline-none focus:border-brand-300 dark:focus:border-brand-800 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-800 transition
+                [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:dark:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
               required>
             @if(isset($field['number']) && $field['number'])
               <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">

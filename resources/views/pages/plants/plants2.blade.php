@@ -1,66 +1,152 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+  <!-- Tambahkan x-data yang memanggil fungsi plantBoard() -->
+  <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10" x-data="plantBoard()">
 
-    <!-- 1. Header & Tombol Tambah (Menggunakan $dispatch ke Modal) -->
+    <!-- 1. Header & Search -->
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Data Pohon</h2>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Data Pohon</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Kelola data pohon, nama, dan satuan.</p>
+      </div>
 
+      <div class="relative w-full sm:w-72 xl:w-96">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+          <i class="fa-solid fa-search"></i>
+        </span>
+        <input type="text" x-model="search" placeholder="Cari nama pohon..."
+          class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-white/3 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800">
+      </div>
+    </div>
+
+    <!-- 1.5 Tombol Tambah -->
+    <div class="mb-6 flex">
       <button @click="$dispatch('open-modal-modal-plants', { mode: 'add', action: '/plants' })"
-        class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700 transition">
+        class="rounded bg-brand-600 dark:bg-brand-900 px-4 py-2 font-medium text-white hover:bg-brand-700 dark:hover:bg-brand-700 transition">
         <i class="fa-solid fa-plus"></i> Tambah Pohon
       </button>
     </div>
 
-    <!-- 2. Grid Cards Tailadmin -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-
-      <!-- Card Item -->
+    <!-- Tampilan Jika Data Tidak Ditemukan -->
+    <div x-show="filteredPlants.length === 0" x-cloak
+      class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div
-        class="relative rounded-sm bg-brand-orange-bg dark:bg-brand-green-bg p-6 shadow-default transition hover:-translate-y-1 hover:shadow-lg">
-        <div class="flex items-center gap-4">
-          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20">
-            🥬
+        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
+        <i class="fa-solid fa-magnifying-glass text-2xl"></i>
+      </div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data tidak ditemukan</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
+        Pohon dengan kata kunci tersebut tidak ada di dalam sistem.
+      </p>
+      <button @click="search = ''" class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+        Bersihkan Pencarian
+      </button>
+    </div>
+
+    <!-- 2. Grid Cards Tailadmin -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" x-show="paginatedPlants.length > 0">
+
+      <!-- Looping Array Data Pohon Menggunakan x-for -->
+      <template x-for="plant in paginatedPlants" :key="plant.id">
+        <div
+          class="relative rounded-xl bg-white border dark:bg-brand-green-bg p-6 shadow-default transition hover:-translate-y-1 hover:shadow-lg border-gray-400">
+          <div class="flex items-center gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20"
+              x-text="plant.icon">
+            </div>
+            <div>
+              <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plant.nama"></h4>
+              <div class="mt-1 flex gap-2 text-xs font-medium">
+                <span
+                  class="rounded bg-warning-100 px-2 py-1 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400">
+                  ⏳ <span x-text="plant.waktu_panen + ' Hari'"></span>
+                </span>
+                <span class="rounded bg-brand-100 px-2 py-1 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
+                  📦 <span x-text="plant.satuan"></span>
+                </span>
+              </div>
+            </div>
           </div>
-          <div>
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white">Sawi Hijau</h4>
-            <div class="mt-1 flex gap-2 text-xs font-medium">
-              <span
-                class="rounded bg-warning-100 px-2 py-1 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400">⏳
-                30 Hari</span>
-              <span class="rounded bg-brand-100 px-2 py-1 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">📦
-                Ikat</span>
+
+          <!-- Dropdown Alpine.js untuk Edit/Hapus -->
+          <div x-data="{ open: false }" class="absolute right-4 top-4">
+            <button @click="open = !open" @click.outside="open = false"
+              class="text-gray-400 hover:text-gray-900 dark:hover:text-white text-xl font-bold">⋮</button>
+
+            <div x-show="open" x-cloak x-transition
+              class="absolute right-0 mt-2 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-10">
+
+              <!-- Tombol Edit melempar data spesifik dari loop ke Modal -->
+              <button @click="$dispatch('open-modal-modal-plants', { 
+                                                mode: 'edit', 
+                                                action: `/plants/${plant.id}`, 
+                                                data: plant 
+                                            }); open = false"
+                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
+                ✏️ Edit
+              </button>
+
+              <form :action="`/plants/${plant.id}`" method="POST"
+                class="m-0 border-t border-stroke dark:border-strokedark"
+                @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus pohon ini?')) $el.submit()">
+                @csrf @method('DELETE')
+                <button type="submit"
+                  class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
+                  🗑️ Hapus
+                </button>
+              </form>
             </div>
           </div>
         </div>
+      </template>
 
-        <!-- Dropdown Alpine.js untuk Edit/Hapus -->
-        <div x-data="{ open: false }" class="absolute right-4 top-4">
-          <button @click="open = !open" @click.outside="open = false"
-            class="text-gray-400 hover:text-gray-900 dark:hover:text-white text-xl font-bold">⋮</button>
+    </div>
 
-          <div x-show="open" x-transition
-            class="absolute right-0 mt-2 w-32 rounded border border-stroke bg-brand-white shadow-lg dark:border-strokedark dark:bg-boxdark z-10"
-            style="display: none;">
-            <!-- Tombol Edit melempar data lama ke Modal -->
-            <button @click="$dispatch('open-modal-modal-plants', { 
-                                    mode: 'edit', 
-                                    action: '/plants/1', 
-                                    data: { nama: 'Sawi Hijau', waktu_panen: 30, satuan: 'Ikat', status: 'aktif' } 
-                                }); open = false"
-              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
-              ✏️ Edit
-            </button>
-            <button
-              class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:hover:bg-error-900/20">
-              🗑️ Hapus
-            </button>
-          </div>
-        </div>
+    <!-- 2.5. Baris Pagination -->
+    <div x-show="filteredPlants.length > itemsPerPage" x-cloak
+      class="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-stroke pt-5 dark:border-strokedark gap-4">
+      <p class="text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
+        Menampilkan <span class="font-semibold text-gray-900 dark:text-white"
+          x-text="((currentPage - 1) * itemsPerPage) + 1"></span>
+        - <span class="font-semibold text-gray-900 dark:text-white"
+          x-text="Math.min(currentPage * itemsPerPage, filteredPlants.length)"></span>
+        dari <span class="font-semibold text-gray-900 dark:text-white" x-text="filteredPlants.length"></span> data
+      </p>
+
+      <div class="flex items-center gap-1">
+        <!-- Tombol Prev -->
+        <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
+             border-gray-200 bg-transparent text-gray-400
+             hover:border-brand-500 hover:text-brand-600
+             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+             dark:border-gray-700 dark:text-gray-500
+             dark:hover:border-brand-500 dark:hover:text-brand-400
+             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+          <i class="fa-solid fa-chevron-left text-xs"></i>
+        </button>
+
+        <!-- Loop Nomer Halaman -->
+        <template x-for="page in totalPages" :key="page">
+          <button @click="goToPage(page)"
+            class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
+            :class="currentPage === page
+          ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+          : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'" x-text="page">
+          </button>
+        </template>
+
+        <!-- Tombol Next -->
+        <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
+             border-gray-200 bg-transparent text-gray-400
+             hover:border-brand-500 hover:text-brand-600
+             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+             dark:border-gray-700 dark:text-gray-500
+             dark:hover:border-brand-500 dark:hover:text-brand-400
+             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+          <i class="fa-solid fa-chevron-right text-xs"></i>
+        </button>
       </div>
-      <!-- End Card Item -->
-
     </div>
 
     <!-- 3. Definisi Form & Panggil Komponen Modal -->
@@ -73,8 +159,79 @@
       ];
     @endphp
 
-    <!-- Komponen ini akan hidden secara default dan muncul dari tengah layar dengan efek blur -->
     <x-ui.modal-form id="modal-plants" title="Data Pohon" :fields="$plantFields" />
 
   </div>
 @endsection
+
+@push('scripts')
+  <script>
+    function plantBoard() {
+      return {
+        search: '',
+        currentPage: 1,
+        itemsPerPage: 9, // Jumlah card per halaman (bisa disesuaikan)
+
+        // Dummy data array of objects
+        plants: [
+          {
+            id: 1,
+            nama: 'Sawi Hijau',
+            icon: '🥬',
+            waktu_panen: 30,
+            satuan: 'Ikat',
+            status: 'aktif'
+          },
+          { id: 2, nama: 'Tomat Merah', icon: '🍅', waktu_panen: 90, satuan: 'Kg', status: 'aktif' },
+          { id: 3, nama: 'Kangkung Cabut', icon: '🌱', waktu_panen: 25, satuan: 'Ikat', status: 'aktif' },
+          { id: 4, nama: 'Cabai Rawit', icon: '🌶️', waktu_panen: 120, satuan: 'Kg', status: 'aktif' },
+          { id: 5, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+          { id: 6, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+          { id: 7, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+          { id: 8, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+          { id: 9, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+          { id: 10, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+          { id: 11, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' }
+        ],
+
+        init() {
+          // Otomatis kembali ke halaman 1 jika user mulai mengetik pencarian
+          this.$watch('search', () => { this.currentPage = 1; });
+        },
+
+        // Fungsi untuk mengembalikan data hasil pencarian
+        get filteredPlants() {
+          if (this.search === '') {
+            return this.plants;
+          }
+          return this.plants.filter(plant =>
+            plant.nama.toLowerCase().includes(this.search.toLowerCase())
+          );
+        },
+
+        // Kalkulasi total halaman berdasarkan data yang sudah di-filter
+        get totalPages() {
+          return Math.ceil(this.filteredPlants.length / this.itemsPerPage);
+        },
+
+        // Fungsi untuk memotong data sesuai halaman aktif (Pagination)
+        get paginatedPlants() {
+          const start = (this.currentPage - 1) * this.itemsPerPage;
+          const end = start + this.itemsPerPage;
+          return this.filteredPlants.slice(start, end);
+        },
+
+        // Navigasi halaman
+        nextPage() {
+          if (this.currentPage < this.totalPages) this.currentPage++;
+        },
+        prevPage() {
+          if (this.currentPage > 1) this.currentPage--;
+        },
+        goToPage(page) {
+          this.currentPage = page;
+        }
+      }
+    }
+  </script>
+@endpush
