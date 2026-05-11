@@ -22,6 +22,7 @@ class CultivateFactory extends Factory
     return [
       'plant_id' => fake()->numberBetween(1,10),
       'plot_id' => fake()->numberBetween(1,10),
+      'is_harvested' => fake()->randomElement([0,1]),
       'datetime' => fake()->dateTimeThisYear(),
     ];
   }

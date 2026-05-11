@@ -1,85 +1,4 @@
-{{-- @props(['id', 'title', 'fields' => []])
-
-<!-- Class fixed, inset-0, z-[999], bg-black/50, dan backdrop-blur menyelesaikan masalah posisi & blur layar -->
-<div x-data="{ 
-        open: false, 
-        mode: 'add', 
-        formAction: '', 
-        formData: {} 
-     }" @open-modal-{{ $id }}.window="
-        open = true; 
-        mode = $event.detail.mode; 
-        formAction = $event.detail.action; 
-        formData = $event.detail.data || {};
-     " x-show="open" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
-  style="display: none;">
-
-  <!-- Konten Modal -->
-  <div @click.outside="open = false" class="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800"
-    x-transition.scale>
-    <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white"
-      x-text="mode === 'add' ? 'Tambah {{ $title }}' : 'Edit {{ $title }}'"></h2>
-
-    <!-- Form Otomatis POST untuk Add, PUT untuk Edit -->
-    <form :action="formAction" method="POST">
-      @csrf
-      <!-- Inject Method PUT jika sedang Edit -->
-      <template x-if="mode === 'edit'">
-        <input type="hidden" name="_method" value="PUT">
-      </template>
-
-      <div class="space-y-4">
-        <!-- Looping Field Dinamis -->
-        @foreach($fields as $field)
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $field['label'] }}</label>
-
-          <!-- Input Text / Number -->
-          @if($field['type'] === 'text' || $field['type'] === 'number')
-          <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
-            class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-            required>
-
-          <!-- Input Select / Dropdown -->
-          @elseif($field['type'] === 'select')
-          <select name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
-            class="w-full rounded border-gray-300 p-2 focus:border-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-            required>
-            <option value="">Pilih...</option>
-            @foreach($field['options'] as $val => $label)
-            <option value="{{ $val }}">{{ $label }}</option>
-            @endforeach
-          </select>
-
-          <!-- Input Radio -->
-          @elseif($field['type'] === 'radio')
-          <div class="flex gap-4 mt-2">
-            @foreach($field['options'] as $val => $label)
-            <label class="flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer">
-              <input type="radio" name="{{ $field['name'] }}" value="{{ $val }}" x-model="formData.{{ $field['name'] }}"
-                class="text-brand-600 focus:ring-brand-500">
-              {{ $label }}
-            </label>
-            @endforeach
-          </div>
-          @endif
-        </div>
-        @endforeach
-      </div>
-
-      <!-- Tombol Action -->
-      <div class="mt-6 flex justify-end gap-3">
-        <button type="button" @click="open = false"
-          class="rounded bg-gray-200 px-4 py-2 font-medium text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Batal</button>
-        <button type="submit"
-          class="rounded bg-brand-600 px-4 py-2 font-medium text-white hover:bg-brand-700">Simpan</button>
-      </div>
-    </form>
-  </div>
-</div> --}}
-
-
-@props(['id', 'title', 'fields' => []])
+@props(['id', 'title', 'action', 'fields' => []])
 
 <div x-data="{ open: false, mode: 'add', formAction: '', formData: {} }" @open-modal-{{ $id }}.window="
         open = true;
@@ -105,7 +24,7 @@
       x-text="mode === 'add' ? 'Tambah {{ $title }}' : 'Edit {{ $title }}'">
     </h2>
 
-    <form :action="formAction" method="POST">
+    <form :action="mode === 'edit' ? formAction : '{{ $action }}'" method="POST">
       @csrf
       <template x-if="mode === 'edit'">
         <input type="hidden" name="_method" value="PUT">

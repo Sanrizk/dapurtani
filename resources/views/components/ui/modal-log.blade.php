@@ -57,7 +57,7 @@
                 Jumlah Panen
               </label>
               <input type="number" name="qty" x-model="formData.qty" placeholder="Isi jumlah..."
-                class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-strokedark dark:bg-form-input dark:text-white"
+                class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 required>
             @endif
           </div>

@@ -30,7 +30,7 @@
 
     <!-- Tampilan Jika Data Tidak Ditemukan -->
     <div x-show="filteredPlants.length === 0" x-cloak
-      class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
+      class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
         <i class="fa-solid fa-magnifying-glass text-2xl"></i>
@@ -45,25 +45,27 @@
     </div>
 
     <!-- 2. Grid Cards Tailadmin -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" x-show="paginatedPlants.length > 0">
-
+    <div x-data="{ formToSubmit: null, /* variabel lain Anda... */ }"
+      @confirmed-delete-plant.window="if(formToSubmit) formToSubmit.submit()"
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" x-show="paginatedPlants.length > 0">
       <!-- Looping Array Data Pohon Menggunakan x-for -->
       <template x-for="plant in paginatedPlants" :key="plant.id">
         <div
           class="relative rounded-xl bg-white border dark:bg-brand-green-bg p-6 shadow-default transition hover:-translate-y-1 hover:shadow-lg border-gray-400">
           <div class="flex items-center gap-4">
             <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20"
-              x-text="plant.icon">
+              {{-- x-text="plant.icon"> --}}
+              x-text="'🧅'">
             </div>
             <div>
-              <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plant.nama"></h4>
+              <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plant.plant_name"></h4>
               <div class="mt-1 flex gap-2 text-xs font-medium">
                 <span
                   class="rounded bg-warning-100 px-2 py-1 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400">
-                  ⏳ <span x-text="plant.waktu_panen + ' Hari'"></span>
+                  ⏳ <span x-text="plant.harvest_time + ' Hari'"></span>
                 </span>
                 <span class="rounded bg-brand-100 px-2 py-1 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400">
-                  📦 <span x-text="plant.satuan"></span>
+                  📦 <span x-text="plant.unit"></span>
                 </span>
               </div>
             </div>
@@ -79,19 +81,19 @@
 
               <!-- Tombol Edit melempar data spesifik dari loop ke Modal -->
               <button @click="$dispatch('open-modal-modal-plants', { 
-                                                mode: 'edit', 
-                                                action: `/plants/${plant.id}`, 
-                                                data: plant 
-                                            }); open = false"
+                                                              mode: 'edit', 
+                                                              action: `/plants/edit/${plant.id}`, 
+                                                              data: {...plant}
+                                                          }); open = false"
                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                 ✏️ Edit
               </button>
 
-              <form :action="`/plants/${plant.id}`" method="POST"
-                class="m-0 border-t border-stroke dark:border-strokedark"
-                @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus pohon ini?')) $el.submit()">
+              <form :action="`/plants/delete/${plant.id}`" method="POST"
+                class="m-0 border-t border-stroke dark:border-strokedark">
                 @csrf @method('DELETE')
                 <button type="submit"
+                  @click.prevent="formToSubmit = $event.target.closest('form'); $dispatch('open-modal', 'delete-plant')"
                   class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                   🗑️ Hapus
                 </button>
@@ -100,7 +102,6 @@
           </div>
         </div>
       </template>
-
     </div>
 
     <!-- 2.5. Baris Pagination -->
@@ -117,12 +118,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-             border-gray-200 bg-transparent text-gray-400
-             hover:border-brand-500 hover:text-brand-600
-             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-             dark:border-gray-700 dark:text-gray-500
-             dark:hover:border-brand-500 dark:hover:text-brand-400
-             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                           border-gray-200 bg-transparent text-gray-400
+                           hover:border-brand-500 hover:text-brand-600
+                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                           dark:border-gray-700 dark:text-gray-500
+                           dark:hover:border-brand-500 dark:hover:text-brand-400
+                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -131,19 +132,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-          ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-          : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'" x-text="page">
+                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+            x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-             border-gray-200 bg-transparent text-gray-400
-             hover:border-brand-500 hover:text-brand-600
-             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-             dark:border-gray-700 dark:text-gray-500
-             dark:hover:border-brand-500 dark:hover:text-brand-400
-             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                           border-gray-200 bg-transparent text-gray-400
+                           hover:border-brand-500 hover:text-brand-600
+                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                           dark:border-gray-700 dark:text-gray-500
+                           dark:hover:border-brand-500 dark:hover:text-brand-400
+                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
@@ -152,14 +154,19 @@
     <!-- 3. Definisi Form & Panggil Komponen Modal -->
     @php
       $plantFields = [
-        ['name' => 'nama', 'label' => 'Nama Pohon', 'type' => 'text', 'placeholder' => 'Masukkan nama pohon'],
-        ['name' => 'waktu_panen', 'label' => 'Waktu Panen (Hari)', 'type' => 'number', 'placeholder' => 'Misal: 90 (artinya 90 Hari)'],
-        ['name' => 'satuan', 'label' => 'Satuan', 'type' => 'select', 'options' => ['Ikat' => 'Ikat', 'Kg' => 'Kilogram']],
-        ['name' => 'status', 'label' => 'Status Pohon', 'type' => 'radio', 'options' => ['aktif' => 'Aktif', 'nonaktif' => 'Nonaktif']]
+        ['name' => 'plant_name', 'label' => 'Nama Pohon', 'type' => 'text', 'placeholder' => 'Masukkan nama pohon'],
+        ['name' => 'harvest_time', 'label' => 'Waktu Panen (Hari)', 'type' => 'number', 'placeholder' => 'Misal: 90 (artinya 90 Hari)'],
+        ['name' => 'unit', 'label' => 'Satuan', 'type' => 'select', 'options' => ['Ikat' => 'Ikat', 'Kg' => 'Kilogram']],
+        // ['name' => 'status', 'label' => 'Status Pohon', 'type' => 'radio', 'options' => ['aktif' => 'Aktif', 'nonaktif' => 'Nonaktif']]
       ];
     @endphp
 
-    <x-ui.modal-form id="modal-plants" title="Data Pohon" :fields="$plantFields" />
+    <x-ui.modal-form id="modal-plants" title="Data Pohon" action="/plants/add" :fields="$plantFields" />
+
+    <!-- Taruh di luar / bawah looping Alpine Anda -->
+    <x-ui.confirm-dialog name="delete-plant" title="Hapus Pohon"
+      message="Apakah Anda yakin ingin menghapus pohon ini? Data yang dihapus tidak dapat dikembalikan."
+      confirmText="Hapus" confirmTheme="danger" />
 
   </div>
 @endsection
@@ -173,26 +180,21 @@
         itemsPerPage: 9, // Jumlah card per halaman (bisa disesuaikan)
 
         // Dummy data array of objects
-        plants: [
-          {
-            id: 1,
-            nama: 'Sawi Hijau',
-            icon: '🥬',
-            waktu_panen: 30,
-            satuan: 'Ikat',
-            status: 'aktif'
-          },
-          { id: 2, nama: 'Tomat Merah', icon: '🍅', waktu_panen: 90, satuan: 'Kg', status: 'aktif' },
-          { id: 3, nama: 'Kangkung Cabut', icon: '🌱', waktu_panen: 25, satuan: 'Ikat', status: 'aktif' },
-          { id: 4, nama: 'Cabai Rawit', icon: '🌶️', waktu_panen: 120, satuan: 'Kg', status: 'aktif' },
-          { id: 5, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-          { id: 6, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-          { id: 7, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-          { id: 8, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-          { id: 9, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-          { id: 10, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-          { id: 11, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' }
-        ],
+        // plants: [
+        //   { id: 1, nama: 'Sawi Hijau', icon: '🥬', waktu_panen: 30, satuan: 'Ikat', status: 'aktif' },
+        //   { id: 2, nama: 'Tomat Merah', icon: '🍅', waktu_panen: 90, satuan: 'Kg', status: 'aktif' },
+        //   { id: 3, nama: 'Kangkung Cabut', icon: '🌱', waktu_panen: 25, satuan: 'Ikat', status: 'aktif' },
+        //   { id: 4, nama: 'Cabai Rawit', icon: '🌶️', waktu_panen: 120, satuan: 'Kg', status: 'aktif' },
+        //   { id: 5, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+        //   { id: 6, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+        //   { id: 7, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+        //   { id: 8, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+        //   { id: 9, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+        //   { id: 10, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
+        //   { id: 11, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' }
+        // ],
+
+        plants: {{ Js::from($plants) }},
 
         init() {
           // Otomatis kembali ke halaman 1 jika user mulai mengetik pencarian
@@ -205,7 +207,7 @@
             return this.plants;
           }
           return this.plants.filter(plant =>
-            plant.nama.toLowerCase().includes(this.search.toLowerCase())
+            plant.plant_name.toLowerCase().includes(this.search.toLowerCase())
           );
         },
 

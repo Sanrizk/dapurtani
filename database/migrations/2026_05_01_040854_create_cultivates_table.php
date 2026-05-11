@@ -19,6 +19,7 @@ return new class extends Migration {
       // 1. Definisikan kolom Foreign Key sebagai unsignedBigInteger
       $table->unsignedBigInteger('plant_id');
       $table->unsignedBigInteger('plot_id');
+      $table->boolean('is_harvested');
 
       // 2. Tambahkan constraint Foreign Key
       $table->foreign('plant_id')

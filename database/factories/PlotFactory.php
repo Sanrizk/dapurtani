@@ -18,7 +18,8 @@ class PlotFactory extends Factory
   public function definition(): array
   {
     return [
-      'order' => fake()->unique()->numberBetween(1, 100),
+      // 'order' => fake()->unique()->numberBetween(1, 100),
+      'plots_name' => fake()->randomElement(['Blok A1', 'Blok A2', 'Blok B1', 'Blok B2', 'Blok C1', 'Blok C2']),
     ];
   }
 }

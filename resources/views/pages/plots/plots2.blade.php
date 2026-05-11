@@ -114,7 +114,7 @@
 
           <!-- Info Lahan -->
           <div class="flex-1">
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plot.nama"></h4>
+            <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plot.plots_name"></h4>
             <p class="text-sm text-gray-500 dark:text-gray-400" x-text="`Ukuran: ${plot.ukuran}`"></p>
           </div>
 
@@ -221,14 +221,16 @@
         itemsPerPage: 4, // Setting limit grid pagination. Saya set 4 agar sejajar dengan xl:grid-cols-4
 
         // Data dummy array
-        plots: [
-          { id: 1, nama: 'Blok A1', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'terisi' },
-          { id: 2, nama: 'Blok A2', ukuran: '1.2 x 8 Meter', kapasitas: 40, status: 'kosong' },
-          { id: 3, nama: 'Blok B1', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'terisi' },
-          { id: 4, nama: 'Blok B2', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'istirahat' },
-          { id: 5, nama: 'Blok C1', ukuran: '2.0 x 12 Meter', kapasitas: 80, status: 'terisi' },
-          { id: 6, nama: 'Blok C2', ukuran: '2.0 x 12 Meter', kapasitas: 80, status: 'kosong' },
-        ],
+        // plots: [
+        //   { id: 1, nama: 'Blok A1', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'terisi' },
+        //   { id: 2, nama: 'Blok A2', ukuran: '1.2 x 8 Meter', kapasitas: 40, status: 'kosong' },
+        //   { id: 3, nama: 'Blok B1', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'terisi' },
+        //   { id: 4, nama: 'Blok B2', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'istirahat' },
+        //   { id: 5, nama: 'Blok C1', ukuran: '2.0 x 12 Meter', kapasitas: 80, status: 'terisi' },
+        //   { id: 6, nama: 'Blok C2', ukuran: '2.0 x 12 Meter', kapasitas: 80, status: 'kosong' },
+        // ],
+
+        plots: {{ Js::from($plots) }},
 
         init() {
           // Reset ke halaman pertama setiap kali input pencarian diketik

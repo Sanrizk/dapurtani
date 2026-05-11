@@ -21,7 +21,12 @@ class Cultivate extends Model
   protected $fillable = [
     'plant_id',
     'plot_id',
+    'is_harvested',
     'datetime',
+  ];
+
+  protected $casts = [
+    'is_harvested' => 'boolean'
   ];
 
   /**

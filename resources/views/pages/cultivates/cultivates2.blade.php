@@ -361,15 +361,17 @@
         currentPage: 1,      // <-- Halaman aktif
         itemsPerPage: 6,     // <-- Batas card per halaman (contoh: 3)
 
-        dataCultivates: [
-          { id: 1, name: 'Tomat Merah', icon: '🍅', location: 'Bedengan Blok A1', date_plant: '01 Mei 2026', date_action: '31 Mei 2026', age_label: 'Hari ke-7', remaining_label: '23 Hari Lagi', progress: 25, is_harvested: false },
-          { id: 2, name: 'Sawi Hijau', icon: '🥬', location: 'Bedengan Blok B2', date_plant: '01 April 2026', date_action: '30 April 2026', age_label: '-', remaining_label: '-', progress: 100, is_harvested: true },
-          { id: 3, name: 'Kangkung Cabut', icon: '🌱', location: 'Bedengan Blok C1', date_plant: '05 Mei 2026', date_action: '26 Mei 2026', age_label: 'Hari ke-4', remaining_label: '17 Hari Lagi', progress: 18, is_harvested: false },
-          { id: 4, name: 'Cabai Rawit', icon: '🌶️', location: 'Bedengan Blok A2', date_plant: '20 April 2026', date_action: '20 Juli 2026', age_label: 'Hari ke-18', remaining_label: '72 Hari Lagi', progress: 20, is_harvested: false },
-          { id: 5, name: 'Bawang Merah', icon: '🧅', location: 'Bedengan Blok D1', date_plant: '10 Maret 2026', date_action: '10 Mei 2026', age_label: '-', remaining_label: '-', progress: 100, is_harvested: true },
-          { id: 6, name: 'Wortel Manis', icon: '🥕', location: 'Bedengan Blok C2', date_plant: '08 Mei 2026', date_action: '08 Agustus 2026', age_label: 'Hari ke-1', remaining_label: '90 Hari Lagi', progress: 1, is_harvested: false },
-          { id: 7, name: 'Selada Air', icon: '🥗', location: 'Bedengan Blok B1', date_plant: '02 Mei 2026', date_action: '22 Mei 2026', age_label: 'Hari ke-6', remaining_label: '14 Hari Lagi', progress: 30, is_harvested: false },
-        ],
+        // dataCultivates: [
+        //   { id: 1, name: 'Tomat Merah', icon: '🍅', location: 'Bedengan Blok A1', date_plant: '01 Mei 2026', date_action: '31 Mei 2026', age_label: 'Hari ke-7', remaining_label: '23 Hari Lagi', progress: 25, is_harvested: false },
+        //   { id: 2, name: 'Sawi Hijau', icon: '🥬', location: 'Bedengan Blok B2', date_plant: '01 April 2026', date_action: '30 April 2026', age_label: '-', remaining_label: '-', progress: 100, is_harvested: true },
+        //   { id: 3, name: 'Kangkung Cabut', icon: '🌱', location: 'Bedengan Blok C1', date_plant: '05 Mei 2026', date_action: '26 Mei 2026', age_label: 'Hari ke-4', remaining_label: '17 Hari Lagi', progress: 18, is_harvested: false },
+        //   { id: 4, name: 'Cabai Rawit', icon: '🌶️', location: 'Bedengan Blok A2', date_plant: '20 April 2026', date_action: '20 Juli 2026', age_label: 'Hari ke-18', remaining_label: '72 Hari Lagi', progress: 20, is_harvested: false },
+        //   { id: 5, name: 'Bawang Merah', icon: '🧅', location: 'Bedengan Blok D1', date_plant: '10 Maret 2026', date_action: '10 Mei 2026', age_label: '-', remaining_label: '-', progress: 100, is_harvested: true },
+        //   { id: 6, name: 'Wortel Manis', icon: '🥕', location: 'Bedengan Blok C2', date_plant: '08 Mei 2026', date_action: '08 Agustus 2026', age_label: 'Hari ke-1', remaining_label: '90 Hari Lagi', progress: 1, is_harvested: false },
+        //   { id: 7, name: 'Selada Air', icon: '🥗', location: 'Bedengan Blok B1', date_plant: '02 Mei 2026', date_action: '22 Mei 2026', age_label: 'Hari ke-6', remaining_label: '14 Hari Lagi', progress: 30, is_harvested: false },
+        // ],
+
+        dataCultivates: {{ Js::from($formattedCultivates) }},
 
         init() {
           // Jika pencarian atau filter status diubah, paksa kembali ke halaman 1

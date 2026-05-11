@@ -14,7 +14,7 @@ class PlantController extends Controller
   {
     $plants = Plant::all();
     $title = 'Pohon | Dapurtani';
-    return view('pages.plants.plants', compact('plants', 'title'));
+    return view('pages.plants.plants2', compact('plants', 'title'));
   }
   public function index2()
   {
