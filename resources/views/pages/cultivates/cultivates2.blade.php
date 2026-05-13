@@ -14,7 +14,8 @@
       <!-- Filter Dropdown -->
       <div class="flex flex-col sm:flex-row">
         <div class="relative w-full sm:w-48 my-1 sm:m-1">
-          <select x-model="status" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
+          <select x-model="status"
+            class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30">
             <option class="text-gray-700 dark:bg-gray-900 dark:text-gray-400" value="all">Semua Status</option>
             <option class="text-gray-700 dark:bg-gray-900 dark:text-gray-400" value="active">Belum Dipanen</option>
             <option class="text-gray-700 dark:bg-gray-900 dark:text-gray-400" value="harvested">Sudah Dipanen</option>
@@ -23,7 +24,7 @@
             <i class="fa-solid fa-chevron-down text-xs"></i>
           </span>
         </div>
-  
+
         <!-- Search Input -->
         <div class="relative w-full sm:w-72 my-1">
           <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -63,7 +64,8 @@
 
     <!-- 2. Grid Cards Masa Tanam -->
     <!-- UBAH: Sekarang mengecek paginatedData.length -->
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3" x-show="paginatedData.length > 0">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3" x-show="paginatedData.length > 0"
+      @confirmed-delete-cultivate.window="if(formToSubmit) formToSubmit.submit()">
 
       <!-- UBAH: Looping sekarang menggunakan array "paginatedData" alih-alih "filteredData" -->
       <template x-for="item in paginatedData" :key="item.id">
@@ -81,17 +83,16 @@
                 <div x-show="open" x-cloak x-transition
                   class="absolute right-0 mt-1 w-36 rounded-md border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20">
                   <button
-                    @click="$dispatch('open-modal-modal-tanam', { mode: 'edit', action: `/cultivates/${item.id}`, data: item }); open = false"
+                    @click="$dispatch('open-modal-modal-tanam', { mode: 'edit', action: `/cultivates/edit/${item.id}`, data: item, }); open = false"
                     class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                     ✏️ Edit Data
                   </button>
-                  <form :action="`/cultivates/${item.id}`" method="POST"
+                  <form :action="`/cultivates/delete/${item.id}`" method="POST"
                     class="m-0 border-t border-stroke dark:border-strokedark"
-                    @submit.prevent="if(confirm('Batalkan dan hapus siklus tanam ini?')) $el.submit()">
-                    @csrf @method('DELETE')
-                    <button type="submit"
-                      class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
-                      🗑️ Hapus
+                    @click.prevent="formToSubmit = $event.target.closest('form'); $dispatch('open-modal', 'delete-cultivate')"
+                    @csrf @method('DELETE') <button type="submit"
+                    class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
+                    🗑️ Hapus
                     </button>
                   </form>
                 </div>
@@ -138,7 +139,10 @@
               <div class="flex gap-2 pt-2 mt-auto">
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-blue-200 bg-blue-50 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-                  @click="$dispatch('open-modal-log-siram', { action: `/siram/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.` })">
+                  @click="$dispatch('open-modal-log-siram', { action: `/siram/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: [
+                              { icon: '📝', text: 'Panen Pagi' },
+                              { icon: '📝', text: 'Panen Sore'}
+                          ] })">
                   💧 Siram
                 </button>
                 <button
@@ -167,11 +171,6 @@
                   class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white transition">⋮</button>
                 <div x-show="open" x-cloak x-transition
                   class="absolute right-0 mt-1 w-36 rounded-md border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20">
-                  <button
-                    @click="$dispatch('open-modal-modal-tanam', { mode: 'edit', action: `/cultivates/${item.id}`, data: item }); open = false"
-                    class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
-                    ✏️ Edit Data
-                  </button>
                   <form :action="`/cultivates/${item.id}`" method="POST"
                     class="m-0 border-t border-stroke dark:border-strokedark"
                     @submit.prevent="if(confirm('Batalkan dan hapus siklus tanam ini?')) $el.submit()">
@@ -250,12 +249,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-             border-gray-200 bg-transparent text-gray-400
-             hover:border-brand-500 hover:text-brand-600
-             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-             dark:border-gray-700 dark:text-gray-500
-             dark:hover:border-brand-500 dark:hover:text-brand-400
-             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                           border-gray-200 bg-transparent text-gray-400
+                           hover:border-brand-500 hover:text-brand-600
+                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                           dark:border-gray-700 dark:text-gray-500
+                           dark:hover:border-brand-500 dark:hover:text-brand-400
+                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -264,19 +263,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-          ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-          : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'" x-text="page">
+                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+            x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-             border-gray-200 bg-transparent text-gray-400
-             hover:border-brand-500 hover:text-brand-600
-             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-             dark:border-gray-700 dark:text-gray-500
-             dark:hover:border-brand-500 dark:hover:text-brand-400
-             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                           border-gray-200 bg-transparent text-gray-400
+                           hover:border-brand-500 hover:text-brand-600
+                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                           dark:border-gray-700 dark:text-gray-500
+                           dark:hover:border-brand-500 dark:hover:text-brand-400
+                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -287,25 +287,19 @@
     @php
       $tanamFields = [
         [
-          'name' => 'tanaman_id',
+          'name' => 'plant_id',
           'label' => 'Pilih Tanaman',
           'type' => 'select',
-          'options' => [
-            '1' => 'Sawi Hijau',
-            '2' => 'Kangkung Cabut'
-          ]
+          'options' => $plants->pluck('plant_name', 'id')
         ],
         [
-          'name' => 'bedengan_id',
+          'name' => 'plot_id',
           'label' => 'Pilih Lokasi Bedengan',
           'type' => 'select',
-          'options' => [
-            '1' => 'Blok A1 (Kosong)',
-            '2' => 'Blok A2 (Kosong)'
-          ]
+          'options' => $plots->pluck('plot_name', 'id')
         ],
-        ['name' => 'tanggal_tanam', 'label' => 'Tanggal Tanam', 'type' => 'text', 'placeholder' => 'Isi Tanggal'], // Nanti type text ini bisa diubah ke 'date' di komponen
-        ['name' => 'jumlah_bibit', 'label' => 'Jumlah Bibit/Lubang', 'type' => 'number', 'placeholder' => 'Isi Jumlah bibit']
+        ['name' => 'datetime', 'label' => 'Tanggal Tanam', 'type' => 'datetime-local', 'placeholder' => 'Isi Jumlah bibit'],
+        // ['name' => 'jumlah_bibit', 'label' => 'Jumlah Bibit/Lubang', 'type' => 'number', 'placeholder' => 'Isi Jumlah bibit']
       ];
 
       $siramFields = [
@@ -339,7 +333,7 @@
       ];
     @endphp
 
-    <x-ui.modal-form id="modal-tanam" title="Data Masa Tanam" :fields="$tanamFields" />
+    <x-ui.modal-form id="modal-tanam" title="Data Masa Tanam" action="/cultivates/add" :fields="$tanamFields" />
 
     <x-ui.modal-log id="siram" title="Catat Penyiraman" icon="💧" colorTheme="blue" logTitle="RIWAYAT PENYIRAMAN"
       :fields="$siramFields" />
@@ -349,6 +343,11 @@
 
     <x-ui.modal-log id="panen" title="Catat Pemanenan" icon="✂️" colorTheme="purple" logTitle="RIWAYAT PANEN"
       :fields="$panenFields" />
+
+    <x-ui.confirm-dialog name="delete-cultivate" title="Hapus Data Menanam"
+      message="Apakah Anda yakin ingin menghapus data menanam ini? Data yang dihapus tidak dapat dikembalikan."
+      confirmText="Hapus" confirmTheme="danger" />
+
   </div>
 @endsection
 

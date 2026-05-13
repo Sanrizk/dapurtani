@@ -30,7 +30,17 @@ class PlotController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    // Validasi input
+    $request->validate([
+      'plot_name' => 'required|string|max:255',
+
+    ]);
+
+    // Simpan ke database
+    Plot::create($request->all());
+
+    return redirect()->route('plots')
+      ->with('success', 'Data bedengan berhasil ditambahkan.');
   }
 
   /**
@@ -54,7 +64,16 @@ class PlotController extends Controller
    */
   public function update(Request $request, Plot $plot)
   {
-    //
+    // Validasi input
+    $request->validate([
+      'plot_name' => 'required|string|max:255'
+    ]);
+
+    // Update database
+    $plot->update($request->all());
+
+    return redirect()->route('plots')
+      ->with('success', 'Data Bedengan berhasil diperbarui.');
   }
 
   /**
@@ -62,6 +81,9 @@ class PlotController extends Controller
    */
   public function destroy(Plot $plot)
   {
-    //
+    $plot->delete();
+
+    return redirect()->route('plots')
+      ->with('success', 'Data Bedengan berhasil dihapus.');
   }
 }

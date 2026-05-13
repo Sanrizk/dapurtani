@@ -46,7 +46,9 @@
     </div>
 
     <!-- 2. Grid Cards untuk Bedengan -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" x-show="paginatedPlots.length > 0">
+    <div x-data="{ formToSubmit: null, /* variabel lain Anda... */ }"
+      @confirmed-delete-plot.window="if(formToSubmit) formToSubmit.submit()"
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" x-show="paginatedPlots.length > 0">
 
       <!-- Looping Array Data Bedengan -->
       <template x-for="plot in paginatedPlots" :key="plot.id">
@@ -61,15 +63,17 @@
             <div x-show="open" x-cloak x-transition
               class="absolute right-0 mt-1 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20">
               <button @click="$dispatch('open-modal-modal-bedengan', { 
-                                        mode: 'edit', 
-                                        action: `/plots/${plot.id}`, 
-                                        data: plot 
-                                    }); open = false"
+                                                mode: 'edit', 
+                                                action: `/plots/edit/${plot.id}`, 
+                                                data: {...plot} 
+                                            }); open = false"
                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                 ✏️ Edit
               </button>
-              <form :action="`/plots/${plot.id}`" method="POST" class="m-0 border-t border-stroke dark:border-strokedark"
-                @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus bedengan ini?')) $el.submit()">
+              <form :action="`/plots/delete/${plot.id}`" method="POST"
+                class="m-0 border-t border-stroke dark:border-strokedark" {{--
+                @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus bedengan ini?')) $el.submit()"> --}}
+                @click.prevent="formToSubmit = $event.target.closest('form'); $dispatch('open-modal', 'delete-plot')">
                 @csrf @method('DELETE')
                 <button type="submit"
                   class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
@@ -86,9 +90,6 @@
               <div class="flex gap-3 text-3xl">
                 <span>🌱</span><span>🌱</span><span>🌱</span>
               </div>
-              <div
-                class="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm"
-                x-text="`Kapasitas: ${plot.kapasitas}`"></div>
             </div>
           </template>
 
@@ -97,8 +98,6 @@
             <div
               class="mb-4 flex h-32 w-full items-center justify-center rounded-md border-4 border-dashed border-[#2E5E16] bg-[#1A3C0F] relative opacity-70">
               <span class="text-sm text-white/70 font-medium">Lahan Kosong</span>
-              <div class="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-xs font-medium text-white"
-                x-text="`Kapasitas: ${plot.kapasitas}`"></div>
             </div>
           </template>
 
@@ -107,15 +106,12 @@
             <div
               class="mb-4 flex h-32 w-full items-center justify-center rounded-md border-4 border-dashed border-amber-900/50 bg-amber-900/20 relative opacity-80">
               <span class="text-sm text-amber-800 dark:text-amber-500 font-medium">Pembalikan Tanah</span>
-              <div class="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-0.5 text-xs font-medium text-white"
-                x-text="`Kapasitas: ${plot.kapasitas}`"></div>
             </div>
           </template>
 
           <!-- Info Lahan -->
           <div class="flex-1">
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plot.plots_name"></h4>
-            <p class="text-sm text-gray-500 dark:text-gray-400" x-text="`Ukuran: ${plot.ukuran}`"></p>
+            <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plot.plot_name"></h4>
           </div>
 
           <!-- Status Footer -->
@@ -153,14 +149,13 @@
       </p>
 
       <div class="flex items-center gap-1">
-        <button @click="prevPage()" :disabled="currentPage === 1"
-          class="flex h-8 w-8 items-center justify-center rounded border transition
-             border-gray-200 bg-transparent text-gray-400
-             hover:border-brand-500 hover:text-brand-600
-             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-             dark:border-gray-700 dark:text-gray-500
-             dark:hover:border-brand-500 dark:hover:text-brand-400
-             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+        <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
+                     border-gray-200 bg-transparent text-gray-400
+                     hover:border-brand-500 hover:text-brand-600
+                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                     dark:border-gray-700 dark:text-gray-500
+                     dark:hover:border-brand-500 dark:hover:text-brand-400
+                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -168,20 +163,19 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-          ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-          : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'" x-text="page"
-            x-text="page">
+                  ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                  : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+            x-text="page" x-text="page">
           </button>
         </template>
 
-        <button @click="nextPage()" :disabled="currentPage === totalPages"
-          class="flex h-8 w-8 items-center justify-center rounded border transition
-             border-gray-200 bg-transparent text-gray-400
-             hover:border-brand-500 hover:text-brand-600
-             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-             dark:border-gray-700 dark:text-gray-500
-             dark:hover:border-brand-500 dark:hover:text-brand-400
-             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+        <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
+                     border-gray-200 bg-transparent text-gray-400
+                     hover:border-brand-500 hover:text-brand-600
+                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                     dark:border-gray-700 dark:text-gray-500
+                     dark:hover:border-brand-500 dark:hover:text-brand-400
+                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
@@ -190,24 +184,16 @@
     <!-- 3. Setup Array Data untuk Modal Form -->
     @php
       $plotFields = [
-        ['name' => 'nama', 'label' => 'Nama/Kode Bedengan', 'type' => 'text', 'placeholder' => 'Nama ...'],
-        ['name' => 'ukuran', 'label' => 'Dimensi (Misal: 1.5 x 10m)', 'type' => 'text', 'placeholder' => 'Ukuran ...'],
-        ['name' => 'kapasitas', 'label' => 'Kapasitas (Lubang Tanam)', 'type' => 'number', 'placeholder' => 'Kapasitas ...'],
-        [
-          'name' => 'status',
-          'label' => 'Status Lahan',
-          'type' => 'select',
-          'options' => [
-            'kosong' => 'Kosong (Siap Tanam)',
-            'terisi' => 'Sedang Ditanami',
-            'istirahat' => 'Istirahat (Pembalikan Tanah)'
-          ]
-        ]
+        ['name' => 'plot_name', 'label' => 'Nama/Kode Bedengan', 'type' => 'text', 'placeholder' => 'Nama ...'],
       ];
     @endphp
 
     <!-- Panggil Komponen Reusable Modal -->
-    <x-ui.modal-form id="modal-bedengan" title="Bedengan" :fields="$plotFields" />
+    <x-ui.modal-form id="modal-bedengan" title="Bedengan" :fields="$plotFields" action="/plots/add" />
+
+    <x-ui.confirm-dialog name="delete-plot" title="Hapus Bedengan"
+      message="Apakah Anda yakin ingin menghapus Bedengan ini? Data yang dihapus tidak dapat dikembalikan."
+      confirmText="Hapus" confirmTheme="danger" />
 
   </div>
 @endsection
@@ -222,12 +208,12 @@
 
         // Data dummy array
         // plots: [
-        //   { id: 1, nama: 'Blok A1', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'terisi' },
-        //   { id: 2, nama: 'Blok A2', ukuran: '1.2 x 8 Meter', kapasitas: 40, status: 'kosong' },
-        //   { id: 3, nama: 'Blok B1', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'terisi' },
-        //   { id: 4, nama: 'Blok B2', ukuran: '1.5 x 10 Meter', kapasitas: 50, status: 'istirahat' },
-        //   { id: 5, nama: 'Blok C1', ukuran: '2.0 x 12 Meter', kapasitas: 80, status: 'terisi' },
-        //   { id: 6, nama: 'Blok C2', ukuran: '2.0 x 12 Meter', kapasitas: 80, status: 'kosong' },
+        //   { id: 1, nama: 'Blok A1', status: 'terisi' },
+        //   { id: 2, nama: 'Blok A2', status: 'kosong' },
+        //   { id: 3, nama: 'Blok B1', status: 'terisi' },
+        //   { id: 4, nama: 'Blok B2', status: 'istirahat' },
+        //   { id: 5, nama: 'Blok C1', status: 'terisi' },
+        //   { id: 6, nama: 'Blok C2', status: 'kosong' },
         // ],
 
         plots: {{ Js::from($plots) }},

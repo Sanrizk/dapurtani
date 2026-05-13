@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cultivate;
+use App\Models\Plant;
+use App\Models\Plot;
 use Carbon\Carbon;
 
 class CultivateController extends Controller
@@ -44,7 +46,7 @@ class CultivateController extends Controller
         $progress = 100; // Jika sudah panen, progress dipaksa penuh 100%
       } else {
         // Jika belum panen, hitung sisa hari
-        $remainingDays = $now->diffInDays($dateAction, false);
+        $remainingDays = round($now->diffInDays($dateAction, false));
         $remainingLabel = $remainingDays > 0 ? $remainingDays . ' Hari Lagi' : 'Siap Panen!';
 
         // Hitung progress berjalan
@@ -61,8 +63,11 @@ class CultivateController extends Controller
         'id' => $cultivate->id,
         'name' => $cultivate->plant->plant_name ?? '-',
         'icon' => '🍅',
+        'plant_id' => $cultivate->plant_id,
+        'plot_id' => $cultivate->plot_id,
+        'datetime' => $cultivate->datetime,
         // Menggunakan plots_name sesuai skema tabel plots Anda
-        'location' => 'Bedengan ' . ($cultivate->plot->plots_name ?? '-'),
+        'location' => 'Bedengan ' . ($cultivate->plot->plot_name ?? '-'),
         'date_plant' => $datePlant->translatedFormat('d F Y'),
         'date_action' => $dateAction->translatedFormat('d F Y'),
         'age_label' => 'Hari ke-' . round($ageInDays),
@@ -74,6 +79,53 @@ class CultivateController extends Controller
 
     $title = "Penanaman | Dapurtani";
 
-    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title'));
+    $plants = Plant::all();
+
+    $plots = Plot::all();
+
+    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots'));
   }
+
+  public function store(Request $request)
+  {
+    // Validasi input
+    $request->validate([
+      'plant_id' => 'required',
+      'plot_id' => 'required',
+      'datetime' => 'required',
+    ]);
+
+    $request['is_harvested'] = 0;
+
+    // Simpan ke database
+    Cultivate::create($request->all());
+
+
+    return redirect()->route('cultivates')
+      ->with('success', 'Data Menanam berhasil ditambahkan.');
+  }
+
+  public function update(Request $request, Cultivate $cultivate)
+  {
+    // Validasi input
+    $request->validate([
+      'plant_id' => 'required',
+      'plot_id' => 'required',
+      'datetime' => 'required',
+    ]);
+
+    // Update database
+    $cultivate->update($request->all());
+
+    return redirect()->route('cultivates')
+      ->with('success', 'Data Menanam berhasil diperbarui.');
+  }
+
+  public function destroy(Cultivate $cultivate)
+  {
+    $cultivate->delete();
+
+    return redirect()->route('cultivates')
+      ->with('success', 'Data Menanam berhasil dihapus.');
+  }  
 }

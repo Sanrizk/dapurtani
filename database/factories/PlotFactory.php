@@ -19,7 +19,7 @@ class PlotFactory extends Factory
   {
     return [
       // 'order' => fake()->unique()->numberBetween(1, 100),
-      'plots_name' => fake()->randomElement(['Blok A1', 'Blok A2', 'Blok B1', 'Blok B2', 'Blok C1', 'Blok C2']),
+      'plot_name' => fake()->randomElement(['Blok A1', 'Blok A2', 'Blok B1', 'Blok B2', 'Blok C1', 'Blok C2']),
     ];
   }
 }

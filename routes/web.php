@@ -102,8 +102,14 @@ Route::put('/plants/edit/{plant}', [PlantController::class,'update']);
 Route::delete('/plants/delete/{plant}', [PlantController::class,'destroy']);
 
 Route::get('/plots', [PlotController::class, 'index'])->name('plots');
+Route::post('/plots/add', [PlotController::class, 'store'])->name('plots.store');
+Route::put('/plots/edit/{plot}', [PlotController::class,'update']);
+Route::delete('/plots/delete/{plot}', [PlotController::class,'destroy']);
 
 Route::get('/cultivates', [CultivateController::class, 'index'])->name('cultivates');
+Route::post('/cultivates/add', [CultivateController::class, 'store'])->name('cultivates.store');
+Route::put('/cultivates/edit/{cultivate}', [CultivateController::class,'update']);
+Route::delete('/cultivates/delete/{cultivate}', [CultivateController::class,'destroy']);
 
 Route::get('/harvests', [HarvestController::class, 'index'])->name('harvests');
 

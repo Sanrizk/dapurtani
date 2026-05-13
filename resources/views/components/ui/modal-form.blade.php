@@ -8,9 +8,7 @@
     " x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
   x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
   x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="open = false"
-  class="fixed inset-0 z-[99999] flex items-center justify-center" 
-  {{-- ❌ Hapus: backdrop-blur-sm (biang lag!) --}} {{--
-  ❌ Hapus: style="display:none" (konflik dengan x-show) --}}>
+  class="fixed inset-0 z-[99999] flex items-center justify-center">
   {{-- Overlay background — pisahkan dari konten --}}
   <div class="absolute inset-0 bg-black/50" @click="open = false"></div>
 
@@ -37,16 +35,16 @@
               {{ $field['label'] }}
             </label>
 
-            @if($field['type'] === 'text' || $field['type'] === 'number')
+            @if($field['type'] === 'text' || $field['type'] === 'number' || $field['type'] === 'datetime-local')
               <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
                 class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                required placeholder="{{ $field['placeholder'] }}">
+                required placeholder="{{ $field['placeholder'] }}" step="1">
 
             @elseif($field['type'] === 'select')
               <select name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
                 class="w-full rounded border-gray-300 p-2 focus:border-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 required>
-                <option value="" disabled selected>Pilih...</option>
+                <option value="" disabled>Pilih...</option>
                 @foreach($field['options'] as $val => $label)
                   <option value="{{ $val }}">{{ $label }}</option>
                 @endforeach

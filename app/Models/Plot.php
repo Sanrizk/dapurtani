@@ -17,7 +17,7 @@ class Plot extends Model
 
 	// Kolom yang dapat diisi
 	protected $fillable = [
-		'plots_name',
+		'plot_name',
 	];
 
 	/**

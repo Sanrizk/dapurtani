@@ -50,7 +50,7 @@
             <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
               placeholder="{{ $field['placeholder'] ?? '' }}"
               class="w-full rounded-lg border border-gray-200 bg-transparent dark:bg-dark-900 dark:bg-white/3 h-11 py-2.5 px-4 text-sm text-gray-800 dark:text-white/90 shadow-theme-xs outline-none focus:border-brand-300 dark:focus:border-brand-800 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-800 transition
-                [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:dark:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
+                        [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:dark:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
               required>
             @if(isset($field['number']) && $field['number'])
               <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -59,6 +59,26 @@
               <input type="number" name="qty" x-model="formData.qty" placeholder="Isi jumlah..."
                 class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                 required>
+              <div x-data="{ checkboxToggle: false }" class="mt-3">
+                <label for="checkboxLabelOne"
+                  class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                  <div class="relative">
+                    <input type="checkbox" id="checkboxLabelOne" class="sr-only"
+                      @change="checkboxToggle = !checkboxToggle" />
+                    <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
+                                'bg-transparent border-gray-300 dark:border-gray-700'"
+                      class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
+                      <span :class="checkboxToggle ? '' : 'opacity-0'">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M11.6666 3.5L5.24992 9.91667L2.33325 7" stroke="white" stroke-width="1.94437"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                  Telah Dipanen Sepenuhya?
+                </label>
+              </div>
             @endif
           </div>
         @endforeach

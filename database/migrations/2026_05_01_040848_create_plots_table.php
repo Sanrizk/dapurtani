@@ -17,7 +17,7 @@ return new class extends Migration {
       $table->id();
 
       // Kolom integer untuk urutan (misalnya urutan lahan/bedengan)
-      $table->string('plots_name');
+      $table->string('plot_name');
 
       // Standar Laravel: created_at dan updated_at
       $table->timestamps();
