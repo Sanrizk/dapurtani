@@ -25,7 +25,7 @@ return new class extends Migration {
         ->onDelete('cascade'); // Jika data kultivasi dihapus, data panen terkait ikut terhapus
 
       // Kolom integer untuk mencatat gelombang/periode panen (batch)
-      $table->integer('batch');
+      $table->string('batch');
 
       // Kolom datetime untuk mencatat waktu panen dilakukan
       $table->dateTime('datetime');

@@ -139,20 +139,17 @@
               <div class="flex gap-2 pt-2 mt-auto">
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-blue-200 bg-blue-50 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-                  @click="$dispatch('open-modal-log-siram', { action: `/siram/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: [
-                              { icon: '📝', text: 'Panen Pagi' },
-                              { icon: '📝', text: 'Panen Sore'}
-                          ] })">
+                  @click="$dispatch('open-modal-log-siram', { action: `/siram/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($waters) }}[item.id] ?? [] })">
                   💧 Siram
                 </button>
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-amber-200 bg-amber-50 py-2 text-sm font-medium text-amber-600 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-                  @click="$dispatch('open-modal-log-pupuk', { action: `/pupuk/${item.id}`, subtitle: `Mencatat pemupukan <strong>${item.name}</strong> di <strong>${item.location}</strong>.` })">
+                  @click="$dispatch('open-modal-log-pupuk', { action: `/pupuk/${item.id}`, subtitle: `Mencatat pemupukan <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($fertilizes) }}[item.id] ?? [] })">
                   🧪 Pupuk
                 </button>
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-purple-200 bg-purple-50 py-2 text-sm font-medium text-purple-600 transition hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
-                  @click="$dispatch('open-modal-log-panen', { action: `/panen/${item.id}`, subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.` })">
+                  @click="$dispatch('open-modal-log-panen', { action: `/panen/${item.id}`, subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
                   ✂️ Panen
                 </button>
               </div>
@@ -223,7 +220,7 @@
               <div class="flex gap-2 pt-2 mt-auto">
                 <button
                   class="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium underline text-blue-600 dark:text-blue-400"
-                  @click="$dispatch('open-modal-log-siram', { action: `/siram/${item.id}`, subtitle: `Melihat riwayat <strong>${item.name}</strong> di <strong>${item.location}</strong>.` })">
+                  @click="$dispatch('open-modal-log-riwayat', { action: `/siram/${item.id}`, subtitle: `Melihat riwayat <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($mergedLogs) }}[item.id] ?? []  })">
                   Lihat Data Riwayat
                 </button>
               </div>
@@ -249,12 +246,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                               border-gray-200 bg-transparent text-gray-400
+                               hover:border-brand-500 hover:text-brand-600
+                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                               dark:border-gray-700 dark:text-gray-500
+                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -263,20 +260,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                               border-gray-200 bg-transparent text-gray-400
+                               hover:border-brand-500 hover:text-brand-600
+                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                               dark:border-gray-700 dark:text-gray-500
+                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -343,6 +340,9 @@
 
     <x-ui.modal-log id="panen" title="Catat Pemanenan" icon="✂️" colorTheme="purple" logTitle="RIWAYAT PANEN"
       :fields="$panenFields" />
+
+    <x-ui.modal-log id="riwayat" title="Daftar Riwayat" icon="✂️" colorTheme="slate" logTitle="DAFTAR RIWAYAT"
+      :fields="false" />
 
     <x-ui.confirm-dialog name="delete-cultivate" title="Hapus Data Menanam"
       message="Apakah Anda yakin ingin menghapus data menanam ini? Data yang dihapus tidak dapat dikembalikan."

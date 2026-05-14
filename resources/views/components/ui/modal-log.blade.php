@@ -5,6 +5,7 @@
     'purple' => ['text' => 'text-[#8B229A]', 'bg' => 'bg-[#8B229A]', 'hover' => 'hover:bg-[#721c7e]', 'logBg' => 'bg-gray-50', 'logIcon' => 'text-[#8B229A]'],
     'orange' => ['text' => 'text-[#E65C00]', 'bg' => 'bg-[#E65C00]', 'hover' => 'hover:bg-[#cc5200]', 'logBg' => 'bg-[#FFFaf0]', 'logIcon' => 'text-[#E65C00]'],
     'blue' => ['text' => 'text-[#0284c7]', 'bg' => 'bg-[#0284c7]', 'hover' => 'hover:bg-[#0369a1]', 'logBg' => 'bg-blue-50', 'logIcon' => 'text-[#0284c7]'],
+    'slate' => ['text' => 'text-[#475569]', 'bg' => 'bg-[#475569]', 'hover' => 'hover:bg-[#334155]', 'logBg' => 'bg-slate-50', 'logIcon' => 'text-[#475569]'],
   ];
   $theme = $themes[$colorTheme] ?? $themes['blue'];
 @endphp
@@ -39,62 +40,81 @@
 
     <p class="mb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed" x-html="subtitle"></p>
 
-    <form :action="formAction" method="POST">
-      @csrf
-      <div class="flex flex-wrap gap-4 mb-6">
-        @foreach($fields as $field)
-          <div class="{{ isset($field['half']) && $field['half'] ? 'w-full sm:w-[calc(50%-0.5rem)]' : 'w-full' }}">
-            <label class="mb-1.5 block text-sm font-semibold text-gray-700 dark:text-gray-300">
-              {{ $field['label'] }}
-            </label>
-            <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
-              placeholder="{{ $field['placeholder'] ?? '' }}"
-              class="w-full rounded-lg border border-gray-200 bg-transparent dark:bg-dark-900 dark:bg-white/3 h-11 py-2.5 px-4 text-sm text-gray-800 dark:text-white/90 shadow-theme-xs outline-none focus:border-brand-300 dark:focus:border-brand-800 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-800 transition
-                        [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:dark:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
-              required>
-            @if(isset($field['number']) && $field['number'])
-              <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                Jumlah Panen
+    @if($fields)
+      <form :action="formAction" method="POST">
+        @csrf
+        <div class="flex flex-wrap gap-4 mb-6">
+          @foreach($fields as $field)
+            <div class="{{ isset($field['half']) && $field['half'] ? 'w-full sm:w-[calc(50%-0.5rem)]' : 'w-full' }}">
+              <label class="mb-1.5 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                {{ $field['label'] }}
               </label>
-              <input type="number" name="qty" x-model="formData.qty" placeholder="Isi jumlah..."
-                class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
+                placeholder="{{ $field['placeholder'] ?? '' }}"
+                class="w-full rounded-lg border border-gray-200 bg-transparent dark:bg-dark-900 dark:bg-white/3 h-11 py-2.5 px-4 text-sm text-gray-800 dark:text-white/90 shadow-theme-xs outline-none focus:border-brand-300 dark:focus:border-brand-800 focus:ring-3 focus:ring-brand-500/10 focus:outline-hidden dark:border-gray-800 transition [&::-webkit-calendar-picker-indicator]:opacity-50 [&::-webkit-calendar-picker-indicator]:dark:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:hover:opacity-100"
                 required>
-              <div x-data="{ checkboxToggle: false }" class="mt-3">
-                <label for="checkboxLabelOne"
-                  class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
-                  <div class="relative">
-                    <input type="checkbox" id="checkboxLabelOne" class="sr-only"
-                      @change="checkboxToggle = !checkboxToggle" />
-                    <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                'bg-transparent border-gray-300 dark:border-gray-700'"
-                      class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
-                      <span :class="checkboxToggle ? '' : 'opacity-0'">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M11.6666 3.5L5.24992 9.91667L2.33325 7" stroke="white" stroke-width="1.94437"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                  Telah Dipanen Sepenuhya?
+              @if(isset($field['number']) && $field['number'])
+                <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Batch
                 </label>
-              </div>
-            @endif
-          </div>
-        @endforeach
-      </div>
+                <input type="text" disabled name="batch"
+                  class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                  required value="2605001" />
+                <div class="flex">
+                  <div class="row mr-1">
+                    <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      Jumlah Panen
+                    </label>
+                    <input type="number" name="qty" x-model="formData.qty" placeholder="Isi jumlah..."
+                      class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                      required />
+                  </div>
+                  <div class="row ml-1">
+                    <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      Satuan
+                    </label>
+                    <input type="text" disabled name="satuan"
+                      class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                      required value="kilogram" />
+                  </div>
+                </div>
+                <div x-data="{ checkboxToggle: false }" class="mt-3">
+                  <label for="checkboxLabelOne"
+                    class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                    <div class="relative">
+                      <input type="checkbox" id="checkboxLabelOne" class="sr-only"
+                        @change="checkboxToggle = !checkboxToggle" />
+                      <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
+                                                      'bg-transparent border-gray-300 dark:border-gray-700'"
+                        class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
+                        <span :class="checkboxToggle ? '' : 'opacity-0'">
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.6666 3.5L5.24992 9.91667L2.33325 7" stroke="white" stroke-width="1.94437"
+                              stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    Telah Dipanen Sepenuhya?
+                  </label>
+                </div>
+              @endif
+            </div>
+          @endforeach
+        </div>
 
-      <div class="flex justify-center gap-3">
-        <button type="button" @click="open = false"
-          class="min-w-[100px] rounded-lg bg-gray-200 px-5 py-2.5 font-bold text-gray-700 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200">
-          Batal
-        </button>
-        <button type="submit"
-          class="min-w-[140px] rounded-lg px-5 py-2.5 font-bold text-white transition shadow-sm {{ $theme['bg'] }} {{ $theme['hover'] }}">
-          Simpan Data
-        </button>
-      </div>
-    </form>
+        <div class="flex justify-center gap-3">
+          <button type="button" @click="open = false"
+            class="min-w-[100px] rounded-lg bg-gray-200 px-5 py-2.5 font-bold text-gray-700 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200">
+            Batal
+          </button>
+          <button type="submit"
+            class="min-w-[140px] rounded-lg px-5 py-2.5 font-bold text-white transition shadow-sm {{ $theme['bg'] }} {{ $theme['hover'] }}">
+            Simpan Data
+          </button>
+        </div>
+      </form>
+    @endif
 
 
     <hr class="my-6 border-t border-dashed border-gray-300 dark:border-strokedark">
@@ -105,20 +125,57 @@
       </h4>
 
       <div class="max-h-40 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
-        <template x-for="(log, index) in logs" :key="index">
-          <div
-            class="flex items-center justify-between gap-3 rounded-lg px-4 py-3 {{ $theme['logBg'] }} dark:bg-gray-800">
-            <div>
-              <span class="font-bold {{ $theme['logIcon'] }}" x-text="log.icon"></span>
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.text"></span>
-            </div>
-            <span class="text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.qty"></span>
-            <button class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1 rounded-sm">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </template>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <!-- Header Tabel -->
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                @if($fields && $field['number'])
+                  <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Batch</th>
+                  <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Tanggal</th>
+                  <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Qty</th>
+                  <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 text-right">Aksi</th>
+                @endif
+              </tr>
+            </thead>
 
+            <!-- Body Tabel -->
+            <tbody>
+              <template x-for="(log, index) in logs" :key="index">
+                <tr
+                  class="border-b border-gray-100 last:border-0 dark:border-gray-700 {{ $theme['logBg'] }} dark:bg-gray-800">
+
+
+                  @if(!$fields)
+                  <td x-show="log.type === 'harvest'" class="text-gray-700 dark:text-gray-300">✂️ Panen</td>
+                  <td x-show="log.type === 'water'" class="text-gray-700 dark:text-gray-300">💧 Siram</td>
+                  <td x-show="log.type === 'fertilize'" class="text-gray-700 dark:text-gray-300">🌱 Pupuk</td>
+                  @else
+                  <!-- Kolom Batch -->
+                  <td class="px-4 py-3 font-semibold dark:text-gray-300" x-text="log.batch"></td>
+                  @endif
+
+                  <!-- Kolom Text -->
+                  <td class="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.text"></td>
+
+                  @if($fields && $field['number'])
+                    <!-- Kolom Qty -->
+                    <td class="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.qty"></td>
+                  @endif
+
+                  <!-- Kolom Button -->
+                  <td class="px-4 py-3 text-right">
+                    <button
+                      class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1.5 rounded-sm transition-colors">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
         <template x-if="logs.length === 0">
           <div class="text-center py-4 text-sm text-gray-400 italic">
             Belum ada catatan riwayat.

@@ -194,7 +194,7 @@
         ['name' => 'jumlah_hasil', 'label' => 'Total Panen Awal (Kg)', 'type' => 'number', 'placeholder' => 'Isi Jumlah']
       ];
     @endphp
-    <x-ui.modal-form id="modal-panen" title="Data Panen" :fields="$panenFields" />
+    {{-- <x-ui.modal-form id="modal-panen" title="Data Panen" :fields="$panenFields" /> --}}
 
     @php
       $penggunaanFields = [
@@ -213,7 +213,7 @@
         ['name' => 'tanggal_keluar', 'label' => 'Tanggal Penggunaan', 'type' => 'text', 'placeholder' => 'Isi Tanggal']
       ];
     @endphp
-    <x-ui.modal-form id="modal-penggunaan" title="Penggunaan Stok" :fields="$penggunaanFields" />
+    {{-- <x-ui.modal-form id="modal-penggunaan" title="Penggunaan Stok" action="/harvests/add" :fields="$penggunaanFields" /> --}}
 
   </div>
 @endsection

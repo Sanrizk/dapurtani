@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Harvest;
 use Illuminate\Http\Request;
 use App\Models\Cultivate;
 use App\Models\Plant;
@@ -73,7 +74,9 @@ class CultivateController extends Controller
         'age_label' => 'Hari ke-' . round($ageInDays),
         'remaining_label' => $remainingLabel,
         'progress' => round($progress),
-        'is_harvested' => $isHarvested
+        'is_harvested' => $isHarvested,
+
+        'harvests' => $cultivate->harvests,
       ];
     });
 
@@ -83,7 +86,77 @@ class CultivateController extends Controller
 
     $plots = Plot::all();
 
-    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots'));
+    $harvests = $cultivates->flatMap->harvests->groupBy('cultivate_id')->map(function ($harvests) {
+      return $harvests->map(function ($harvest) {
+        return [
+          'batch' => $harvest->batch,
+          'text' => Carbon::parse($harvest->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
+          'qty' => $harvest->qty,
+        ];
+      })->values();
+    });
+
+    $waters = $cultivates->flatMap->waters->groupBy('cultivate_id')->map(function ($waters) {
+      return $waters->map(function ($water) {
+        return [
+          'batch' => $water->batch,
+          'text' => Carbon::parse($water->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
+          'qty' => $water->qty,
+        ];
+      })->values();
+    });
+
+    $fertilizes = $cultivates->flatMap->fertilizes->groupBy('cultivate_id')->map(function ($fertilizes) {
+      return $fertilizes->map(function ($fertilize) {
+        return [
+          'batch' => $fertilize->batch,
+          'text' => Carbon::parse($fertilize->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
+          'qty' => $fertilize->qty,
+        ];
+      })->values();
+    });
+
+    // 1. Gabungkan semua relasi menjadi satu Collection datar (Flat Collection)
+    $allLogs = collect()
+      ->concat($cultivates->flatMap->harvests)
+      ->concat($cultivates->flatMap->waters)
+      ->concat($cultivates->flatMap->fertilizes);
+
+    // 2. Kelompokkan, urutkan, dan format datanya
+    $mergedLogs = $allLogs->groupBy('cultivate_id')->map(function ($logs) {
+
+      return $logs->sortByDesc('datetime')->map(function ($item) {
+
+        // Cek nama Model dari item ini
+        $modelName = class_basename($item);
+
+        // Tentukan label string berdasarkan nama Modelnya
+        // (Pastikan nama 'Harvest', 'Water', 'Fertilize' sesuai dengan nama file Model kamu)
+        $type = match ($modelName) {
+          'Harvest' => 'harvest',
+          'Water' => 'water',       // Ubah jadi 'Waters' jika nama modelmu Waters
+          'Fertilize' => 'fertilize',   // Ubah jadi 'Fertilizes' jika nama modelmu Fertilizes
+          default => 'unknown'
+        };
+
+        return [
+          'type' => $type, // <--- Tambahan jenis data ada di sini
+          'batch' => $item->batch,
+          'text' => Carbon::parse($item->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
+          'qty' => $item->qty,
+        ];
+      })->values();
+    });
+    // dd($allLogs);
+
+    // Hasil akhirnya ada di variabel $mergedLogs
+
+    // $harvests = $cultivates->flatMap->harvests;
+    // $harvests = $cultivates->pluck('harvests')->collapse();
+
+    // dd($harvests->where('cultivate_id', ($cultivates[3]->id)));
+
+    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots', 'cultivates', 'harvests', 'waters', 'fertilizes', 'mergedLogs'));
   }
 
   public function store(Request $request)
@@ -127,5 +200,5 @@ class CultivateController extends Controller
 
     return redirect()->route('cultivates')
       ->with('success', 'Data Menanam berhasil dihapus.');
-  }  
+  }
 }
