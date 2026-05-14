@@ -9,6 +9,8 @@ use App\Models\Plant;
 use App\Models\Plot;
 use Carbon\Carbon;
 
+use App\Http\Controllers\HarvestController;
+
 class CultivateController extends Controller
 {
   public function index()
@@ -22,6 +24,7 @@ class CultivateController extends Controller
       'harvests'     // Mengambil data Harvests terkait (One-to-Many)
     ])->get();
 
+    // data cultivates yang diformat khusus
     $formattedCultivates = $cultivates->map(function ($cultivate) {
       // Parsing tanggal tanam dari kolom 'datetime'
       $datePlant = Carbon::parse($cultivate->datetime);
@@ -63,14 +66,15 @@ class CultivateController extends Controller
       return [
         'id' => $cultivate->id,
         'name' => $cultivate->plant->plant_name ?? '-',
+        'unit' => $cultivate->plant->unit ?? '-',
         'icon' => '🍅',
         'plant_id' => $cultivate->plant_id,
         'plot_id' => $cultivate->plot_id,
         'datetime' => $cultivate->datetime,
         // Menggunakan plots_name sesuai skema tabel plots Anda
         'location' => 'Bedengan ' . ($cultivate->plot->plot_name ?? '-'),
-        'date_plant' => $datePlant->translatedFormat('d F Y'),
-        'date_action' => $dateAction->translatedFormat('d F Y'),
+        'date_plant' => $datePlant->locale('id')->translatedFormat('d F Y'),
+        'date_action' => $dateAction->locale('id')->translatedFormat('d F Y'),
         'age_label' => 'Hari ke-' . round($ageInDays),
         'remaining_label' => $remainingLabel,
         'progress' => round($progress),
@@ -86,6 +90,7 @@ class CultivateController extends Controller
 
     $plots = Plot::all();
 
+    // log atau riwayat harvests
     $harvests = $cultivates->flatMap->harvests->groupBy('cultivate_id')->map(function ($harvests) {
       return $harvests->map(function ($harvest) {
         return [
@@ -96,6 +101,7 @@ class CultivateController extends Controller
       })->values();
     });
 
+    // log atau riwayat waters
     $waters = $cultivates->flatMap->waters->groupBy('cultivate_id')->map(function ($waters) {
       return $waters->map(function ($water) {
         return [
@@ -106,6 +112,7 @@ class CultivateController extends Controller
       })->values();
     });
 
+    // log atau riwayat fertilizes
     $fertilizes = $cultivates->flatMap->fertilizes->groupBy('cultivate_id')->map(function ($fertilizes) {
       return $fertilizes->map(function ($fertilize) {
         return [
@@ -147,16 +154,11 @@ class CultivateController extends Controller
         ];
       })->values();
     });
-    // dd($allLogs);
 
-    // Hasil akhirnya ada di variabel $mergedLogs
+    $hc = new HarvestController();
+    $newBatch = $hc->getBatch();
 
-    // $harvests = $cultivates->flatMap->harvests;
-    // $harvests = $cultivates->pluck('harvests')->collapse();
-
-    // dd($harvests->where('cultivate_id', ($cultivates[3]->id)));
-
-    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots', 'cultivates', 'harvests', 'waters', 'fertilizes', 'mergedLogs'));
+    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots', 'cultivates', 'harvests', 'waters', 'fertilizes', 'mergedLogs', 'newBatch'));
   }
 
   public function store(Request $request)
@@ -201,4 +203,6 @@ class CultivateController extends Controller
     return redirect()->route('cultivates')
       ->with('success', 'Data Menanam berhasil dihapus.');
   }
+
+
 }

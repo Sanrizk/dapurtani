@@ -10,12 +10,13 @@
   $theme = $themes[$colorTheme] ?? $themes['blue'];
 @endphp
 
-<div x-data="{ open: false, formAction: '', subtitle: '', logs: [], formData: {} }" @open-modal-log-{{ $id }}.window="
+<div x-data="{ open: false, formAction: '', subtitle: '', logs: [], formData: {}, unit: '' }" @open-modal-log-{{ $id }}.window="
         open = true;
         formAction = $event.detail.action;
         subtitle = $event.detail.subtitle;
         logs = $event.detail.logs || [];
         formData = {};
+        unit = $event.detail.unit
     " x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
   x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
   x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="open = false"
@@ -57,9 +58,9 @@
                 <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
                   Batch
                 </label>
-                <input type="text" disabled name="batch"
+                <input type="text" name="batch" value="{{ $field['batch'] }}" disabled name="batch"
                   class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                  required value="2605001" />
+                  required />
                 <div class="flex">
                   <div class="row mr-1">
                     <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -73,16 +74,16 @@
                     <label class="mb-1.5 mt-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">
                       Satuan
                     </label>
-                    <input type="text" disabled name="satuan"
+                    <input type="text" disabled :value="unit"
                       class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                      required value="kilogram" />
+                      required />
                   </div>
                 </div>
                 <div x-data="{ checkboxToggle: false }" class="mt-3">
                   <label for="checkboxLabelOne"
                     class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
                     <div class="relative">
-                      <input type="checkbox" id="checkboxLabelOne" class="sr-only"
+                      <input type="checkbox" id="checkboxLabelOne" class="sr-only" name="harvestCheck"
                         @change="checkboxToggle = !checkboxToggle" />
                       <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
                                                       'bg-transparent border-gray-300 dark:border-gray-700'"

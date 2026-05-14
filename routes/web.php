@@ -6,6 +6,8 @@ use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PlotController;
 use App\Http\Controllers\CultivateController;
 use App\Http\Controllers\HarvestController;
+use App\Http\Controllers\WaterController;
+use App\Http\Controllers\FertilizeController;
 
 // dashboard pages
 Route::get('/', function () {
@@ -112,6 +114,12 @@ Route::put('/cultivates/edit/{cultivate}', [CultivateController::class,'update']
 Route::delete('/cultivates/delete/{cultivate}', [CultivateController::class,'destroy']);
 
 Route::get('/harvests', [HarvestController::class, 'index'])->name('harvests');
+
+Route::post('/waters/add/{cultivate}', [WaterController::class,'store']);
+
+Route::post('/fertilizes/add/{cultivate}', [FertilizeController::class,'store']);
+
+Route::post('/harvests/add/{cultivate}', [HarvestController::class,'store']);
 
 // Route::get('/plots', function () {
 //     return view('pages.plots.plots2', ['title' => 'E-commerce Dashboard']);

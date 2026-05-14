@@ -9,7 +9,7 @@ class Harvest extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['cultivateId', 'batch', 'datetime', 'qty'];
+  protected $fillable = ['cultivate_id', 'batch', 'datetime', 'qty'];
 
   // - Relasi: belongsTo ke Cultivate (cultivateId).
   // - Relasi: hasMany ke Consume (harvestId).

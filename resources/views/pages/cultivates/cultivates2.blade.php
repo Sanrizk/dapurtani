@@ -139,17 +139,21 @@
               <div class="flex gap-2 pt-2 mt-auto">
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-blue-200 bg-blue-50 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-                  @click="$dispatch('open-modal-log-siram', { action: `/siram/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($waters) }}[item.id] ?? [] })">
+                  @click="$dispatch('open-modal-log-siram', { action: `/waters/add/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($waters) }}[item.id] ?? [] })">
                   💧 Siram
                 </button>
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-amber-200 bg-amber-50 py-2 text-sm font-medium text-amber-600 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-                  @click="$dispatch('open-modal-log-pupuk', { action: `/pupuk/${item.id}`, subtitle: `Mencatat pemupukan <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($fertilizes) }}[item.id] ?? [] })">
+                  @click="$dispatch('open-modal-log-pupuk', { action: `/fertilizes/add/${item.id}`, subtitle: `Mencatat pemupukan <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($fertilizes) }}[item.id] ?? [] })">
                   🧪 Pupuk
                 </button>
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-purple-200 bg-purple-50 py-2 text-sm font-medium text-purple-600 transition hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
-                  @click="$dispatch('open-modal-log-panen', { action: `/panen/${item.id}`, subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
+                  @click="$dispatch('open-modal-log-panen', { 
+                    action: `/harvests/add/${item.id}`, 
+                    subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, 
+                    unit: item.unit, 
+                    logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
                   ✂️ Panen
                 </button>
               </div>
@@ -301,7 +305,7 @@
 
       $siramFields = [
         [
-          'name' => 'waktu_siram',
+          'name' => 'datetime',
           'label' => 'Waktu Disiram',
           'type' => 'datetime-local', // Otomatis memunculkan ikon kalender/jam bawaan browser
           'half' => false, // Set true jika ingin sejajar sebelah-sebelahan
@@ -311,7 +315,7 @@
 
       $pupukFields = [
         [
-          'name' => 'waktu_pupuk',
+          'name' => 'datetime',
           'label' => 'Waktu Dipupuk',
           'type' => 'datetime-local', // Otomatis memunculkan ikon kalender/jam bawaan browser
           'half' => false, // Set true jika ingin sejajar sebelah-sebelahan
@@ -321,7 +325,8 @@
 
       $panenFields = [
         [
-          'name' => 'waktu_panen',
+          'name' => 'datetime',
+          'batch' => $newBatch,
           'label' => 'Waktu Dipanen',
           'type' => 'datetime-local', // Otomatis memunculkan ikon kalender/jam bawaan browser
           'half' => false, // Set true jika ingin sejajar sebelah-sebelahan
