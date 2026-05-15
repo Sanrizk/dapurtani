@@ -27,16 +27,16 @@
 
     <!-- Tampilan Jika Data Tidak Ditemukan -->
     <div x-show="filteredHarvests.length === 0" x-cloak
-      class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white dark:bg-gray-700 py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
+      class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
-        <i class="fa-solid fa-box-open text-2xl"></i>
+        <i class="fa-solid fa-magnifying-glass text-2xl"></i>
       </div>
       <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data tidak ditemukan</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
-        Riwayat panen dengan kata kunci tersebut tidak ada di dalam gudang.
+        Tidak ada data Panen yang cocok dengan pencarian.
       </p>
-      <button @click="search = ''" class="mt-4 text-sm font-medium text-[#E65C00] hover:underline dark:text-orange-200">
+      <button @click="search = ''" class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
         Bersihkan Pencarian
       </button>
     </div>
@@ -69,10 +69,10 @@
                 <div x-show="open" x-cloak x-transition
                   class="absolute right-0 mt-2 w-36 rounded-md border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-30">
                   <button @click="$dispatch('open-modal-modal-panen', { 
-                                                      mode: 'edit', 
-                                                      action: `/harvests/${item.id}`, 
-                                                      data: item 
-                                                  }); open = false"
+                                                          mode: 'edit', 
+                                                          action: `/harvests/${item.id}`, 
+                                                          data: item 
+                                                      }); open = false"
                     class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
                     ✏️ Edit Panen
                   </button>
@@ -130,8 +130,8 @@
               :disabled="item.sisa_stok === 0"
               class="flex w-full items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
               :class="item.sisa_stok === 0 
-                                      ? 'border-gray-300 text-gray-400 dark:border-gray-600 dark:text-gray-500' 
-                                      : 'border-[#E65C00] text-[#E65C00] hover:bg-[#FFFaf0] dark:border-orange-500 dark:text-orange-200 dark:hover:bg-orange-900/20'">
+                                          ? 'border-gray-300 text-gray-400 dark:border-gray-600 dark:text-gray-500' 
+                                          : 'border-[#E65C00] text-[#E65C00] hover:bg-[#FFFaf0] dark:border-orange-500 dark:text-orange-200 dark:hover:bg-orange-900/20'">
               🛒 <span x-text="item.sisa_stok === 0 ? 'Stok Habis' : 'Catat Penggunaan'"></span>
             </button>
 
@@ -155,12 +155,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                               border-gray-200 bg-transparent text-gray-400
+                               hover:border-brand-500 hover:text-brand-600
+                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                               dark:border-gray-700 dark:text-gray-500
+                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -169,20 +169,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                               border-gray-200 bg-transparent text-gray-400
+                               hover:border-brand-500 hover:text-brand-600
+                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                               dark:border-gray-700 dark:text-gray-500
+                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -205,18 +205,18 @@
       ];
     @endphp
 
-    <x-ui.modal-log icon="✂️" logTitle="RIWAYAT PANEN" id="panen" title="Penggunaan Stok" action="/harvests/add" :fields="$penggunaanFields" />
+    <x-ui.modal-log icon="✂️" logTitle="RIWAYAT PANEN" id="panen" title="Penggunaan Stok" action="/harvests/add"
+      :fields="$penggunaanFields" />
 
   </div>
 
-  
+
   {{-- per jenis --}}
   <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10" x-data="harvestBoard({{ Js::from($harvestsStok) }})">
     {{-- per jenis (hanya tampilan keseluruhan tanpa aksi) --}}
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Riwayat Panen Per Jenis</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Kelola hasil panen dan catat pengeluaran stok.</p>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Data Panen Per Jenis</h2>
       </div>
       <!-- 1.5 Baris Pencarian (Search) -->
       <div class="mb-6 flex">
@@ -229,6 +229,22 @@
         </div>
       </div>
     </div>
+
+    <!-- Tampilan Jika Data Tidak Ditemukan -->
+    <div x-show="filteredHarvestsStok.length === 0" x-cloak
+      class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
+      <div
+        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
+        <i class="fa-solid fa-magnifying-glass text-2xl"></i>
+      </div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data tidak ditemukan</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
+        Tidak ada data Panen yang cocok dengan pencarian.
+      </p>
+      <button @click="search = ''" class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
+        Bersihkan Pencarian
+      </button>
+    </div>    
 
     <!-- 2. Grid Cards Riwayat Panen -->
     <div class=" grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" x-show="paginatedHarvestsStok.length > 0">
@@ -289,12 +305,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                               border-gray-200 bg-transparent text-gray-400
+                               hover:border-brand-500 hover:text-brand-600
+                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                               dark:border-gray-700 dark:text-gray-500
+                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -303,20 +319,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPagesStok" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                               border-gray-200 bg-transparent text-gray-400
+                               hover:border-brand-500 hover:text-brand-600
+                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                               dark:border-gray-700 dark:text-gray-500
+                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -372,7 +388,7 @@
 
           const searchTerm = this.search.toLowerCase();
           return this.harvests.filter(item =>
-            item.plant_name.toLowerCase().includes(searchTerm) 
+            item.plant_name.toLowerCase().includes(searchTerm)
           );
         },
 

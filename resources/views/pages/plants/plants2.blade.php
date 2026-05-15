@@ -37,7 +37,7 @@
       </div>
       <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data tidak ditemukan</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
-        Pohon dengan kata kunci tersebut tidak ada di dalam sistem.
+        Pohon dengan kata kunci tersebut tidak ada.
       </p>
       <button @click="search = ''" class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
         Bersihkan Pencarian

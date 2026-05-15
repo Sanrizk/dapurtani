@@ -47,18 +47,18 @@
 
     <!-- State Jika Data Tidak Ditemukan -->
     <div x-show="filteredData.length === 0" x-cloak
-      class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white dark:bg-gray-700 py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
+      class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
         <i class="fa-solid fa-magnifying-glass text-2xl"></i>
       </div>
       <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data tidak ditemukan</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
-        Tidak ada data tanaman yang cocok dengan pencarian atau filter saat ini.
+        Tidak ada data Menanam yang cocok dengan pencarian.
       </p>
       <button @click="search = ''; status = 'all'"
         class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
-        Reset Pencarian
+        Bersihkan Pencarian
       </button>
     </div>
 
