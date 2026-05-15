@@ -25,8 +25,21 @@
       </div>
     </div>
 
+    {{-- data kosongan --}}
+    <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="harvests.length === 0" x-cloak>
+      <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
+        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3C8 3 4.5 6.5 5 11c.3 2.5 2 4.5 4 5.5V19h6v-2.5c2-1 3.7-3 4-5.5.5-4.5-3-8-7-8z" />
+        </svg>
+      </div>
+      <p class="text-lg font-semibold text-brand-800 dark:text-brand-400">Belum ada Panen</p>
+      <p class="mt-1 text-sm text-brand-500">Data Panen yang ditambahkan akan muncul di sini.</p>
+    </div>
+
     <!-- Tampilan Jika Data Tidak Ditemukan -->
-    <div x-show="filteredHarvests.length === 0" x-cloak
+    <div x-show="harvests.length > 0 && filteredHarvests.length === 0" x-cloak
       class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
@@ -69,10 +82,10 @@
                 <div x-show="open" x-cloak x-transition
                   class="absolute right-0 mt-2 w-36 rounded-md border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-30">
                   <button @click="$dispatch('open-modal-modal-panen', { 
-                                                          mode: 'edit', 
-                                                          action: `/harvests/${item.id}`, 
-                                                          data: item 
-                                                      }); open = false"
+                                                              mode: 'edit', 
+                                                              action: `/harvests/${item.id}`, 
+                                                              data: item 
+                                                          }); open = false"
                     class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-900/20">
                     ✏️ Edit Panen
                   </button>
@@ -130,8 +143,8 @@
               :disabled="item.sisa_stok === 0"
               class="flex w-full items-center justify-center gap-2 rounded-lg border py-2.5 text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
               :class="item.sisa_stok === 0 
-                                          ? 'border-gray-300 text-gray-400 dark:border-gray-600 dark:text-gray-500' 
-                                          : 'border-[#E65C00] text-[#E65C00] hover:bg-[#FFFaf0] dark:border-orange-500 dark:text-orange-200 dark:hover:bg-orange-900/20'">
+                                              ? 'border-gray-300 text-gray-400 dark:border-gray-600 dark:text-gray-500' 
+                                              : 'border-[#E65C00] text-[#E65C00] hover:bg-[#FFFaf0] dark:border-orange-500 dark:text-orange-200 dark:hover:bg-orange-900/20'">
               🛒 <span x-text="item.sisa_stok === 0 ? 'Stok Habis' : 'Catat Penggunaan'"></span>
             </button>
 
@@ -155,12 +168,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                               border-gray-200 bg-transparent text-gray-400
-                               hover:border-brand-500 hover:text-brand-600
-                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                               dark:border-gray-700 dark:text-gray-500
-                               dark:hover:border-brand-500 dark:hover:text-brand-400
-                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                   border-gray-200 bg-transparent text-gray-400
+                                   hover:border-brand-500 hover:text-brand-600
+                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                   dark:border-gray-700 dark:text-gray-500
+                                   dark:hover:border-brand-500 dark:hover:text-brand-400
+                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -169,20 +182,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                               border-gray-200 bg-transparent text-gray-400
-                               hover:border-brand-500 hover:text-brand-600
-                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                               dark:border-gray-700 dark:text-gray-500
-                               dark:hover:border-brand-500 dark:hover:text-brand-400
-                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                   border-gray-200 bg-transparent text-gray-400
+                                   hover:border-brand-500 hover:text-brand-600
+                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                   dark:border-gray-700 dark:text-gray-500
+                                   dark:hover:border-brand-500 dark:hover:text-brand-400
+                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -230,8 +243,21 @@
       </div>
     </div>
 
+    {{-- data kosongan --}}
+    <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="harvests.length === 0" x-cloak>
+      <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
+        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3C8 3 4.5 6.5 5 11c.3 2.5 2 4.5 4 5.5V19h6v-2.5c2-1 3.7-3 4-5.5.5-4.5-3-8-7-8z" />
+        </svg>
+      </div>
+      <p class="text-lg font-semibold text-brand-800 dark:text-brand-400">Belum ada Panen</p>
+      <p class="mt-1 text-sm text-brand-500">Data Panen yang ditambahkan akan muncul di sini.</p>
+    </div>
+
     <!-- Tampilan Jika Data Tidak Ditemukan -->
-    <div x-show="filteredHarvestsStok.length === 0" x-cloak
+    <div x-show="harvests.length > 0 && filteredHarvestsStok.length === 0" x-cloak
       class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
@@ -244,7 +270,7 @@
       <button @click="search = ''" class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
         Bersihkan Pencarian
       </button>
-    </div>    
+    </div>
 
     <!-- 2. Grid Cards Riwayat Panen -->
     <div class=" grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" x-show="paginatedHarvestsStok.length > 0">
@@ -305,12 +331,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                               border-gray-200 bg-transparent text-gray-400
-                               hover:border-brand-500 hover:text-brand-600
-                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                               dark:border-gray-700 dark:text-gray-500
-                               dark:hover:border-brand-500 dark:hover:text-brand-400
-                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                   border-gray-200 bg-transparent text-gray-400
+                                   hover:border-brand-500 hover:text-brand-600
+                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                   dark:border-gray-700 dark:text-gray-500
+                                   dark:hover:border-brand-500 dark:hover:text-brand-400
+                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -319,20 +345,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPagesStok" class="flex h-8 w-8 items-center justify-center rounded border transition
-                               border-gray-200 bg-transparent text-gray-400
-                               hover:border-brand-500 hover:text-brand-600
-                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                               dark:border-gray-700 dark:text-gray-500
-                               dark:hover:border-brand-500 dark:hover:text-brand-400
-                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                   border-gray-200 bg-transparent text-gray-400
+                                   hover:border-brand-500 hover:text-brand-600
+                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                   dark:border-gray-700 dark:text-gray-500
+                                   dark:hover:border-brand-500 dark:hover:text-brand-400
+                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -360,14 +386,29 @@
 
         // Fitur Pencarian Data
         get filteredHarvests() {
-          if (this.search === '') return this.harvests;
+          // 1. Amankan data utama (mencegah error jika harvests belum ter-load)
+          if (!this.harvests || this.harvests.length === 0) {
+            return [];
+          }
 
-          const searchTerm = this.search.toLowerCase();
-          return this.harvests.filter(item =>
-            item.plant_name.toLowerCase().includes(searchTerm) ||
-            item.plot.toLowerCase().includes(searchTerm) ||
-            item.batch.toLowerCase().includes(searchTerm)
-          );
+          // 2. Siapkan keyword pencarian dan bersihkan spasi kosong
+          const keyword = (this.search || '').trim().toLowerCase();
+
+          // Jika input pencarian kosong, langsung kembalikan semua data
+          if (keyword === '') {
+            return this.harvests;
+          }
+
+          // 3. Proses filter dengan pengaman (fallback string kosong untuk mencegah null)
+          return this.harvests.filter(item => {
+            const plantName = (item.plant_name || '').toLowerCase();
+            const plotName = (item.plot || '').toLowerCase();
+            const batchName = (item.batch || '').toLowerCase();
+
+            return plantName.includes(keyword) ||
+              plotName.includes(keyword) ||
+              batchName.includes(keyword);
+          });
         },
 
         // Hitung Total Halaman
@@ -384,12 +425,25 @@
 
         // Fitur Pencarian Data
         get filteredHarvestsStok() {
-          if (this.search === '') return this.harvests;
+          // 1. Amankan data utama jika belum ter-load
+          if (!this.harvests || this.harvests.length === 0) {
+            return [];
+          }
 
-          const searchTerm = this.search.toLowerCase();
-          return this.harvests.filter(item =>
-            item.plant_name.toLowerCase().includes(searchTerm)
-          );
+          // 2. Amankan input pencarian (bersihkan spasi berlebih)
+          const keyword = (this.search || '').trim().toLowerCase();
+
+          // Jika pencarian kosong, kembalikan semua data stok
+          if (keyword === '') {
+            return this.harvests;
+          }
+
+          // 3. Proses filter dengan fallback string kosong ('') pada plant_name
+          return this.harvests.filter(item => {
+            const plantName = (item.plant_name || '').toLowerCase();
+
+            return plantName.includes(keyword);
+          });
         },
 
         // Hitung Total Halaman

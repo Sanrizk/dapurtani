@@ -45,8 +45,20 @@
       </button>
     </div>
 
+    {{-- data kosongan --}}
+    <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="dataCultivates.length === 0" x-cloak>
+      <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
+        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3C8 3 4.5 6.5 5 11c.3 2.5 2 4.5 4 5.5V19h6v-2.5c2-1 3.7-3 4-5.5.5-4.5-3-8-7-8z" />
+        </svg>
+      </div>
+      <p class="text-lg font-semibold text-brand-800 dark:text-brand-400">Belum ada Penanaman</p>
+      <p class="mt-1 text-sm text-brand-500">Data Menanam yang ditambahkan akan muncul di sini.</p>
+    </div>
+
     <!-- State Jika Data Tidak Ditemukan -->
-    <div x-show="filteredData.length === 0" x-cloak
+    <div x-show="dataCultivates.length > 0 && filteredData.length === 0" x-cloak
       class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
@@ -150,10 +162,10 @@
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-purple-200 bg-purple-50 py-2 text-sm font-medium text-purple-600 transition hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
                   @click="$dispatch('open-modal-log-panen', { 
-                    action: `/harvests/add/${item.id}`, 
-                    subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, 
-                    unit: item.unit, 
-                    logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
+                      action: `/harvests/add/${item.id}`, 
+                      subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, 
+                      unit: item.unit, 
+                      logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
                   ✂️ Panen
                 </button>
               </div>
@@ -250,12 +262,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                               border-gray-200 bg-transparent text-gray-400
-                               hover:border-brand-500 hover:text-brand-600
-                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                               dark:border-gray-700 dark:text-gray-500
-                               dark:hover:border-brand-500 dark:hover:text-brand-400
-                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                 border-gray-200 bg-transparent text-gray-400
+                                 hover:border-brand-500 hover:text-brand-600
+                                 disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                 dark:border-gray-700 dark:text-gray-500
+                                 dark:hover:border-brand-500 dark:hover:text-brand-400
+                                 dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -264,20 +276,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                              ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                              : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                               border-gray-200 bg-transparent text-gray-400
-                               hover:border-brand-500 hover:text-brand-600
-                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                               dark:border-gray-700 dark:text-gray-500
-                               dark:hover:border-brand-500 dark:hover:text-brand-400
-                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                 border-gray-200 bg-transparent text-gray-400
+                                 hover:border-brand-500 hover:text-brand-600
+                                 disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                 dark:border-gray-700 dark:text-gray-500
+                                 dark:hover:border-brand-500 dark:hover:text-brand-400
+                                 dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -321,7 +333,7 @@
           'type' => 'datetime-local', // Otomatis memunculkan ikon kalender/jam bawaan browser
           'half' => false, // Set true jika ingin sejajar sebelah-sebelahan
           'number' => false, // set true hanya untuk panen
-          'fertilize' => true 
+          'fertilize' => true
         ]
       ];
 
@@ -377,11 +389,29 @@
 
         // Filter Data Keseluruhan (Pencarian & Status)
         get filteredData() {
-          return this.dataCultivates.filter((item) => {
-            const searchTerm = this.search.toLowerCase();
-            const isMatchedSearch = item.name.toLowerCase().includes(searchTerm) ||
-              item.location.toLowerCase().includes(searchTerm);
+          // 1. Validasi jika data utama dari awal memang kosong (mencegah error .filter is not a function)
+          if (!this.dataCultivates || this.dataCultivates.length === 0) {
+            return [];
+          }
 
+          // 2. Siapkan keyword pencarian di luar loop agar performa lebih cepat
+          // Gunakan fallback ('') jika this.search undefined, lalu trim()
+          const keyword = (this.search || '').trim().toLowerCase();
+
+          // 3. Proses filter
+          return this.dataCultivates.filter((item) => {
+
+            // --- CEK PENCARIAN ---
+            // Gunakan fallback string kosong ('') jika name/location kebetulan null di database
+            const itemName = (item.name || '').toLowerCase();
+            const itemLocation = (item.location || '').toLowerCase();
+
+            // Jika keyword kosong, otomatis true. Jika ada, cek apakah cocok.
+            const isMatchedSearch = keyword === '' ||
+              itemName.includes(keyword) ||
+              itemLocation.includes(keyword);
+
+            // --- CEK STATUS ---
             let isMatchedStatus = true;
             if (this.status === 'active') {
               isMatchedStatus = item.is_harvested === false;
@@ -389,6 +419,7 @@
               isMatchedStatus = item.is_harvested === true;
             }
 
+            // Item akan ditampilkan hanya jika cocok pencarian DAN cocok status
             return isMatchedSearch && isMatchedStatus;
           });
         },

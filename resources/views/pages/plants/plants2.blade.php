@@ -28,8 +28,20 @@
       </button>
     </div>
 
+    {{-- data kosongan --}}
+    <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="plants.length === 0" x-cloak>
+      <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
+        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3C8 3 4.5 6.5 5 11c.3 2.5 2 4.5 4 5.5V19h6v-2.5c2-1 3.7-3 4-5.5.5-4.5-3-8-7-8z" />
+        </svg>
+      </div>
+      <p class="text-lg font-semibold text-brand-800 dark:text-brand-400">Belum ada tanaman</p>
+      <p class="mt-1 text-sm text-brand-500">Data tanaman yang ditambahkan akan muncul di sini.</p>
+    </div>
+
     <!-- Tampilan Jika Data Tidak Ditemukan -->
-    <div x-show="filteredPlants.length === 0" x-cloak
+    <div x-show="plants.length > 0 && filteredPlants.length === 0" x-cloak
       class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
@@ -81,10 +93,10 @@
 
               <!-- Tombol Edit melempar data spesifik dari loop ke Modal -->
               <button @click="$dispatch('open-modal-modal-plants', { 
-                                                              mode: 'edit', 
-                                                              action: `/plants/edit/${plant.id}`, 
-                                                              data: {...plant}
-                                                          }); open = false"
+                                                                        mode: 'edit', 
+                                                                        action: `/plants/edit/${plant.id}`, 
+                                                                        data: {...plant}
+                                                                    }); open = false"
                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                 ✏️ Edit
               </button>
@@ -118,12 +130,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                     border-gray-200 bg-transparent text-gray-400
+                                     hover:border-brand-500 hover:text-brand-600
+                                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                     dark:border-gray-700 dark:text-gray-500
+                                     dark:hover:border-brand-500 dark:hover:text-brand-400
+                                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -132,20 +144,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                  ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                  : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                           border-gray-200 bg-transparent text-gray-400
-                           hover:border-brand-500 hover:text-brand-600
-                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                           dark:border-gray-700 dark:text-gray-500
-                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                     border-gray-200 bg-transparent text-gray-400
+                                     hover:border-brand-500 hover:text-brand-600
+                                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                     dark:border-gray-700 dark:text-gray-500
+                                     dark:hover:border-brand-500 dark:hover:text-brand-400
+                                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
@@ -179,21 +191,6 @@
         currentPage: 1,
         itemsPerPage: 9, // Jumlah card per halaman (bisa disesuaikan)
 
-        // Dummy data array of objects
-        // plants: [
-        //   { id: 1, nama: 'Sawi Hijau', icon: '🥬', waktu_panen: 30, satuan: 'Ikat', status: 'aktif' },
-        //   { id: 2, nama: 'Tomat Merah', icon: '🍅', waktu_panen: 90, satuan: 'Kg', status: 'aktif' },
-        //   { id: 3, nama: 'Kangkung Cabut', icon: '🌱', waktu_panen: 25, satuan: 'Ikat', status: 'aktif' },
-        //   { id: 4, nama: 'Cabai Rawit', icon: '🌶️', waktu_panen: 120, satuan: 'Kg', status: 'aktif' },
-        //   { id: 5, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-        //   { id: 6, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-        //   { id: 7, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-        //   { id: 8, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-        //   { id: 9, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-        //   { id: 10, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' },
-        //   { id: 11, nama: 'Bawang Merah', icon: '🧅', waktu_panen: 60, satuan: 'Kg', status: 'aktif' }
-        // ],
-
         plants: {{ Js::from($plants) }},
 
         init() {
@@ -203,11 +200,21 @@
 
         // Fungsi untuk mengembalikan data hasil pencarian
         get filteredPlants() {
-          if (this.search === '') {
+          // 1. Validasi jika data utama dari awal memang kosong atau belum di-load (null/undefined)
+          if (!this.plants || this.plants.length === 0) {
+            return [];
+          }
+
+          // 2. Jika input pencarian kosong (hanya spasi juga dihitung kosong)
+          if (this.search.trim() === '') {
             return this.plants;
           }
+
+          // 3. Proses filter pencarian
           return this.plants.filter(plant =>
-            plant.plant_name.toLowerCase().includes(this.search.toLowerCase())
+            // Opsional: Validasi plant_name tidak null agar tidak error saat di-toLowerCase()
+            plant.plant_name &&
+            plant.plant_name.toLowerCase().includes(this.search.trim().toLowerCase())
           );
         },
 

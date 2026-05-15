@@ -29,8 +29,20 @@
       </button>
     </div>
 
+    {{-- data kosongan --}}
+    <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="plots.length === 0" x-cloak>
+      <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
+        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3C8 3 4.5 6.5 5 11c.3 2.5 2 4.5 4 5.5V19h6v-2.5c2-1 3.7-3 4-5.5.5-4.5-3-8-7-8z" />
+        </svg>
+      </div>
+      <p class="text-lg font-semibold text-brand-800 dark:text-brand-400">Belum ada bedengan</p>
+      <p class="mt-1 text-sm text-brand-500">Data bedengan yang ditambahkan akan muncul di sini.</p>
+    </div>
+
     <!-- State Jika Data Tidak Ditemukan -->
-    <div x-show="filteredPlots.length === 0" x-cloak
+    <div x-show="plots.length > 0 && filteredPlots.length === 0" x-cloak
       class="flex flex-col items-center justify-center rounded-sm border border-stroke bg-white dark:bg-gray-800 py-16 px-4 shadow-default dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
@@ -225,11 +237,22 @@
 
         // Logic Pencarian Text
         get filteredPlots() {
-          if (this.search === '') return this.plots;
+          // 1. Validasi jika data utama dari awal memang kosong atau belum di-load (null/undefined)
+          if (!this.plots || this.plots.length === 0) {
+            return [];
+          }
 
-          return this.plots.filter(plot =>
-            plot.plot_name.toLowerCase().includes(this.search.toLowerCase())
+          // 2. Jika input pencarian kosong (hanya spasi juga dihitung kosong)
+          if (this.search.trim() === '') {
+            return this.plots;
+          }
+
+          // 3. Proses filter pencarian
+          return this.plots.filter(plant =>
+            // Opsional: Validasi plant_name tidak null agar tidak error saat di-toLowerCase()
+            plant.plot_name.toLowerCase().includes(this.search.trim().toLowerCase())
           );
+
         },
 
         // Logic Pagination: Total Halaman
