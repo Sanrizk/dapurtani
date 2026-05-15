@@ -16,7 +16,7 @@ class HarvestController extends Controller
     $harvests = Harvest::with([
       'cultivate.plant', // Mengambil relasi cultivate, lanjut ke plant
       'cultivate.plot'   // Mengambil relasi cultivate, lanjut ke plot
-    ])->get();
+    ])->orderBy('datetime', 'desc')->get();
 
     // 2. Ubah format datanya menggunakan map()
     $formattedHarvests = $harvests->map(function ($harvest) {

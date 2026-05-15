@@ -22,7 +22,7 @@ class CultivateController extends Controller
       'waters',      // Mengambil data Waters terkait (One-to-Many)
       'fertilizes',  // Mengambil data Fertilizes terkait (One-to-Many)
       'harvests'     // Mengambil data Harvests terkait (One-to-Many)
-    ])->get();
+    ])->orderBy('datetime', 'desc')->get();
 
     // data cultivates yang diformat khusus
     $formattedCultivates = $cultivates->map(function ($cultivate) {
@@ -50,9 +50,10 @@ class CultivateController extends Controller
         $progress = 100; // Jika sudah panen, progress dipaksa penuh 100%
       } else {
         // Jika belum panen, hitung sisa hari
-        $remainingDays = round($now->diffInDays($dateAction, false));
-        $remainingLabel = $remainingDays > 0 ? $remainingDays . ' Hari Lagi' : 'Siap Panen!';
+        $remainingDays = $now->copy()->startOfDay()->diffInDays($dateAction->copy()->startOfDay(), false);
+        $remainingDays = (int) $remainingDays;
 
+        $remainingLabel = $remainingDays > 0 ? $remainingDays . ' Hari Lagi' : 'Siap Panen!';
         // Hitung progress berjalan
         if ($harvestTimeDays > 0) {
           $progress = ($ageInDays / $harvestTimeDays) * 100;
@@ -94,7 +95,7 @@ class CultivateController extends Controller
     $harvests = $cultivates->flatMap->harvests->groupBy('cultivate_id')->map(function ($harvests) {
       return $harvests->map(function ($harvest) {
         return [
-          'id'=> $harvest->id,
+          'id' => $harvest->id,
           'batch' => $harvest->batch,
           'text' => Carbon::parse($harvest->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
           'qty' => $harvest->qty,
@@ -107,7 +108,7 @@ class CultivateController extends Controller
     $waters = $cultivates->flatMap->waters->groupBy('cultivate_id')->map(function ($waters) {
       return $waters->map(function ($water) {
         return [
-          'id'=> $water->id,
+          'id' => $water->id,
           'batch' => $water->batch,
           'text' => Carbon::parse($water->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
           'qty' => $water->qty,
