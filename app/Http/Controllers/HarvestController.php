@@ -69,6 +69,13 @@ class HarvestController extends Controller
       ->with('success', 'Data Panen berhasil ditambahkan.');
   }
 
+  public function destroy(Harvest $harvest) {
+    $harvest->delete();
+
+    return redirect()->route('cultivates')
+      ->with('success', 'Data Panen berhasil dihapus.');  
+  }
+
   public function getBatch()
   {
     // format batch

@@ -22,6 +22,13 @@ class WaterController extends Controller
 
     return redirect()->route('cultivates')
       ->with('success', 'Data Menyiram berhasil ditambahkan.');
+  }
 
+  public function destroy(Water $water)
+  {
+    $water->delete();
+
+    return redirect()->route('cultivates')
+      ->with('success', 'Data Menyiram berhasil dihapus.');
   }
 }

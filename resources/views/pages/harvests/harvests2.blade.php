@@ -26,7 +26,7 @@
 
     <!-- Tampilan Jika Data Tidak Ditemukan -->
     <div x-show="filteredHarvests.length === 0" x-cloak
-      class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
+      class="flex flex-col items-center justify-center rounded-xl border border-stroke bg-white dark:bg-gray-700 py-16 px-4 shadow-sm dark:border-strokedark dark:bg-boxdark">
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800">
         <i class="fa-solid fa-box-open text-2xl"></i>
@@ -228,7 +228,7 @@
 
         // Data Dummy Array Object
         // harvests: [
-        //   { id: 1, gelombang: 'Gelombang 1', tanggal_panen: '12 Mei 2026', icon: '🍅', nama_tanaman: 'Tomat Sayur', lokasi: 'Blok 2', sisa_stok: 75, total_panen: 100, satuan: 'Kg' },
+        //   { id: 1, : 'Gelombang 1', tanggal_panen: '12 Mei 2026', icon: '🍅', nama_tanaman: 'Tomat Sayur', lokasi: 'Blok 2', sisa_stok: 75, total_panen: 100, satuan: 'Kg' },
         //   { id: 2, gelombang: 'Gelombang 1', tanggal_panen: '10 Mei 2026', icon: '🥬', nama_tanaman: 'Sawi Hijau', lokasi: 'Blok 1', sisa_stok: 20, total_panen: 50, satuan: 'Ikat' },
         //   { id: 3, gelombang: 'Gelombang 2', tanggal_panen: '15 Mei 2026', icon: '🌶️', nama_tanaman: 'Cabai Rawit', lokasi: 'Blok 3', sisa_stok: 40, total_panen: 40, satuan: 'Kg' },
         //   { id: 4, gelombang: 'Gelombang 1', tanggal_panen: '08 Mei 2026', icon: '🧅', nama_tanaman: 'Bawang Merah', lokasi: 'Blok 4', sisa_stok: 0, total_panen: 80, satuan: 'Kg' },

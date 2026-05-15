@@ -20,7 +20,9 @@
     " x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
   x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
   x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="open = false"
-  class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
+  class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true"
+  @confirmed-delete-cultivate.window="if(formToSubmit) formToSubmit.submit()">
+  >
   {{-- ✅ Overlay: hapus backdrop-blur, x-show cukup di wrapper --}}
   <div class="absolute inset-0 bg-black/50" @click="open = false" x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -40,6 +42,7 @@
     </div>
 
     <p class="mb-5 text-sm text-gray-600 dark:text-gray-400 leading-relaxed" x-html="subtitle"></p>
+
 
     @if($fields)
       <form :action="formAction" method="POST">
@@ -85,8 +88,9 @@
                     <div class="relative">
                       <input type="checkbox" id="checkboxLabelOne" class="sr-only" name="harvestCheck"
                         @change="checkboxToggle = !checkboxToggle" />
-                      <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                                      'bg-transparent border-gray-300 dark:border-gray-700'"
+                      <div
+                        :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
+                                                                              'bg-transparent border-gray-300 dark:border-gray-700'"
                         class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
                         <span :class="checkboxToggle ? '' : 'opacity-0'">
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -146,14 +150,14 @@
                 <tr
                   class="border-b border-gray-100 last:border-0 dark:border-gray-700 {{ $theme['logBg'] }} dark:bg-gray-800">
 
-
+                  {{-- hanya muncul yang sudah panen habis --}}
                   @if(!$fields)
-                  <td x-show="log.type === 'harvest'" class="text-gray-700 dark:text-gray-300">✂️ Panen</td>
-                  <td x-show="log.type === 'water'" class="text-gray-700 dark:text-gray-300">💧 Siram</td>
-                  <td x-show="log.type === 'fertilize'" class="text-gray-700 dark:text-gray-300">🌱 Pupuk</td>
+                    <td x-show="log.type === 'harvest'" class="text-gray-700 dark:text-gray-300">✂️ Panen</td>
+                    <td x-show="log.type === 'water'" class="text-gray-700 dark:text-gray-300">💧 Siram</td>
+                    <td x-show="log.type === 'fertilize'" class="text-gray-700 dark:text-gray-300">🌱 Pupuk</td>
                   @else
-                  <!-- Kolom Batch -->
-                  <td class="px-4 py-3 font-semibold dark:text-gray-300" x-text="log.batch"></td>
+                    <!-- Kolom Batch -->
+                    <td class="px-4 py-3 font-semibold dark:text-gray-300" x-text="log.batch"></td>
                   @endif
 
                   <!-- Kolom Text -->
@@ -166,10 +170,14 @@
 
                   <!-- Kolom Button -->
                   <td class="px-4 py-3 text-right">
-                    <button
-                      class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1.5 rounded-sm transition-colors">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
+                    <form :action="`/${log.type}/delete/${log.id}`" method="POST"
+                      @click.prevent="formToSubmit = $event.target.closest('form'); $dispatch('open-modal', 'delete-cultivate')">
+                      @csrf @method('DELETE')
+                      <button type="submit"
+                        class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1.5 rounded-sm transition-colors">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </form>
                   </td>
 
                 </tr>
@@ -186,4 +194,5 @@
     </div>
 
   </div>
+
 </div>

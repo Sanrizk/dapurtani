@@ -116,10 +116,13 @@ Route::delete('/cultivates/delete/{cultivate}', [CultivateController::class,'des
 Route::get('/harvests', [HarvestController::class, 'index'])->name('harvests');
 
 Route::post('/waters/add/{cultivate}', [WaterController::class,'store']);
+Route::delete('/waters/delete/{water}', [WaterController::class,'destroy']);
 
 Route::post('/fertilizes/add/{cultivate}', [FertilizeController::class,'store']);
+Route::delete('/fertilizes/delete/{fertilize}', [FertilizeController::class,'destroy']);
 
 Route::post('/harvests/add/{cultivate}', [HarvestController::class,'store']);
+Route::delete('/harvests/delete/{harvest}', [HarvestController::class,'destroy']);
 
 // Route::get('/plots', function () {
 //     return view('pages.plots.plots2', ['title' => 'E-commerce Dashboard']);

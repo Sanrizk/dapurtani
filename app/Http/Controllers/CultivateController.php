@@ -94,9 +94,11 @@ class CultivateController extends Controller
     $harvests = $cultivates->flatMap->harvests->groupBy('cultivate_id')->map(function ($harvests) {
       return $harvests->map(function ($harvest) {
         return [
+          'id'=> $harvest->id,
           'batch' => $harvest->batch,
           'text' => Carbon::parse($harvest->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
           'qty' => $harvest->qty,
+          'type' => 'harvests'
         ];
       })->values();
     });
@@ -105,9 +107,11 @@ class CultivateController extends Controller
     $waters = $cultivates->flatMap->waters->groupBy('cultivate_id')->map(function ($waters) {
       return $waters->map(function ($water) {
         return [
+          'id'=> $water->id,
           'batch' => $water->batch,
           'text' => Carbon::parse($water->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
           'qty' => $water->qty,
+          'type' => 'waters',
         ];
       })->values();
     });
@@ -116,13 +120,16 @@ class CultivateController extends Controller
     $fertilizes = $cultivates->flatMap->fertilizes->groupBy('cultivate_id')->map(function ($fertilizes) {
       return $fertilizes->map(function ($fertilize) {
         return [
+          'id' => $fertilize->id,
           'batch' => $fertilize->batch,
           'text' => Carbon::parse($fertilize->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
           'qty' => $fertilize->qty,
+          'type' => 'fertilizes',
         ];
       })->values();
     });
 
+    // is_harvested true (hanya khusus untuk yang sudah panen)
     // 1. Gabungkan semua relasi menjadi satu Collection datar (Flat Collection)
     $allLogs = collect()
       ->concat($cultivates->flatMap->harvests)

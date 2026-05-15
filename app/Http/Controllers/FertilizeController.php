@@ -21,7 +21,13 @@ class FertilizeController extends Controller
     Fertilize::create($request->all());
 
     return redirect()->route('cultivates')
-      ->with('success', 'Data Menyiram berhasil ditambahkan.');
+      ->with('success', 'Data Memupuk berhasil ditambahkan.');
+  }
 
+  public function destroy(Fertilize $fertilize) {
+    $fertilize->delete();
+
+    return redirect()->route('cultivates')
+      ->with('success', 'Data Memupuk berhasil dihapus.');
   }
 }
