@@ -135,7 +135,7 @@
             <!-- Header Tabel -->
             <thead>
               <tr class="border-b border-gray-200 dark:border-gray-700">
-                @if($fields && $field['number'])
+                @if(isset($fields['number']) && $field['number'])
                   <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Batch</th>
                   <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Tanggal</th>
                   <th class="px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300">Qty</th>
@@ -163,7 +163,7 @@
                   <!-- Kolom Text -->
                   <td class="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.text"></td>
 
-                  @if($fields && $field['number'])
+                  @if(isset($fields['number']) && $field['number'])
                     <!-- Kolom Qty -->
                     <td class="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.qty"></td>
                   @endif

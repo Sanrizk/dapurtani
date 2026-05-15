@@ -27,24 +27,54 @@ class HarvestController extends Controller
 
       return [
         'id' => $harvest->id,
-        'gelombang' => 'Batch ' . $harvest->batch,
-        'tanggal_panen' => Carbon::parse($harvest->datetime)->translatedFormat('d F Y'),
+        'batch' => 'Batch ' . $harvest->batch,
+        'harvest_date' => Carbon::parse($harvest->datetime)->locale('id')->translatedFormat('d F Y'),
         'icon' => '🍅', // Bisa Anda buat dinamis nanti berdasarkan nama tanaman
-        'nama_tanaman' => $plant->plant_name ?? '-',
-        'lokasi' => $plot->plots_name ?? '-',
+        'plant_name' => $plant->plant_name ?? '-',
+        'plot' => $plot->plot_name ?? '-',
 
         // Karena di tabel harvest hanya ada 'qty', sementara sisa_stok kita asumsikan 
         // sama dengan qty saat baru dipanen (kecuali Anda punya tabel penjualan/penggunaan)
         'sisa_stok' => $harvest->qty,
         'total_panen' => $harvest->qty,
 
-        'satuan' => $plant->unit ?? '-'
+        'unit' => $plant->unit ?? '-'
       ];
     });
 
+    $harvestsStok = $formattedHarvests->groupBy('plant_name')->map(function ($groupedItems, $plantName) {
+      // Ambil data pertama dari grup ini untuk mengambil icon dan satuan yang sama
+      $firstItem = $groupedItems->first();
+
+      return [
+        'icon' => $firstItem['icon'],
+        'plant_name' => $plantName,
+
+        // 2. Jumlahkan total sisa stok dan total panen dari semua data di grup ini
+        'sisa_stok' => $groupedItems->sum('sisa_stok'),
+        'total_panen' => $groupedItems->sum('total_panen'),
+
+        'unit' => $firstItem['unit'],
+      ];
+    })->values();
+
+    // log atau riwayat consumes
+    $consumes = $harvests->flatMap->consumes->groupBy('harvest_id')->map(function ($consumes) {
+      return $consumes->map(function ($consume) {
+        return [
+          'id' => $consume->id,
+          'batch' => $consume->batch,
+          'text' => Carbon::parse($consume->datetime)->locale('id')->translatedFormat('j F Y \(\J\a\m G\)'),
+          'qty' => $consume->qty,
+          'type' => 'consumes'
+        ];
+      })->values();
+    });
+
+
     $title = "Daftar Panen | Dapurtani";
 
-    return view('pages.harvests.harvests2', compact('formattedHarvests', 'title'));
+    return view('pages.harvests.harvests2', compact('formattedHarvests', 'title', 'harvestsStok', 'consumes'));
   }
 
   public function store(Request $request, Cultivate $cultivate)
@@ -69,11 +99,12 @@ class HarvestController extends Controller
       ->with('success', 'Data Panen berhasil ditambahkan.');
   }
 
-  public function destroy(Harvest $harvest) {
+  public function destroy(Harvest $harvest)
+  {
     $harvest->delete();
 
     return redirect()->route('cultivates')
-      ->with('success', 'Data Panen berhasil dihapus.');  
+      ->with('success', 'Data Panen berhasil dihapus.');
   }
 
   public function getBatch()
