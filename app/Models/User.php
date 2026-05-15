@@ -19,7 +19,7 @@ class User extends Authenticatable
   use HasFactory, Notifiable;
 
   protected $primaryKey = 'id';
-  protected $fillable = ['password', 'full_name', 'role'];
+  protected $fillable = ['email', 'username', 'password', 'full_name', 'role'];
   protected $hidden = ['password'];
 
   /**

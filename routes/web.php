@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlantController;
@@ -10,10 +11,6 @@ use App\Http\Controllers\WaterController;
 use App\Http\Controllers\FertilizeController;
 use App\Http\Controllers\ConsumeController;
 
-// dashboard pages
-Route::get('/', function () {
-    return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
-})->name('dashboard');
 
 // calender pages
 Route::get('/calendar', function () {
@@ -57,9 +54,9 @@ Route::get('/bar-chart', function () {
 
 
 // authentication pages
-Route::get('/signin', function () {
-    return view('pages.auth.signin', ['title' => 'Sign In']);
-})->name('signin');
+// Route::get('/signin', function () {
+//     return view('pages.auth.signin', ['title' => 'Sign In']);
+// })->name('signin');
 
 Route::get('/signup', function () {
     return view('pages.auth.signup', ['title' => 'Sign Up']);
@@ -99,6 +96,15 @@ Route::get('/dashboard2', function () {
 //     return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
 // })->name('dashboard');
 // Route::get('/plants', [PlantController::class, 'index'])->name('plants');
+Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
+Route::post('/login', [AuthController::class, 'authenticate']);
+Route::post('/logout', [AuthController::class, 'logout']);
+
+// dashboard pages
+Route::get('/', function () {
+    return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard')->middleware('auth');
+
 Route::get('/plants', [PlantController::class, 'index'])->name('plants');
 Route::post('/plants/add', [PlantController::class, 'store'])->name('plants.store');
 Route::put('/plants/edit/{plant}', [PlantController::class,'update']);
