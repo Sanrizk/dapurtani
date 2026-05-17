@@ -93,14 +93,14 @@ Route::get('/dashboard2', function () {
 //     return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
 // })->name('dashboard');
 // Route::get('/plants', [PlantController::class, 'index'])->name('plants');
-Route::get('/signup', function () {
-    return view('pages.auth.signup', ['title' => 'Sign Up']);
-})->name('signup');
 
 Route::middleware(['guest'])->group(function () {
+    Route::get('/signup', function () {
+        return view('pages.auth.signup', ['title' => 'Sign Up']);
+    })->name('signup');
     Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
     Route::post('/login', [AuthController::class, 'authenticate']);
-    Route::post('/register', [AuthController::class,'register']);
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
 Route::middleware(['auth'])->group(function () {
