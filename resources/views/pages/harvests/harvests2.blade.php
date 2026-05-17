@@ -362,9 +362,8 @@
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
-    <x-ui.confirm-dialog name="delete-cultivate" title="Hapus Data Menanam"
-      message="Apakah Anda yakin ingin menghapus data menanam ini? Data yang dihapus tidak dapat dikembalikan."
-      confirmText="Hapus" confirmTheme="danger" />
+    <x-ui.confirm-dialog name="global-confirm" />
+
   </div>
 @endsection
 

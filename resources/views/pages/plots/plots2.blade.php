@@ -83,14 +83,22 @@
                 ✏️ Edit
               </button>
               <form :action="`/plots/delete/${plot.id}`" method="POST"
-                class="m-0 border-t border-stroke dark:border-strokedark" {{--
-                @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus bedengan ini?')) $el.submit()"> --}}
-                @click.prevent="formToSubmit = $event.target.closest('form'); $dispatch('open-modal', 'delete-plot')">
+                class="m-0 border-t border-stroke dark:border-strokedark">
                 @csrf @method('DELETE')
-                <button type="submit"
+
+                <!-- Tombol Trigger untuk menghapus data spesifik -->
+                <button type="submit" @click.prevent="$dispatch('open-modal', {
+                  name: 'global-confirm',
+                  title: `Hapus Bedengan ${plot.plot_name}?`,
+                  message: `Apakah Anda yakin ingin menghapus bedengan ${plot.plot_name} ini? Data tidak dapat dikembalikan.`,
+                  confirmText: 'Ya, Hapus',
+                  confirmTheme: 'danger',
+                  onConfirm: () => $event.target.closest('form').submit()
+              })"
                   class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                   🗑️ Hapus
                 </button>
+
               </form>
             </div>
           </div>
@@ -203,9 +211,7 @@
     <!-- Panggil Komponen Reusable Modal -->
     <x-ui.modal-form id="modal-bedengan" title="Bedengan" :fields="$plotFields" action="/plots/add" />
 
-    <x-ui.confirm-dialog name="delete-plot" title="Hapus Bedengan"
-      message="Apakah Anda yakin ingin menghapus Bedengan ini? Data yang dihapus tidak dapat dikembalikan."
-      confirmText="Hapus" confirmTheme="danger" />
+    <x-ui.confirm-dialog name="global-confirm" />
 
   </div>
 @endsection

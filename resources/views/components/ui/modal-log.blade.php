@@ -90,7 +90,7 @@
                         @change="checkboxToggle = !checkboxToggle" />
                       <div
                         :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                                                              'bg-transparent border-gray-300 dark:border-gray-700'"
+                                                                                          'bg-transparent border-gray-300 dark:border-gray-700'"
                         class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
                         <span :class="checkboxToggle ? '' : 'opacity-0'">
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,13 +170,20 @@
 
                   <!-- Kolom Button -->
                   <td class="px-4 py-3 text-right">
-                    <form :action="`/${log.type}/delete/${log.id}`" method="POST"
-                      @click.prevent="formToSubmit = $event.target.closest('form'); $dispatch('open-modal', 'delete-cultivate')">
+                    <form :action="`/${log.type}/delete/${log.id}`" method="POST">
                       @csrf @method('DELETE')
-                      <button type="submit"
-                        class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1.5 rounded-sm transition-colors">
+
+                      <button type="submit" @click.prevent="$dispatch('open-modal', {
+                      name: 'global-confirm',
+                      title: `Hapus Riwayat ${{ waters: 'menyiram', fertilizes: 'memupuk', harvests: 'memanen', consumes: 'penggunaan' }[log.type] || log.type}?`,
+                      message: `Apakah Anda yakin ingin menghapus Data Menanam ${log.type} ini? Data tidak dapat dikembalikan.`,
+                      confirmText: 'Ya, Hapus',
+                      confirmTheme: 'danger',
+                      onConfirm: () => $event.target.closest('form').submit()
+                  })" class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1.5 rounded-sm transition-colors">
                         <i class="fa-solid fa-trash"></i>
                       </button>
+
                     </form>
                   </td>
 

@@ -1,12 +1,6 @@
 @props([
-    'name' => null, // Digunakan untuk trigger modal via event
-    'isOpen' => false,
-    'title' => 'Konfirmasi',
-    'message' => 'Apakah Anda yakin ingin melanjutkan tindakan ini?',
-    'confirmText' => 'Ya, Lanjutkan',
-    'cancelText' => 'Batal',
-    'confirmTheme' => 'danger', // opsi: danger, primary, warning
-    'maxWidth' => 'sm' // opsi: sm, md, lg
+    'name' => 'confirm-dialog', // Nama default
+    'maxWidth' => 'sm'
 ])
 
 @php
@@ -16,35 +10,62 @@
         'lg' => 'sm:max-w-lg',
         default => 'sm:max-w-md',
     };
-
-    $confirmBtnClass = match($confirmTheme) {
-        'danger' => 'bg-red-600 text-white hover:bg-red-700',
-        'primary' => 'bg-blue-600 text-white hover:bg-blue-700',
-        'warning' => 'bg-yellow-500 text-white hover:bg-yellow-600',
-        default => 'bg-blue-600 text-white hover:bg-blue-700',
-    };
 @endphp
 
 <div x-data="{
-        open: @js($isOpen),
+        open: false,
+        title: 'Konfirmasi',
+        message: 'Apakah Anda yakin ingin melanjutkan tindakan ini?',
+        confirmText: 'Ya, Lanjutkan',
+        cancelText: 'Batal',
+        confirmTheme: 'danger',
+        onConfirmCallback: null, // Menyimpan aksi yang akan dijalankan
+        
+        getThemeClass() {
+            if (this.confirmTheme === 'danger') return 'bg-red-600 text-white hover:bg-red-700';
+            if (this.confirmTheme === 'primary') return 'bg-blue-600 text-white hover:bg-blue-700';
+            if (this.confirmTheme === 'warning') return 'bg-yellow-500 text-white hover:bg-yellow-600';
+            return 'bg-blue-600 text-white hover:bg-blue-700';
+        },
+
+        openModal(detail) {
+            // Cek apakah parameter berupa string (cara lama) atau object (cara baru)
+            let targetName = typeof detail === 'string' ? detail : (detail?.name ?? null);
+            
+            if (targetName === '{{ $name }}') {
+                if (typeof detail === 'object') {
+                    // Timpa nilai default dengan nilai dari tombol yang diklik
+                    this.title = detail.title ?? 'Konfirmasi';
+                    this.message = detail.message ?? 'Apakah Anda yakin?';
+                    this.confirmText = detail.confirmText ?? 'Ya, Lanjutkan';
+                    this.cancelText = detail.cancelText ?? 'Batal';
+                    this.confirmTheme = detail.confirmTheme ?? 'danger';
+                    this.onConfirmCallback = detail.onConfirm ?? null;
+                }
+                this.open = true;
+            }
+        },
+
+        confirm() {
+            if (typeof this.onConfirmCallback === 'function') {
+                this.onConfirmCallback(); // Eksekusi fungsi submit/action
+            } else {
+                $dispatch('confirmed-{{ $name }}'); // Fallback ke cara lama
+            }
+            this.open = false;
+        },
+
         init() {
             this.$watch('open', value => {
-                if (value) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = 'unset';
-                }
+                document.body.style.overflow = value ? 'hidden' : 'unset';
             });
         }
     }" 
     x-show="open" 
     x-cloak 
     @keydown.escape.window="open = false"
-    {{-- Listener untuk membuka/menutup modal via $dispatch --}}
-    @if($name)
-        @open-modal.window="if ($event.detail === '{{ $name }}') open = true"
-        @close-modal.window="if ($event.detail === '{{ $name }}') open = false"
-    @endif
+    @open-modal.window="openModal($event.detail)"
+    @close-modal.window="if (($event.detail?.name || $event.detail) === '{{ $name }}') open = false"
     class="modal fixed inset-0 z-[99999] flex items-center justify-center overflow-y-auto p-4 sm:p-5"
     {{ $attributes->except('class') }}>
 
@@ -64,28 +85,25 @@
 
         <!-- Body Konfirmasi -->
         <div class="mt-2">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                {{ $title }}
-            </h3>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white" x-text="title"></h3>
             <div class="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                {{ $slot->isEmpty() ? $message : $slot }}
+                <span x-html="message"></span>
             </div>
         </div>
 
         <!-- Footer / Actions -->
         <div class="mt-6 flex flex-row-reverse gap-3">
             @if(isset($actions))
-                {{-- Jika custom actions diberikan --}}
                 {{ $actions }}
             @else
-                {{-- Default Buttons --}}
-                <button type="button" @click="$dispatch('confirmed-{{ $name }}'); open = false" 
-                    class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors {{ $confirmBtnClass }}">
-                    {{ $confirmText }}
+                <button type="button" @click="confirm()" 
+                    :class="getThemeClass()"
+                    class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors">
+                    <span x-text="confirmText"></span>
                 </button>
                 <button type="button" @click="open = false" 
                     class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600 dark:hover:bg-gray-700">
-                    {{ $cancelText }}
+                    <span x-text="cancelText"></span>
                 </button>
             @endif
         </div>

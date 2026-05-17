@@ -19,6 +19,9 @@
               <form action="/login" method="POST">
                 @csrf
                 <div class="space-y-5">
+                  @error('email')
+                    <x-ui.alert variant="error" title="Login Gagal" :message="$message" :showLink="false" />
+                  @enderror
                   <!-- Email -->
                   <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -61,7 +64,7 @@
                           <input type="checkbox" id="checkboxLabelOne" class="sr-only" name="remember"
                             @change="checkboxToggle = !checkboxToggle" />
                           <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                                          'bg-transparent border-gray-300 dark:border-gray-700'"
+                                                            'bg-transparent border-gray-300 dark:border-gray-700'"
                             class="mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
                             <span :class="checkboxToggle ? '' : 'opacity-0'">
                               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"

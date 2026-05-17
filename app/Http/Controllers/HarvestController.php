@@ -95,7 +95,7 @@ class HarvestController extends Controller
       Cultivate::where('id', $cultivate->id)->update(['is_harvested' => true]);
     }
 
-    return redirect()->route('cultivates')
+    return redirect()->route('harvests')
       ->with('success', 'Data Panen berhasil ditambahkan.');
   }
 
@@ -103,7 +103,7 @@ class HarvestController extends Controller
   {
     $harvest->delete();
 
-    return redirect()->route('cultivates')
+    return redirect()->route('harvests')
       ->with('success', 'Data Panen berhasil dihapus.');
   }
 
