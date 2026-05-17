@@ -9,7 +9,7 @@ class Consume extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['harvest_id', 'datetime', 'qty'];
+  protected $fillable = ['harvest_id', 'datetime', 'qty', 'batch'];
 
   public function harvest() {
     return $this->belongsTo(Harvest::class, 'harvest_id');

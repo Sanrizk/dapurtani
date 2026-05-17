@@ -10,7 +10,8 @@
   $theme = $themes[$colorTheme] ?? $themes['blue'];
 @endphp
 
-<div x-data="{ done: false, open: false, formAction: '', subtitle: '', logs: [], formData: {}, unit: '' }" @open-modal-log-{{ $id }}.window="
+<div x-data="{ done: false, open: false, formAction: '', subtitle: '', logs: [], formData: {}, unit: '' }"
+  @open-modal-log-{{ $id }}.window="
         open = true;
         formAction = $event.detail.action;
         subtitle = $event.detail.subtitle;
@@ -23,7 +24,7 @@
   x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="open = false"
   class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true"
   @confirmed-delete-cultivate.window="if(formToSubmit) formToSubmit.submit()">
-  >
+
   {{-- ✅ Overlay: hapus backdrop-blur, x-show cukup di wrapper --}}
   <div class="absolute inset-0 bg-black/50" @click="open = false" x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -91,7 +92,7 @@
                         @change="checkboxToggle = !checkboxToggle" />
                       <div
                         :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                                                                                'bg-transparent border-gray-300 dark:border-gray-700'"
+                                                                                                      'bg-transparent border-gray-300 dark:border-gray-700'"
                         class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
                         <span :class="checkboxToggle ? '' : 'opacity-0'">
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,6 +169,7 @@
                     <!-- Kolom Qty -->
                     <td class="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.qty"></td>
                   @endif
+                  <td class="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300" x-text="log.qty"></td>
 
                   <!-- Kolom Button -->
                   <td class="px-4 py-3 text-right">

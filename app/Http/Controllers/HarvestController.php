@@ -59,8 +59,18 @@ class HarvestController extends Controller
     })->values();
 
     // log atau riwayat consumes
-    $consumes = $harvests->flatMap->consumes->groupBy('harvest_id')->map(function ($consumes) {
-      return $consumes->map(function ($consume) {
+    $consumes = $harvests->mapWithKeys(function ($harvest) {
+
+      // MENYARING DATA (2 Kondisi):
+      // 1. harvest_id otomatis cocok karena kita memanggil bawaan relasi ($harvest->consumes)
+      // 2. Filter data consume: cocokkan batch di consume dengan batch di harvest
+      $validConsumes = $harvest->consumes->filter(function ($consume) use ($harvest) {
+        return $consume->batch === $harvest->batch;
+      });
+
+      // FORMATTING DATA:
+      // Format hanya data consume yang lolos filter di atas
+      $mappedConsumes = $validConsumes->map(function ($consume) {
         return [
           'id' => $consume->id,
           'batch' => $consume->batch,
@@ -68,9 +78,13 @@ class HarvestController extends Controller
           'qty' => $consume->qty,
           'type' => 'consumes'
         ];
-      })->values();
-    });
+      })->values(); // values() untuk mereset index array agar dimulai dari 0 lagi
 
+      // RETURN RESULT:
+      // Output akhirnya dikelompokkan berdasarkan ID dari harvest 
+      // Sama persis seperti output dari groupBy('harvest_id') sebelumnya
+      return [$harvest->id => $mappedConsumes];
+    });
 
     $title = "Daftar Panen | Dapurtani";
 

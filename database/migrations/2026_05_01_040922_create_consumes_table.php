@@ -24,6 +24,8 @@ return new class extends Migration {
         ->references('id')->on('harvests')
         ->onDelete('cascade'); // Jika data panen dihapus, riwayat konsumsi terkait ikut terhapus
 
+      $table->string('batch');
+
       // Kolom datetime untuk mencatat waktu konsumsi
       $table->dateTime('datetime');
 

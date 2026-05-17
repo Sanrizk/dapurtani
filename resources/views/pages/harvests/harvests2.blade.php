@@ -200,17 +200,6 @@
       </div>
     </div>
 
-    <!-- 3. Definisi Form & Modal (Sama seperti bawaan Anda) -->
-    @php
-      $panenFields = [
-        ['name' => 'tanaman_id', 'label' => 'Tanaman yang Dipanen', 'type' => 'select', 'options' => ['1' => 'Tomat Sayur', '2' => 'Sawi Hijau']],
-        ['name' => 'bedengan_id', 'label' => 'Asal Bedengan', 'type' => 'select', 'options' => ['1' => 'Blok 1', '2' => 'Blok 2']],
-        ['name' => 'harvest_date', 'label' => 'Tanggal Panen', 'type' => 'text', 'placeholder' => 'Isi Tanggal'],
-        ['name' => 'jumlah_hasil', 'label' => 'Total Panen Awal (Kg)', 'type' => 'number', 'placeholder' => 'Isi Jumlah']
-      ];
-    @endphp
-    {{-- <x-ui.modal-form id="modal-panen" title="Data Panen" :fields="$panenFields" /> --}}
-
     @php
       $penggunaanFields = [
         ['name' => 'qty', 'label' => 'Jumlah Penggunaan (Kg)', 'type' => 'number', 'placeholder' => 'Isi Jumlah'],

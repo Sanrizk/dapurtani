@@ -22,14 +22,14 @@ class ConsumeController extends Controller
     Consume::create($request->all());
 
     return redirect()->route('harvests')
-      ->with('success', 'Data Menyiram berhasil ditambahkan.');
+      ->with('success', 'Data Penggunaan berhasil ditambahkan.');
   }
 
   public function destroy(Consume $consume)
   {
     $consume->delete();
 
-    return redirect()->route('cultivates')
-      ->with('success', 'Data Menyiram berhasil dihapus.');
+    return redirect()->route('harvests')
+      ->with('success', 'Data Penggunaan berhasil dihapus.');
   }
 }

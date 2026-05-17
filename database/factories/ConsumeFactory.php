@@ -20,6 +20,7 @@ class ConsumeFactory extends Factory
   {
     return [
       'harvest_id' => fake()->numberBetween(1,10),
+      'batch' => fake()->numberBetween(2605001,2605100),
       'datetime' => fake()->dateTimeBetween('now', '+1 week'),
       'qty' => fake()->numberBetween(1, 40), // Pastikan logic seeder nanti qty consume tidak melebihi qty harvest
     ];
