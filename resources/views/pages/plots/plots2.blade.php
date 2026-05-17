@@ -29,6 +29,13 @@
       </button>
     </div>
 
+    @if(session('success'))
+    <div class="mb-4">
+      <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}"
+        :showLink="false" />
+    </div>
+    @endif    
+
     {{-- data kosongan --}}
     <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="plots.length === 0" x-cloak>
       <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">

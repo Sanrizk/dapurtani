@@ -185,6 +185,7 @@ class CultivateController extends Controller
 
 
     return redirect()->route('cultivates')
+      ->with('action', 'tambah')
       ->with('success', 'Data Menanam berhasil ditambahkan.');
   }
 
@@ -201,6 +202,7 @@ class CultivateController extends Controller
     $cultivate->update($request->all());
 
     return redirect()->route('cultivates')
+      ->with('action', 'ubah')
       ->with('success', 'Data Menanam berhasil diperbarui.');
   }
 
@@ -209,6 +211,7 @@ class CultivateController extends Controller
     $cultivate->delete();
 
     return redirect()->route('cultivates')
+      ->with('action', 'hapus')
       ->with('success', 'Data Menanam berhasil dihapus.');
   }
 

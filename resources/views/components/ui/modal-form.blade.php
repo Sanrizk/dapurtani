@@ -37,18 +37,18 @@
 
             @if($field['type'] === 'text' || $field['type'] === 'number' || $field['type'] === 'datetime-local')
               <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
-                class="w-full rounded border-gray-300 p-2 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 required placeholder="{{ $field['placeholder'] }}" step="1">
 
             @elseif($field['type'] === 'select')
               <select name="{{ $field['name'] }}" x-model="formData.{{ $field['name'] }}"
-                class="w-full rounded border-gray-300 p-2 focus:border-brand-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                required>
+                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" required>
                 <option value="" disabled>Pilih...</option>
                 @foreach($field['options'] as $val => $label)
                   <option value="{{ $val }}">{{ $label }}</option>
                 @endforeach
               </select>
+
 
             @elseif($field['type'] === 'radio')
               <div class="flex gap-4 mt-2">

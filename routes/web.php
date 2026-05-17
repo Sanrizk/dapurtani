@@ -143,6 +143,10 @@ Route::get('/users', function () {
     return view('pages.users.users', ['title' => 'E-commerce Dashboard']);
 })->name('dashboard');
 
+Route::get('/settings', function () {
+    return view('pages.settings.settings', ['title' => 'E-commerce Dashboard']);
+})->name('dashboard');
+
 // Route::get('/cultivates', function () {
 //     return view('pages.cultivates.cultivates2', ['title' => 'E-commerce Dashboard']);
 // })->name('dashboard');

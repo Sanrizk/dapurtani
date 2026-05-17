@@ -40,7 +40,8 @@ class PlotController extends Controller
     Plot::create($request->all());
 
     return redirect()->route('plots')
-      ->with('success', 'Data bedengan berhasil ditambahkan.');
+      ->with('action', 'tambah')
+      ->with('success', 'Data '. $request['plot_name'] .' berhasil ditambahkan.');
   }
 
   /**
@@ -73,6 +74,7 @@ class PlotController extends Controller
     $plot->update($request->all());
 
     return redirect()->route('plots')
+      ->with('action', 'ubah')
       ->with('success', 'Data Bedengan berhasil diperbarui.');
   }
 
@@ -84,6 +86,7 @@ class PlotController extends Controller
     $plot->delete();
 
     return redirect()->route('plots')
-      ->with('success', 'Data Bedengan berhasil dihapus.');
+      ->with('action', 'hapus')
+      ->with('success', 'Data ' . $plot->plot_name . ' berhasil dihapus.');
   }
 }
