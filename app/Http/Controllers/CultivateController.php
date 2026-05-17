@@ -68,8 +68,8 @@ class CultivateController extends Controller
         'id' => $cultivate->id,
         'name' => $cultivate->plant->plant_name ?? '-',
         'unit' => $cultivate->plant->unit ?? '-',
-        'icon' => '🍅',
         'plant_id' => $cultivate->plant_id,
+        'qty' => $cultivate->qty,
         'plot_id' => $cultivate->plot_id,
         'datetime' => $cultivate->datetime,
         // Menggunakan plots_name sesuai skema tabel plots Anda

@@ -21,6 +21,8 @@ return new class extends Migration {
       $table->unsignedBigInteger('plot_id');
       $table->boolean('is_harvested');
 
+      $table->integer('qty');
+
       // 2. Tambahkan constraint Foreign Key
       $table->foreign('plant_id')
         ->references('id')->on('plants')

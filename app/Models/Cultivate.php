@@ -23,6 +23,7 @@ class Cultivate extends Model
     'plot_id',
     'is_harvested',
     'datetime',
+    'qty',
   ];
 
   protected $casts = [

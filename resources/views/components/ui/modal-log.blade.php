@@ -10,13 +10,14 @@
   $theme = $themes[$colorTheme] ?? $themes['blue'];
 @endphp
 
-<div x-data="{ open: false, formAction: '', subtitle: '', logs: [], formData: {}, unit: '' }" @open-modal-log-{{ $id }}.window="
+<div x-data="{ done: false, open: false, formAction: '', subtitle: '', logs: [], formData: {}, unit: '' }" @open-modal-log-{{ $id }}.window="
         open = true;
         formAction = $event.detail.action;
         subtitle = $event.detail.subtitle;
         logs = $event.detail.logs || [];
         formData = {};
         unit = $event.detail.unit
+        done = $event.detail.done || false;
     " x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
   x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
   x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="open = false"
@@ -90,7 +91,7 @@
                         @change="checkboxToggle = !checkboxToggle" />
                       <div
                         :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                                                                          'bg-transparent border-gray-300 dark:border-gray-700'"
+                                                                                                'bg-transparent border-gray-300 dark:border-gray-700'"
                         class="f hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
                         <span :class="checkboxToggle ? '' : 'opacity-0'">
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,10 +171,11 @@
 
                   <!-- Kolom Button -->
                   <td class="px-4 py-3 text-right">
-                    <form :action="`/${log.type}/delete/${log.id}`" method="POST">
-                      @csrf @method('DELETE')
+                    <template x-if="done === false">
+                      <form :action="`/${log.type}/delete/${log.id}`" method="POST">
+                        @csrf @method('DELETE')
 
-                      <button type="submit" @click.prevent="$dispatch('open-modal', {
+                        <button type="submit" @click.prevent="$dispatch('open-modal', {
                       name: 'global-confirm',
                       title: `Hapus Riwayat ${{ waters: 'menyiram', fertilizes: 'memupuk', harvests: 'memanen', consumes: 'penggunaan' }[log.type] || log.type}?`,
                       message: `Apakah Anda yakin ingin menghapus Data Menanam ${log.type} ini? Data tidak dapat dikembalikan.`,
@@ -181,10 +183,12 @@
                       confirmTheme: 'danger',
                       onConfirm: () => $event.target.closest('form').submit()
                   })" class="btn btn-sm bg-error-600 hover:bg-error-700 text-white p-1.5 rounded-sm transition-colors">
-                        <i class="fa-solid fa-trash"></i>
-                      </button>
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
 
-                    </form>
+                      </form>
+                    </template>
+
                   </td>
 
                 </tr>

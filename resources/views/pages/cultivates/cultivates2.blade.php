@@ -46,11 +46,10 @@
     </div>
 
     @if(session('success'))
-    <div class="mb-4">
-      <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}"
-        :showLink="false" />
-    </div>
-    @endif    
+      <div class="mb-4">
+        <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}" :showLink="false" />
+      </div>
+    @endif
 
     {{-- data kosongan --}}
     <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="dataCultivates.length === 0"
@@ -114,13 +113,13 @@
 
                     <!-- Tombol Trigger untuk menghapus data spesifik -->
                     <button type="submit" @click.prevent="$dispatch('open-modal', {
-                      name: 'global-confirm',
-                      title: `Hapus Data Menanam ${item.name}?`,
-                      message: `Apakah Anda yakin ingin menghapus Data Menanam ${item.name} ini? Data tidak dapat dikembalikan.`,
-                      confirmText: 'Ya, Hapus',
-                      confirmTheme: 'danger',
-                      onConfirm: () => $event.target.closest('form').submit()
-                  })"
+                          name: 'global-confirm',
+                          title: `Hapus Data Menanam ${item.name}?`,
+                          message: `Apakah Anda yakin ingin menghapus Data Menanam ${item.name} ini? Data tidak dapat dikembalikan.`,
+                          confirmText: 'Ya, Hapus',
+                          confirmTheme: 'danger',
+                          onConfirm: () => $event.target.closest('form').submit()
+                      })"
                       class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                       🗑️ Hapus
                     </button>
@@ -133,8 +132,19 @@
                 <!-- Header Card: Tanaman & Lokasi -->
                 <div class="flex items-center gap-4 border-b border-stroke pb-4 dark:border-strokedark">
                   <div
-                    class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20"
-                    x-text="item.icon"></div>
+                    class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-carrot">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path
+                        d="M3 21s9.834 -3.489 12.684 -6.34a4.487 4.487 0 0 0 0 -6.344a4.483 4.483 0 0 0 -6.342 0c-2.86 2.861 -6.347 12.689 -6.347 12.689l.005 -.005" />
+                      <path d="M9 13l-1.5 -1.5" />
+                      <path d="M16 14l-2 -2" />
+                      <path d="M22 8s-1.14 -2 -3 -2c-1.406 0 -3 2 -3 2s1.14 2 3 2s3 -2 3 -2" />
+                      <path d="M16 2s-2 1.14 -2 3s2 3 2 3s2 -1.577 2 -3c0 -1.86 -2 -3 -2 -3" />
+                    </svg>
+                  </div>
                   <div>
                     <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="item.name"></h4>
                     <p class="text-sm font-medium text-brand-600 dark:text-brand-400" x-text="'📍 ' + item.location"></p>
@@ -170,21 +180,21 @@
               <div class="flex gap-2 pt-2 mt-auto">
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-blue-200 bg-blue-50 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-                  @click="$dispatch('open-modal-log-siram', { action: `/waters/add/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($waters) }}[item.id] ?? [] })">
+                  @click="$dispatch('open-modal-log-siram', { done: false, action: `/waters/add/${item.id}`, subtitle: `Mencatat penyiraman <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($waters) }}[item.id] ?? [] })">
                   💧 Siram
                 </button>
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-amber-200 bg-amber-50 py-2 text-sm font-medium text-amber-600 transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-                  @click="$dispatch('open-modal-log-pupuk', { action: `/fertilizes/add/${item.id}`, subtitle: `Mencatat pemupukan <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($fertilizes) }}[item.id] ?? [] })">
+                  @click="$dispatch('open-modal-log-pupuk', { done: false, action: `/fertilizes/add/${item.id}`, subtitle: `Mencatat pemupukan <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($fertilizes) }}[item.id] ?? [] })">
                   🧪 Pupuk
                 </button>
                 <button
                   class="flex-1 flex items-center justify-center gap-2 rounded border border-purple-200 bg-purple-50 py-2 text-sm font-medium text-purple-600 transition hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/30 dark:text-purple-400"
-                  @click="$dispatch('open-modal-log-panen', { 
-                          action: `/harvests/add/${item.id}`, 
-                          subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, 
-                          unit: item.unit, 
-                          logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
+                  @click="$dispatch('open-modal-log-panen', { done: false, 
+                              action: `/harvests/add/${item.id}`, 
+                              subtitle: `Mencatat panen <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, 
+                              unit: item.unit, 
+                              logs: {{ Js::from($harvests) }}[item.id] ?? [] })">
                   ✂️ Panen
                 </button>
               </div>
@@ -209,13 +219,13 @@
 
                     <!-- Tombol Trigger untuk menghapus data spesifik -->
                     <button type="submit" @click.prevent="$dispatch('open-modal', {
-                      name: 'global-confirm',
-                      title: `Hapus Data Menanam ${item.name}?`,
-                      message: `Apakah Anda yakin ingin menghapus Data Menanam ${item.name} ini? Data tidak dapat dikembalikan.`,
-                      confirmText: 'Ya, Hapus',
-                      confirmTheme: 'danger',
-                      onConfirm: () => $event.target.closest('form').submit()
-                  })"
+                          name: 'global-confirm',
+                          title: `Hapus Data Menanam ${item.name}?`,
+                          message: `Apakah Anda yakin ingin menghapus Data Menanam ${item.name} ini? Data tidak dapat dikembalikan.`,
+                          confirmText: 'Ya, Hapus',
+                          confirmTheme: 'danger',
+                          onConfirm: () => $event.target.closest('form').submit()
+                      })"
                       class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                       🗑️ Hapus
                     </button>
@@ -228,8 +238,19 @@
                 <!-- Header Card: Tanaman & Lokasi -->
                 <div class="flex items-center gap-4 border-b border-stroke pb-4 dark:border-strokedark">
                   <div
-                    class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-success-50 text-2xl dark:bg-success-900/20"
-                    x-text="item.icon"></div>
+                    class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-success-50 text-2xl dark:bg-success-900/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-carrot">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path
+                        d="M3 21s9.834 -3.489 12.684 -6.34a4.487 4.487 0 0 0 0 -6.344a4.483 4.483 0 0 0 -6.342 0c-2.86 2.861 -6.347 12.689 -6.347 12.689l.005 -.005" />
+                      <path d="M9 13l-1.5 -1.5" />
+                      <path d="M16 14l-2 -2" />
+                      <path d="M22 8s-1.14 -2 -3 -2c-1.406 0 -3 2 -3 2s1.14 2 3 2s3 -2 3 -2" />
+                      <path d="M16 2s-2 1.14 -2 3s2 3 2 3s2 -1.577 2 -3c0 -1.86 -2 -3 -2 -3" />
+                    </svg>
+                  </div>
                   <div>
                     <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="item.name"></h4>
                     <p class="text-sm font-medium text-success-600 dark:text-success-400">✅ <span
@@ -264,7 +285,7 @@
               <div class="flex gap-2 pt-2 mt-auto">
                 <button
                   class="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium underline text-blue-600 dark:text-blue-400"
-                  @click="$dispatch('open-modal-log-riwayat', { action: `/siram/${item.id}`, subtitle: `Melihat riwayat <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($mergedLogs) }}[item.id] ?? []  })">
+                  @click="$dispatch('open-modal-log-riwayat', { done: true, action: `/siram/${item.id}`, subtitle: `Melihat riwayat <strong>${item.name}</strong> di <strong>${item.location}</strong>.`, logs: {{ Js::from($mergedLogs) }}[item.id] ?? []  })">
                   Lihat Data Riwayat
                 </button>
               </div>
@@ -290,12 +311,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                     border-gray-200 bg-transparent text-gray-400
-                                     hover:border-brand-500 hover:text-brand-600
-                                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                     dark:border-gray-700 dark:text-gray-500
-                                     dark:hover:border-brand-500 dark:hover:text-brand-400
-                                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                         border-gray-200 bg-transparent text-gray-400
+                                         hover:border-brand-500 hover:text-brand-600
+                                         disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                         dark:border-gray-700 dark:text-gray-500
+                                         dark:hover:border-brand-500 dark:hover:text-brand-400
+                                         dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -304,20 +325,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                                  ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                                  : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                      ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                      : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                     border-gray-200 bg-transparent text-gray-400
-                                     hover:border-brand-500 hover:text-brand-600
-                                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                     dark:border-gray-700 dark:text-gray-500
-                                     dark:hover:border-brand-500 dark:hover:text-brand-400
-                                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                         border-gray-200 bg-transparent text-gray-400
+                                         hover:border-brand-500 hover:text-brand-600
+                                         disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                         dark:border-gray-700 dark:text-gray-500
+                                         dark:hover:border-brand-500 dark:hover:text-brand-400
+                                         dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
       </div>
     </div>
@@ -334,12 +355,18 @@
           'options' => $plants->pluck('plant_name', 'id')
         ],
         [
+          'name' => 'qty',
+          'label' => 'Jumlah Bibit',
+          'type' => 'number',
+          'placeholder' => 'Isi Jumlah Bibit'
+        ],
+        [
           'name' => 'plot_id',
           'label' => 'Pilih Lokasi Bedengan',
           'type' => 'select',
           'options' => $plots->pluck('plot_name', 'id')
         ],
-        ['name' => 'datetime', 'label' => 'Tanggal Tanam', 'type' => 'datetime-local', 'placeholder' => 'Isi Jumlah bibit'],
+        ['name' => 'datetime', 'label' => 'Tanggal Tanam', 'type' => 'datetime-local', 'placeholder' => ''],
         // ['name' => 'jumlah_bibit', 'label' => 'Jumlah Bibit/Lubang', 'type' => 'number', 'placeholder' => 'Isi Jumlah bibit']
       ];
 
@@ -377,7 +404,7 @@
       ];
     @endphp
 
-    <x-ui.modal-form id="modal-tanam" title="Data Masa Tanam" action="/cultivates/add" :fields="$tanamFields" />
+    <x-ui.modal-form id="modal-tanam" title="Data Menanam" action="/cultivates/add" :fields="$tanamFields" />
 
     <x-ui.modal-log id="siram" title="Catat Penyiraman" icon="💧" colorTheme="blue" logTitle="RIWAYAT PENYIRAMAN"
       :fields="$siramFields" />
