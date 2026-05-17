@@ -15,6 +15,12 @@
                 Enter your email or username and password to sign in!
               </p>
             </div>
+            @if(session('register'))
+              <div class="mb-4">
+                <x-ui.alert variant="success" title="{{ session('title') }}" message="{{ session('register') }}"
+                  :showLink="false" />
+              </div>
+            @endif
             <div>
               <form action="/login" method="POST">
                 @csrf
@@ -63,8 +69,9 @@
                         <div class="relative">
                           <input type="checkbox" id="checkboxLabelOne" class="sr-only" name="remember"
                             @change="checkboxToggle = !checkboxToggle" />
-                          <div :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
-                                                            'bg-transparent border-gray-300 dark:border-gray-700'"
+                          <div
+                            :class="checkboxToggle ? 'border-brand-500 bg-brand-500' :
+                                                                        'bg-transparent border-gray-300 dark:border-gray-700'"
                             class="mr-3 flex h-5 w-5 items-center justify-center rounded-md border-[1.25px]">
                             <span :class="checkboxToggle ? '' : 'opacity-0'">
                               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -93,7 +100,7 @@
               </form>
               <div class="mt-5">
                 <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
-                  Don't have an account?
+                  Tidak Punya Akun?
                   <a href="/signup" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">Sign Up</a>
                 </p>
               </div>
@@ -104,18 +111,17 @@
 
       {{-- another side --}}
       <div class="bg-brand-950 relative hidden h-full w-full items-center lg:grid lg:w-1/2 dark:bg-white/5">
-        <div class="z-1 flex items-center justify-center">
-          <!-- ===== Common Grid Shape Start ===== -->
-          <x-common.common-grid-shape />
-          <div class="flex max-w-xs flex-col items-center">
-            <a href="/" class="mb-4 block">
-              <img src="./images/logo/auth-logo.svg" alt="Logo" />
-            </a>
-            <p class="text-center text-gray-400 dark:text-white/60">
-              Free and Open-Source Tailwind CSS Admin Dashboard Template
-            </p>
-          </div>
+
+        <div class="relative grid h-full w-full grid-cols-1 grid-rows-2 gap-0 overflow-hidden">
+
+          <div class="absolute inset-0 z-10 pointer-events-none dark:bg-black/50 transition-colors duration-300"></div>
+
+          <img src="{{ asset('images/photos/photo1.jpg') }}" alt="Fase Tanam" class="object-cover w-full h-full" />
+
+          <img src="{{ asset('images/photos/photo2.jpg') }}" alt="Fase Perawatan" class="object-cover w-full h-full" />
+
         </div>
+
       </div>
 
       <!-- Toggler -->

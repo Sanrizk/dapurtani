@@ -58,9 +58,6 @@ Route::get('/bar-chart', function () {
 //     return view('pages.auth.signin', ['title' => 'Sign In']);
 // })->name('signin');
 
-Route::get('/signup', function () {
-    return view('pages.auth.signup', ['title' => 'Sign Up']);
-})->name('signup');
 
 // ui elements pages
 Route::get('/alerts', function () {
@@ -90,49 +87,61 @@ Route::get('/videos', function () {
 
 Route::get('/dashboard2', function () {
     return view('pages.dashboard_.dashboard', ['title' => 'E-commerce Dashboard']);
-})->name('dashboard');
+});
 
 // Route::get('/plants', function () {
 //     return view('pages.plants.plants', ['title' => 'E-commerce Dashboard']);
 // })->name('dashboard');
 // Route::get('/plants', [PlantController::class, 'index'])->name('plants');
-Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
-Route::post('/login', [AuthController::class, 'authenticate']);
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/signup', function () {
+    return view('pages.auth.signup', ['title' => 'Sign Up']);
+})->name('signup');
 
-// dashboard pages
-Route::get('/', function () {
-    return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
-})->name('dashboard')->middleware('auth');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/signin', [AuthController::class, 'signin'])->name('signin');
+    Route::post('/login', [AuthController::class, 'authenticate']);
+    Route::post('/register', [AuthController::class,'register']);
+});
 
-Route::get('/plants', [PlantController::class, 'index'])->name('plants');
-Route::post('/plants/add', [PlantController::class, 'store'])->name('plants.store');
-Route::put('/plants/edit/{plant}', [PlantController::class,'update']);
-Route::delete('/plants/delete/{plant}', [PlantController::class,'destroy']);
+Route::middleware(['auth'])->group(function () {
+    // Semua route di dalam kotak ini aman, wajib login!
+    // dashboard pages
+    Route::get('/', function () {
+        return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
+    })->name('dashboard');
 
-Route::get('/plots', [PlotController::class, 'index'])->name('plots');
-Route::post('/plots/add', [PlotController::class, 'store'])->name('plots.store');
-Route::put('/plots/edit/{plot}', [PlotController::class,'update']);
-Route::delete('/plots/delete/{plot}', [PlotController::class,'destroy']);
+    Route::get('/plants', [PlantController::class, 'index'])->name('plants');
+    Route::post('/plants/add', [PlantController::class, 'store'])->name('plants.store');
+    Route::put('/plants/edit/{plant}', [PlantController::class, 'update']);
+    Route::delete('/plants/delete/{plant}', [PlantController::class, 'destroy']);
 
-Route::get('/cultivates', [CultivateController::class, 'index'])->name('cultivates');
-Route::post('/cultivates/add', [CultivateController::class, 'store'])->name('cultivates.store');
-Route::put('/cultivates/edit/{cultivate}', [CultivateController::class,'update']);
-Route::delete('/cultivates/delete/{cultivate}', [CultivateController::class,'destroy']);
+    Route::get('/plots', [PlotController::class, 'index'])->name('plots');
+    Route::post('/plots/add', [PlotController::class, 'store'])->name('plots.store');
+    Route::put('/plots/edit/{plot}', [PlotController::class, 'update']);
+    Route::delete('/plots/delete/{plot}', [PlotController::class, 'destroy']);
 
-Route::get('/harvests', [HarvestController::class, 'index'])->name('harvests');
+    Route::get('/cultivates', [CultivateController::class, 'index'])->name('cultivates');
+    Route::post('/cultivates/add', [CultivateController::class, 'store'])->name('cultivates.store');
+    Route::put('/cultivates/edit/{cultivate}', [CultivateController::class, 'update']);
+    Route::delete('/cultivates/delete/{cultivate}', [CultivateController::class, 'destroy']);
 
-Route::post('/waters/add/{cultivate}', [WaterController::class,'store']);
-Route::delete('/waters/delete/{water}', [WaterController::class,'destroy']);
+    Route::get('/harvests', [HarvestController::class, 'index'])->name('harvests');
 
-Route::post('/fertilizes/add/{cultivate}', [FertilizeController::class,'store']);
-Route::delete('/fertilizes/delete/{fertilize}', [FertilizeController::class,'destroy']);
+    Route::post('/waters/add/{cultivate}', [WaterController::class, 'store']);
+    Route::delete('/waters/delete/{water}', [WaterController::class, 'destroy']);
 
-Route::post('/harvests/add/{cultivate}', [HarvestController::class,'store']);
-Route::delete('/harvests/delete/{harvest}', [HarvestController::class,'destroy']);
+    Route::post('/fertilizes/add/{cultivate}', [FertilizeController::class, 'store']);
+    Route::delete('/fertilizes/delete/{fertilize}', [FertilizeController::class, 'destroy']);
 
-Route::post('/consumes/add/{harvest}', [ConsumeController::class,'store']);
-Route::delete('/consumes/delete/{consume}', [ConsumeController::class,'destroy']);
+    Route::post('/harvests/add/{cultivate}', [HarvestController::class, 'store']);
+    Route::delete('/harvests/delete/{harvest}', [HarvestController::class, 'destroy']);
+
+    Route::post('/consumes/add/{harvest}', [ConsumeController::class, 'store']);
+    Route::delete('/consumes/delete/{consume}', [ConsumeController::class, 'destroy']);
+
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
 
 
 // Route::get('/plots', function () {
