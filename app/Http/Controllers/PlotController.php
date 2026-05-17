@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cultivate;
 use App\Models\Plot;
 use Illuminate\Http\Request;
+
 
 class PlotController extends Controller
 {
@@ -13,7 +15,29 @@ class PlotController extends Controller
   public function index()
   {
     $plots = Plot::all();
+    $cultivates = Cultivate::all();
+
+    // 1. Ekstrak semua 'plot_id' dari data cultivate menjadi bentuk array.
+    // Jika data $cultivates kosong, ini otomatis akan menghasilkan array kosong [].
+    $cultivatedPlotIds = $cultivates->pluck('plot_id')->toArray();
+
+    // 2. Map data plots
+    $plots = $plots->map(function ($plot) use ($cultivatedPlotIds) {
+
+      // Cek apakah ID plot saat ini ada di dalam array $cultivatedPlotIds
+      if (in_array($plot->id, $cultivatedPlotIds)) {
+        $plot->status = 'terisi';
+      } else {
+        // Jika tidak ada kecocokan, atau jika array $cultivatedPlotIds kosong, 
+        // maka status otomatis menjadi 'kosong'.
+        $plot->status = 'kosong';
+      }
+
+      return $plot;
+    });
+
     $title = 'Bedengan | Dapurtani';
+
     return view('pages.plots.plots2', compact('plots', 'title'));
   }
 
@@ -41,7 +65,7 @@ class PlotController extends Controller
 
     return redirect()->route('plots')
       ->with('action', 'tambah')
-      ->with('success', 'Data '. $request['plot_name'] .' berhasil ditambahkan.');
+      ->with('success', 'Data ' . $request['plot_name'] . ' berhasil ditambahkan.');
   }
 
   /**

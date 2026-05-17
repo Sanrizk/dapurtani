@@ -30,16 +30,16 @@
     </div>
 
     @if(session('success'))
-    <div class="mb-4">
-      <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}"
-        :showLink="false" />
-    </div>
-    @endif    
+      <div class="mb-4">
+        <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}" :showLink="false" />
+      </div>
+    @endif
 
     {{-- data kosongan --}}
     <div class="flex flex-col items-center justify-center py-16 px-6 text-center" x-show="plots.length === 0" x-cloak>
       <div class="w-20 h-20 mb-5 rounded-full bg-brand-100 dark:bg-brand-800 flex items-center justify-center">
-        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <svg class="w-10 h-10 text-brand-400 dark:text-brand-300" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round"
             d="M12 3C8 3 4.5 6.5 5 11c.3 2.5 2 4.5 4 5.5V19h6v-2.5c2-1 3.7-3 4-5.5.5-4.5-3-8-7-8z" />
         </svg>
@@ -82,10 +82,10 @@
             <div x-show="open" x-cloak x-transition
               class="absolute right-0 mt-1 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20">
               <button @click="$dispatch('open-modal-modal-bedengan', { 
-                                                mode: 'edit', 
-                                                action: `/plots/edit/${plot.id}`, 
-                                                data: {...plot} 
-                                            }); open = false"
+                                                        mode: 'edit', 
+                                                        action: `/plots/edit/${plot.id}`, 
+                                                        data: {...plot} 
+                                                    }); open = false"
                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                 ✏️ Edit
               </button>
@@ -95,13 +95,13 @@
 
                 <!-- Tombol Trigger untuk menghapus data spesifik -->
                 <button type="submit" @click.prevent="$dispatch('open-modal', {
-                  name: 'global-confirm',
-                  title: `Hapus Bedengan ${plot.plot_name}?`,
-                  message: `Apakah Anda yakin ingin menghapus bedengan ${plot.plot_name} ini? Data tidak dapat dikembalikan.`,
-                  confirmText: 'Ya, Hapus',
-                  confirmTheme: 'danger',
-                  onConfirm: () => $event.target.closest('form').submit()
-              })"
+                          name: 'global-confirm',
+                          title: `Hapus Bedengan ${plot.plot_name}?`,
+                          message: `Apakah Anda yakin ingin menghapus bedengan ${plot.plot_name} ini? Data tidak dapat dikembalikan.`,
+                          confirmText: 'Ya, Hapus',
+                          confirmTheme: 'danger',
+                          onConfirm: () => $event.target.closest('form').submit()
+                      })"
                   class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                   🗑️ Hapus
                 </button>
@@ -114,8 +114,34 @@
           <template x-if="plot.status === 'terisi'">
             <div
               class="mb-4 flex h-32 w-full items-center justify-center rounded-md border-4 border-dashed border-[#2E5E16] bg-[#1A3C0F] relative overflow-hidden">
-              <div class="flex gap-3 text-3xl">
-                <span>🌱</span><span>🌱</span><span>🌱</span>
+              <div class="flex gap-3 text-3xl text-gray-50 dark:text-gray-300">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-plant">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 15h10v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2v-4" />
+                    <path d="M12 9a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3" />
+                    <path d="M12 11a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3" />
+                    <path d="M12 15l0 -6" />
+                  </svg></span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-plant">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 15h10v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2v-4" />
+                    <path d="M12 9a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3" />
+                    <path d="M12 11a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3" />
+                    <path d="M12 15l0 -6" />
+                  </svg></span>
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-plant">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 15h10v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2v-4" />
+                    <path d="M12 9a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3" />
+                    <path d="M12 11a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3" />
+                    <path d="M12 15l0 -6" />
+                  </svg></span>
               </div>
             </div>
           </template>
@@ -177,12 +203,12 @@
 
       <div class="flex items-center gap-1">
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                     border-gray-200 bg-transparent text-gray-400
-                     hover:border-brand-500 hover:text-brand-600
-                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                     dark:border-gray-700 dark:text-gray-500
-                     dark:hover:border-brand-500 dark:hover:text-brand-400
-                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                             border-gray-200 bg-transparent text-gray-400
+                             hover:border-brand-500 hover:text-brand-600
+                             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                             dark:border-gray-700 dark:text-gray-500
+                             dark:hover:border-brand-500 dark:hover:text-brand-400
+                             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -190,19 +216,19 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                  ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                  : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                          ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                          : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page" x-text="page">
           </button>
         </template>
 
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                     border-gray-200 bg-transparent text-gray-400
-                     hover:border-brand-500 hover:text-brand-600
-                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                     dark:border-gray-700 dark:text-gray-500
-                     dark:hover:border-brand-500 dark:hover:text-brand-400
-                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                             border-gray-200 bg-transparent text-gray-400
+                             hover:border-brand-500 hover:text-brand-600
+                             disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                             dark:border-gray-700 dark:text-gray-500
+                             dark:hover:border-brand-500 dark:hover:text-brand-400
+                             dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
@@ -229,7 +255,7 @@
       return {
         search: '',
         currentPage: 1,
-        itemsPerPage: 4, // Setting limit grid pagination. Saya set 4 agar sejajar dengan xl:grid-cols-4
+        itemsPerPage: 8, // Setting limit grid pagination. Saya set 4 agar sejajar dengan xl:grid-cols-4
 
         // Data dummy array
         // plots: [

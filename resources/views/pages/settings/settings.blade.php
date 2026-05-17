@@ -14,7 +14,7 @@
       <!-- ========================================= -->
       <!-- Card 1: Update Personal Information       -->
       <!-- ========================================= -->
-      <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div class="rounded-sm border border-stroke bg-white dark:bg-gray-800 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div class="border-b border-stroke py-4 px-7 dark:border-strokedark">
           <h3 class="font-medium text-black dark:text-white">
             Informasi Personal
@@ -53,8 +53,7 @@
             <!-- Submit Button -->
             <div class="flex justify-end gap-4.5">
               <button type="submit"
-                class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:opacity-50"
-                x-bind:disabled="isSubmitting">
+                class="rounded bg-brand-600 dark:bg-brand-900 px-4 py-2 font-medium text-white hover:bg-brand-700 dark:hover:bg-brand-700 transition" x-bind:disabled="isSubmitting">
                 <span x-show="!isSubmitting">Simpan Perubahan</span>
                 <span x-show="isSubmitting">Menyimpan...</span>
               </button>
@@ -66,7 +65,7 @@
       <!-- ========================================= -->
       <!-- Card 2: Update Password                   -->
       <!-- ========================================= -->
-      <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div class="rounded-sm border border-stroke bg-white dark:bg-gray-800 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div class="border-b border-stroke py-4 px-7 dark:border-strokedark">
           <h3 class="font-medium text-black dark:text-white">
             Ubah Password
@@ -113,9 +112,8 @@
             <!-- Submit Button -->
             <div class="flex justify-end gap-4.5">
               <button type="submit"
-                class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90 disabled:opacity-50"
-                x-bind:disabled="isSubmitting">
-                <span x-show="!isSubmitting">Update Password</span>
+                class="rounded bg-brand-600 dark:bg-brand-900 px-4 py-2 font-medium text-white hover:bg-brand-700 dark:hover:bg-brand-700 transition" x-bind:disabled="isSubmitting">
+                <span x-show="!isSubmitting">Ubah Password</span>
                 <span x-show="isSubmitting">Memproses...</span>
               </button>
             </div>

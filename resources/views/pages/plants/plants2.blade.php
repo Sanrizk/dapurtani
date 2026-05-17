@@ -29,10 +29,9 @@
     </div>
 
     @if(session('success'))
-    <div class="mb-4">
-      <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}"
-        :showLink="false" />
-    </div>
+      <div class="mb-4">
+        <x-ui.alert variant="success" :title="session('action') == 'ubah' ? 'Berhasil Diubah' : (session('action') == 'hapus' ? 'Berhasil Dihapus' : 'Berhasil Diinput')" message="{{ session('success') }}" :showLink="false" />
+      </div>
     @endif
 
     {{-- data kosongan --}}
@@ -73,9 +72,20 @@
         <div
           class="relative rounded-xl bg-white border dark:bg-brand-green-bg p-6 shadow-default transition hover:-translate-y-1 hover:shadow-lg border-gray-400">
           <div class="flex items-center gap-4">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20"
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-2xl dark:bg-brand-900/20 dark:text-amber-300">
               {{-- x-text="plant.icon"> --}}
-              x-text="'🧅'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-carrot">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M3 21s9.834 -3.489 12.684 -6.34a4.487 4.487 0 0 0 0 -6.344a4.483 4.483 0 0 0 -6.342 0c-2.86 2.861 -6.347 12.689 -6.347 12.689l.005 -.005" />
+                <path d="M9 13l-1.5 -1.5" />
+                <path d="M16 14l-2 -2" />
+                <path d="M22 8s-1.14 -2 -3 -2c-1.406 0 -3 2 -3 2s1.14 2 3 2s3 -2 3 -2" />
+                <path d="M16 2s-2 1.14 -2 3s2 3 2 3s2 -1.577 2 -3c0 -1.86 -2 -3 -2 -3" />
+              </svg>
             </div>
             <div>
               <h4 class="text-lg font-bold text-gray-900 dark:text-white" x-text="plant.plant_name"></h4>
@@ -101,10 +111,10 @@
 
               <!-- Tombol Edit melempar data spesifik dari loop ke Modal -->
               <button @click="$dispatch('open-modal-modal-plants', { 
-                              mode: 'edit', 
-                              action: `/plants/edit/${plant.id}`, 
-                              data: {...plant}
-                          }); open = false"
+                                  mode: 'edit', 
+                                  action: `/plants/edit/${plant.id}`, 
+                                  data: {...plant}
+                              }); open = false"
                 class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                 ✏️ Edit
               </button>
@@ -115,13 +125,13 @@
 
                 <!-- Tombol Trigger untuk menghapus data spesifik -->
                 <button type="submit" @click.prevent="$dispatch('open-modal', {
-                    name: 'global-confirm',
-                    title: `Hapus Pohon ${plant.plant_name}?`,
-                    message: `Apakah Anda yakin ingin menghapus pohon ${plant.plant_name} ini? Data tidak dapat dikembalikan.`,
-                    confirmText: 'Ya, Hapus',
-                    confirmTheme: 'danger',
-                    onConfirm: () => $event.target.closest('form').submit()
-                })"
+                        name: 'global-confirm',
+                        title: `Hapus Pohon ${plant.plant_name}?`,
+                        message: `Apakah Anda yakin ingin menghapus pohon ${plant.plant_name} ini? Data tidak dapat dikembalikan.`,
+                        confirmText: 'Ya, Hapus',
+                        confirmTheme: 'danger',
+                        onConfirm: () => $event.target.closest('form').submit()
+                    })"
                   class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                   🗑️ Hapus
                 </button>
@@ -147,12 +157,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                           border-gray-200 bg-transparent text-gray-400
-                                           hover:border-brand-500 hover:text-brand-600
-                                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                           dark:border-gray-700 dark:text-gray-500
-                                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                               border-gray-200 bg-transparent text-gray-400
+                                               hover:border-brand-500 hover:text-brand-600
+                                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                               dark:border-gray-700 dark:text-gray-500
+                                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -161,20 +171,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                                        ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                                        : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                            ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                            : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                           border-gray-200 bg-transparent text-gray-400
-                                           hover:border-brand-500 hover:text-brand-600
-                                           disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                           dark:border-gray-700 dark:text-gray-500
-                                           dark:hover:border-brand-500 dark:hover:text-brand-400
-                                           dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                               border-gray-200 bg-transparent text-gray-400
+                                               hover:border-brand-500 hover:text-brand-600
+                                               disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                               dark:border-gray-700 dark:text-gray-500
+                                               dark:hover:border-brand-500 dark:hover:text-brand-400
+                                               dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
