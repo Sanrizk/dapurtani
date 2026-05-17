@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Harvest;
+use App\Models\Stock;
 use App\Models\Cultivate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class HarvestController extends Controller
 {
@@ -25,6 +27,10 @@ class HarvestController extends Controller
       $plant = $cultivate ? $cultivate->plant : null;
       $plot = $cultivate ? $cultivate->plot : null;
 
+      $totalConsumed = $harvest->consumes->filter(function ($consume) use ($harvest) {
+        return $consume->batch === $harvest->batch;
+      })->sum('qty');
+
       return [
         'id' => $harvest->id,
         'batch' => 'Batch ' . $harvest->batch,
@@ -35,7 +41,7 @@ class HarvestController extends Controller
 
         // Karena di tabel harvest hanya ada 'qty', sementara sisa_stok kita asumsikan 
         // sama dengan qty saat baru dipanen (kecuali Anda punya tabel penjualan/penggunaan)
-        'sisa_stok' => $harvest->qty,
+        'sisa_stok' => $harvest->qty - $totalConsumed,
         'total_panen' => $harvest->qty,
 
         'unit' => $plant->unit ?? '-'
@@ -88,7 +94,33 @@ class HarvestController extends Controller
 
     $title = "Daftar Panen | Dapurtani";
 
-    return view('pages.harvests.harvests2', compact('formattedHarvests', 'title', 'harvestsStok', 'consumes'));
+    // 1. Ambil data Stock beserta relasinya ke Plant
+    $stocks = Stock::with('plant')->get();
+
+    // 2. Ubah format datanya menggunakan map()
+    $formattedStocks = $stocks->map(function ($stock) {
+      // Mempermudah pemanggilan relasi
+      $plant = $stock->plant;
+
+      return [
+        'id' => $stock->id,
+        'icon' => '🌱', // Bisa disesuaikan dinamis nanti
+        'plant_name' => $plant->plant_name ?? '-',
+
+        // Mengambil dari kolom fisik
+        'total_panen' => $stock->total_harvest,
+        'total_keluar' => $stock->total_consume,
+
+        // Menghitung sisa stok langsung di dalam map 
+        // (Jika sudah pakai Accessor, bisa juga panggil $stock->sisa_stok)
+        'sisa_stok' => $stock->total_harvest - $stock->total_consume,
+
+        // Jika di tabel plants ada kolom unit (satuan), bisa dipanggil juga
+        'unit' => $plant->unit ?? 'kg'
+      ];
+    });
+
+    return view('pages.harvests.harvests2', compact('formattedHarvests', 'title', 'harvestsStok', 'consumes', 'formattedStocks'));
   }
 
   public function store(Request $request, Cultivate $cultivate)

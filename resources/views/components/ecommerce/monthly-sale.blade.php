@@ -4,10 +4,6 @@
         <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">
             Monthly Sales
         </h3>
-
-        <!-- Dropdown Menu -->
-        <x-common.dropdown-menu />
-        <!-- End Dropdown Menu -->
     </div>
 
     <div class="max-w-full overflow-x-auto custom-scrollbar">

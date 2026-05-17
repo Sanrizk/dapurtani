@@ -214,7 +214,7 @@
 
 
   {{-- per jenis --}}
-  <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10" x-data="harvestBoard({{ Js::from($harvestsStok) }})">
+  <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10" x-data="harvestBoard({{ Js::from($formattedStocks) }})">
     {{-- per jenis (hanya tampilan keseluruhan tanpa aksi) --}}
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>

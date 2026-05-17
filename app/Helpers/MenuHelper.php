@@ -16,11 +16,6 @@ class MenuHelper
         'icon' => 'calendar',
         'name' => 'Bedengan',
         'path' => '/plots',
-      ],
-      [
-        'icon' => 'user-profile',
-        'name' => 'Pengguna',
-        'path' => '/users',
       ]
     ];
   }
@@ -43,17 +38,7 @@ class MenuHelper
         'icon' => 'charts',
         'name' => 'Menanam',
         'path' => '/cultivates'
-      ],
-      [
-        'icon' => 'ui-elements',
-        'name' => 'Memupuk',
-        'path' => '/fertilizes'
-      ],
-      [
-        'icon' => 'ui-elements',
-        'name' => 'Menyiram',
-        'path' => '/waters'
-      ],
+      ]
     ];
   }
 
@@ -65,12 +50,7 @@ class MenuHelper
         'icon' => 'charts',
         'name' => 'Panen',
         'path' => '/harvests'
-      ],
-      [
-        'icon' => 'ui-elements',
-        'name' => 'Pascapanen',
-        'path' => '/consumes'
-      ],
+      ]
     ];
   }
 
@@ -78,19 +58,19 @@ class MenuHelper
   {
     return [
       [
-        'title' => 'Dashboard',
+        'title' => '',
         'items' => self::getDashboardItems(),
       ],
       [
-        'title' => 'Data Master',
+        'title' => '',
         'items' => self::getMainNavItems()
       ],
       [
-        'title' => 'Aktivitas',
+        'title' => '',
         'items' => self::getOthersItems1()
       ],
       [
-        'title' => 'Pengelolaan',
+        'title' => '',
         'items' => self::getOthersItems2()
       ]
     ];

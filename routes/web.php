@@ -107,7 +107,7 @@ Route::middleware(['auth'])->group(function () {
     // Semua route di dalam kotak ini aman, wajib login!
     // dashboard pages
     Route::get('/', function () {
-        return view('pages.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
+        return view('pages.dashboard.ecommerce2', ['title' => 'E-commerce Dashboard']);
     })->name('dashboard');
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
