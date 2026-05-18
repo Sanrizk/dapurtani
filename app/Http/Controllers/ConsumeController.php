@@ -17,6 +17,7 @@ class ConsumeController extends Controller
     ]);
 
     $request['harvest_id'] = $harvest->id;
+    $request['batch'] = $harvest->batch;
 
     // Simpan ke database
     Consume::create($request->all());

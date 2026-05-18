@@ -90,4 +90,40 @@ class AuthController extends Controller
 
     return redirect('/signin');
   }
+
+  public function updateProfile(Request $request)
+  {
+    // $user = User::findOrFail($id);
+    // $user->update($request->all());
+    $request->user()->update([
+      'username' => $request->username,
+      'full_name' => $request->full_name,
+      'email' => $request->email,
+    ]);
+
+    return redirect()->back()->with('successProfile', 'Data Telah Diperbarui');
+
+  }
+
+  public function updatePassword(Request $request)
+  {
+    // 1. Validasi Input
+    $request->validate([
+      'current_password' => ['required', 'current_password'],
+
+      'password' => ['required', 'string', 'min:8', 'confirmed'],
+    ], [
+      'current_password.current_password' => 'Password saat ini tidak sesuai.',
+      'password.min' => 'Password baru minimal harus 8 karakter.',
+      'password.confirmed' => 'Konfirmasi password tidak cocok.'
+    ]);
+
+    // 2. Update password ke database
+    $request->user()->update([
+      'password' => Hash::make($request->password),
+    ]);
+
+    // 3. Redirect kembali dengan pesan sukses
+    return back()->with('successPassword', 'Password berhasil diperbarui!');
+  }
 }

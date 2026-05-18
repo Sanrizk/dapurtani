@@ -140,6 +140,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/consumes/delete/{consume}', [ConsumeController::class, 'destroy']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::patch('/users/update', [AuthController::class,'updateProfile']);
+
+    Route::put('/profile/password', [AuthController::class, 'updatePassword']);
 });
 
 

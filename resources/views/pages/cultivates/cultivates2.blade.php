@@ -364,7 +364,7 @@
           'name' => 'plot_id',
           'label' => 'Pilih Lokasi Bedengan',
           'type' => 'select',
-          'options' => $plots->pluck('plot_name', 'id')
+          'options' => $availablePlots->pluck('plot_name', 'id')
         ],
         ['name' => 'datetime', 'label' => 'Tanggal Tanam', 'type' => 'datetime-local', 'placeholder' => ''],
         // ['name' => 'jumlah_bibit', 'label' => 'Jumlah Bibit/Lubang', 'type' => 'number', 'placeholder' => 'Isi Jumlah bibit']

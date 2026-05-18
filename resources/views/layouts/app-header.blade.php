@@ -50,8 +50,8 @@
 
             <!-- Logo (mobile only) -->
             <a href="/" class="xl:hidden">
-                <img class="dark:hidden" width="100px" src="/images/logo/logo.png" alt="Logo" />
-                <img class="hidden dark:block" width="100px" src="/images/logo/logo-dark.png" alt="Logo" />
+                <img class="dark:hidden" width="180px" src="/images/logo/logo.png" alt="Logo" />
+                <img class="hidden dark:block" width="180px" src="/images/logo/logo-dark.png" alt="Logo" />
             </a>
 
             <!-- Application Menu Toggle (mobile only) -->

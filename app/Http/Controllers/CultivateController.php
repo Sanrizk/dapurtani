@@ -89,7 +89,12 @@ class CultivateController extends Controller
 
     $plants = Plant::all();
 
+    $cultivatedPlotIds = $cultivates->pluck('plot_id')->toArray();
     $plots = Plot::all();
+
+    $cultivatedPlotIds = $cultivates->pluck('plot_id')->toArray();
+
+    $availablePlots = $plots->whereNotIn('id', $cultivatedPlotIds)->values();
 
     // log atau riwayat harvests
     $harvests = $cultivates->flatMap->harvests->groupBy('cultivate_id')->map(function ($harvests) {
@@ -166,7 +171,7 @@ class CultivateController extends Controller
     $hc = new HarvestController();
     $newBatch = $hc->getBatch();
 
-    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots', 'cultivates', 'harvests', 'waters', 'fertilizes', 'mergedLogs', 'newBatch'));
+    return view('pages.cultivates.cultivates2', compact('formattedCultivates', 'title', 'plants', 'plots', 'cultivates', 'harvests', 'waters', 'fertilizes', 'mergedLogs', 'newBatch', 'availablePlots'));
   }
 
   public function store(Request $request)
