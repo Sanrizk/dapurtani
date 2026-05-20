@@ -59,7 +59,7 @@ class MenuHelper
       [
         'icon' => 'task',
         'name' => 'Laporan',
-        'path' => '/report',
+        'path' => '/reports',
       ]
     ];
   }

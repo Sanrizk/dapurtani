@@ -10,6 +10,7 @@ use App\Http\Controllers\HarvestController;
 use App\Http\Controllers\WaterController;
 use App\Http\Controllers\FertilizeController;
 use App\Http\Controllers\ConsumeController;
+use App\Http\Controllers\ReportController;
 
 // calender pages
 Route::get('/calendar', function () {
@@ -142,6 +143,13 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/users/update', [AuthController::class,'updateProfile']);
 
     Route::put('/profile/password', [AuthController::class, 'updatePassword']);
+
+    Route::get('/reports', function() {
+        $title = 'Laporan | Dapurtani';
+        return view('pages.report', compact('title'));
+    });
+
+    Route::get('/reports/excel', [ReportController::class, 'index']);
 });
 
 
