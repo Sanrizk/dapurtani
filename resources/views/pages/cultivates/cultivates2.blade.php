@@ -94,8 +94,8 @@
           <!-- KOMPONEN 1: BELUM DIPANEN (is_harvested == false) -->
           <template x-if="!item.is_harvested">
             <div
-              class="relative flex h-full flex-col justify-between rounded-sm border border-stroke bg-white dark:bg-brand-green-bg p-5 shadow-default dark:border-strokedark dark:bg-boxdark">
-
+              class="relative flex h-full flex-col justify-between rounded-sm border border-stroke bg-white dark:bg-brand-green-bg p-5 dark:border-strokedark shadow-default dark:bg-boxdark" :class="item.id == {{ session('fromPlot', 'null') }} ? 'dark:border-amber-500 border-amber-700' : ''">
+{{-- dark:border-amber-500 border-amber-700 --}}
               <!-- Dropdown Edit/Delete -->
               <div x-data="{ open: false }" class="absolute right-3 top-3 z-10">
                 <button @click="open = !open" @click.outside="open = false"
@@ -206,7 +206,7 @@
           <template x-if="item.is_harvested">
             <div
               class="relative flex h-full flex-col justify-between rounded-sm border border-stroke bg-white dark:bg-brand-green-bg p-5 shadow-default dark:border-strokedark dark:bg-boxdark opacity-90 hover:opacity-100 transition-opacity">
-
+{{-- dark:border-amber-500 border-amber-700 --}}
               <!-- Dropdown Edit/Delete -->
               <div x-data="{ open: false }" class="absolute right-3 top-3 z-10">
                 <button @click="open = !open" @click.outside="open = false"

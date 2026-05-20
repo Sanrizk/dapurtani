@@ -89,11 +89,16 @@ class CultivateController extends Controller
 
     $plants = Plant::all();
 
-    $cultivatedPlotIds = $cultivates->pluck('plot_id')->toArray();
+    // Ambil data kultivasi yang statusnya BUKAN 'harvested' (sesuaikan dengan nama status di database)
+    $activeCultivates = Cultivate::where('is_harvested', '!=', true)->get();
+
+    // Jika acuan panen menggunakan tanggal (kolom harvest_date kosong berarti belum dipanen):
+// $activeCultivates = Cultivate::whereNull('harvest_date')->get();
+
+    $cultivatedPlotIds = $activeCultivates->pluck('plot_id')->toArray();
     $plots = Plot::all();
 
-    $cultivatedPlotIds = $cultivates->pluck('plot_id')->toArray();
-
+    // Filter plot yang tersedia
     $availablePlots = $plots->whereNotIn('id', $cultivatedPlotIds)->values();
 
     // log atau riwayat harvests

@@ -17,19 +17,13 @@ class PlotController extends Controller
     $plots = Plot::all();
     $cultivates = Cultivate::all();
 
-    // 1. Ekstrak semua 'plot_id' dari data cultivate menjadi bentuk array.
-    // Jika data $cultivates kosong, ini otomatis akan menghasilkan array kosong [].
-    $cultivatedPlotIds = $cultivates->pluck('plot_id')->toArray();
+    $cultivatedPlotIds = $cultivates->where('is_harvested', '!=', true)->pluck('plot_id')->toArray();
 
-    // 2. Map data plots
     $plots = $plots->map(function ($plot) use ($cultivatedPlotIds) {
 
-      // Cek apakah ID plot saat ini ada di dalam array $cultivatedPlotIds
       if (in_array($plot->id, $cultivatedPlotIds)) {
         $plot->status = 'terisi';
       } else {
-        // Jika tidak ada kecocokan, atau jika array $cultivatedPlotIds kosong, 
-        // maka status otomatis menjadi 'kosong'.
         $plot->status = 'kosong';
       }
 
@@ -112,5 +106,15 @@ class PlotController extends Controller
     return redirect()->route('plots')
       ->with('action', 'hapus')
       ->with('success', 'Data ' . $plot->plot_name . ' berhasil dihapus.');
+  }
+
+  public function toCultivate($id)
+  {
+    $plot = Plot::findOrFail($id);
+
+    $latestCultivate = $plot->cultivates()->latest()->first();
+
+    return redirect()->route('cultivates')
+      ->with('fromPlot', $latestCultivate?->id);
   }
 }

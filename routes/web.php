@@ -119,6 +119,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/plots/add', [PlotController::class, 'store'])->name('plots.store');
     Route::put('/plots/edit/{plot}', [PlotController::class, 'update']);
     Route::delete('/plots/delete/{plot}', [PlotController::class, 'destroy']);
+    Route::get('/plots/cultivate/{plot}', [PlotController::class, 'toCultivate']);
 
     Route::get('/cultivates', [CultivateController::class, 'index'])->name('cultivates');
     Route::post('/cultivates/add', [CultivateController::class, 'store'])->name('cultivates.store');
