@@ -1,22 +1,22 @@
-
-
 export const initChartOne = () => {
     const chartElement = document.querySelector('#chartOne');
     if (!chartElement) return;
 
+    // Ambil dan parse data dari HTML, berikan nilai default jika kosong
+    const seriesData = chartElement.dataset.series ? JSON.parse(chartElement.dataset.series) : [];
+    const categoriesData = chartElement.dataset.categories ? JSON.parse(chartElement.dataset.categories) : [];
+
     const chartOneOptions = {
         series: [{
-            name: "Sales",
-            data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
-        },],
+            name: "Penanaman",
+            data: seriesData, // Masukkan data dinamis di sini
+        }],
         colors: ["#465fff"],
         chart: {
             fontFamily: "Outfit, sans-serif",
             type: "bar",
             height: 180,
-            toolbar: {
-                show: false,
-            },
+            toolbar: { show: false },
         },
         plotOptions: {
             bar: {
@@ -26,63 +26,31 @@ export const initChartOne = () => {
                 borderRadiusApplication: "end",
             },
         },
-        dataLabels: {
-            enabled: false,
-        },
+        dataLabels: { enabled: false },
         stroke: {
             show: true,
             width: 4,
             colors: ["transparent"],
         },
         xaxis: {
-            categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
-            axisBorder: {
-                show: false,
-            },
-            axisTicks: {
-                show: false,
-            },
+            categories: categoriesData, // Masukkan kategori dinamis di sini
+            axisBorder: { show: false },
+            axisTicks: { show: false },
         },
         legend: {
             show: true,
             position: "top",
             horizontalAlign: "left",
             fontFamily: "Outfit",
-            markers: {
-                radius: 99,
-            },
+            markers: { radius: 99 },
         },
-        yaxis: {
-            title: false,
-        },
+        yaxis: { title: false },
         grid: {
-            yaxis: {
-                lines: {
-                    show: true,
-                },
-            },
+            yaxis: { lines: { show: true } },
         },
-        fill: {
-            opacity: 1,
-        },
-
+        fill: { opacity: 1 },
         tooltip: {
-            x: {
-                show: false,
-            },
+            x: { show: false },
             y: {
                 formatter: function (val) {
                     return val;

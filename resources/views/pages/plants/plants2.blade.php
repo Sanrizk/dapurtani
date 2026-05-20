@@ -21,12 +21,14 @@
     </div>
 
     <!-- 1.5 Tombol Tambah -->
-    <div class="mb-6 flex">
-      <button @click="$dispatch('open-modal-modal-plants', { mode: 'add', action: '/plants' })"
-        class="rounded bg-brand-600 dark:bg-brand-900 px-4 py-2 font-medium text-white hover:bg-brand-700 dark:hover:bg-brand-700 transition">
-        <i class="fa-solid fa-plus"></i> Tambah Pohon
-      </button>
-    </div>
+    <template x-if="['pengurus', 'admin'].includes('{{ auth()->user()->role }}')">
+      <div class="mb-6 flex">
+        <button @click="$dispatch('open-modal-modal-plants', { mode: 'add', action: '/plants' })"
+          class="rounded bg-brand-600 dark:bg-brand-900 px-4 py-2 font-medium text-white hover:bg-brand-700 dark:hover:bg-brand-700 transition">
+          <i class="fa-solid fa-plus"></i> Tambah Pohon
+        </button>
+      </div>
+    </template>
 
     @if(session('success'))
       <div class="mb-4">
@@ -112,10 +114,10 @@
 
                 <!-- Tombol Edit melempar data spesifik dari loop ke Modal -->
                 <button @click="$dispatch('open-modal-modal-plants', { 
-                                    mode: 'edit', 
-                                    action: `/plants/edit/${plant.id}`, 
-                                    data: {...plant}
-                                }); open = false"
+                                      mode: 'edit', 
+                                      action: `/plants/edit/${plant.id}`, 
+                                      data: {...plant}
+                                  }); open = false"
                   class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
                   ✏️ Edit
                 </button>
@@ -126,13 +128,13 @@
 
                   <!-- Tombol Trigger untuk menghapus data spesifik -->
                   <button type="submit" @click.prevent="$dispatch('open-modal', {
-                          name: 'global-confirm',
-                          title: `Hapus Pohon ${plant.plant_name}?`,
-                          message: `Apakah Anda yakin ingin menghapus pohon ${plant.plant_name} ini? Data tidak dapat dikembalikan.`,
-                          confirmText: 'Ya, Hapus',
-                          confirmTheme: 'danger',
-                          onConfirm: () => $event.target.closest('form').submit()
-                      })"
+                            name: 'global-confirm',
+                            title: `Hapus Pohon ${plant.plant_name}?`,
+                            message: `Apakah Anda yakin ingin menghapus pohon ${plant.plant_name} ini? Data tidak dapat dikembalikan.`,
+                            confirmText: 'Ya, Hapus',
+                            confirmTheme: 'danger',
+                            onConfirm: () => $event.target.closest('form').submit()
+                        })"
                     class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
                     🗑️ Hapus
                   </button>
@@ -159,12 +161,12 @@
       <div class="flex items-center gap-1">
         <!-- Tombol Prev -->
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                                 border-gray-200 bg-transparent text-gray-400
-                                                 hover:border-brand-500 hover:text-brand-600
-                                                 disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                                 dark:border-gray-700 dark:text-gray-500
-                                                 dark:hover:border-brand-500 dark:hover:text-brand-400
-                                                 dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                                   border-gray-200 bg-transparent text-gray-400
+                                                   hover:border-brand-500 hover:text-brand-600
+                                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                                   dark:border-gray-700 dark:text-gray-500
+                                                   dark:hover:border-brand-500 dark:hover:text-brand-400
+                                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -173,20 +175,20 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                                              ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                                              : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                                ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                                : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page">
           </button>
         </template>
 
         <!-- Tombol Next -->
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                                 border-gray-200 bg-transparent text-gray-400
-                                                 hover:border-brand-500 hover:text-brand-600
-                                                 disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                                 dark:border-gray-700 dark:text-gray-500
-                                                 dark:hover:border-brand-500 dark:hover:text-brand-400
-                                                 dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                                   border-gray-200 bg-transparent text-gray-400
+                                                   hover:border-brand-500 hover:text-brand-600
+                                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                                   dark:border-gray-700 dark:text-gray-500
+                                                   dark:hover:border-brand-500 dark:hover:text-brand-400
+                                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>

@@ -11,7 +11,6 @@ use App\Http\Controllers\WaterController;
 use App\Http\Controllers\FertilizeController;
 use App\Http\Controllers\ConsumeController;
 
-
 // calender pages
 Route::get('/calendar', function () {
     return view('pages.calender', ['title' => 'Calendar']);
@@ -106,9 +105,7 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Semua route di dalam kotak ini aman, wajib login!
     // dashboard pages
-    Route::get('/', function () {
-        return view('pages.dashboard.ecommerce2', ['title' => 'E-commerce Dashboard']);
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/plants', [PlantController::class, 'index'])->name('plants');
     Route::post('/plants/add', [PlantController::class, 'store'])->name('plants.store');

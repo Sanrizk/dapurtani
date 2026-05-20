@@ -54,6 +54,16 @@ class MenuHelper
     ];
   }
 
+  public static function getOthersItems3() {
+    return [
+      [
+        'icon' => 'task',
+        'name' => 'Laporan',
+        'path' => '/report',
+      ]
+    ];
+  }
+
   public static function getMenuGroups()
   {
     return [
@@ -72,6 +82,10 @@ class MenuHelper
       [
         'title' => '',
         'items' => self::getOthersItems2()
+      ],
+      [
+        'title' => '',
+        'items' => self::getOthersItems3()
       ]
     ];
   }

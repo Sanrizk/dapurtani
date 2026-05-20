@@ -21,7 +21,7 @@ class HarvestFactory extends Factory
     return [
       'cultivate_id' => fake()->numberBetween(1, 10),
       'batch' => fake()->numberBetween(2605001, 2605100),
-      'datetime' => fake()->dateTimeBetween('-1 month', 'now'),
+      'datetime' => fake()->dateTimeBetween('-12 month', 'now'),
       'qty' => fake()->numberBetween(50, 500),
     ];
   }

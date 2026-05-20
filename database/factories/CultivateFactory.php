@@ -24,7 +24,7 @@ class CultivateFactory extends Factory
       'qty' => fake()->numberBetween(1,100),
       'plot_id' => fake()->numberBetween(1,10),
       'is_harvested' => fake()->randomElement([0,1]),
-      'datetime' => fake()->dateTimeThisYear(),
+      'datetime' => fake()->dateTimeBetween('-12 month', 'now'),
     ];
   }
 }
