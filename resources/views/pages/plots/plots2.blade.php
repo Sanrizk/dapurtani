@@ -75,40 +75,42 @@
           class="relative flex flex-col rounded-sm border border-stroke bg-white dark:bg-brand-green-bg p-5 shadow-default transition hover:-translate-y-1 hover:shadow-lg dark:border-strokedark dark:bg-boxdark">
 
           <!-- Menu Dropdown -->
-          <div x-data="{ open: false }" class="absolute right-3 top-3 z-10">
-            <button @click="open = !open" @click.outside="open = false"
-              class="text-gray-900 hover:text-gray-900 dark:hover:text-gray-500 pb-1 px-2 text-xl font-bold border rounded-full bg-white dark:bg-gray-900 dark:text-gray-200 border-gray-400">⋮</button>
+          <template x-if="['pengurus', 'admin'].includes('{{ auth()->user()->role }}')">
+            <div x-data="{ open: false }" class="absolute right-3 top-3 z-10">
+              <button @click="open = !open" @click.outside="open = false"
+                class="text-gray-900 hover:text-gray-900 dark:hover:text-gray-500 pb-1 px-2 text-xl font-bold border rounded-full bg-white dark:bg-gray-900 dark:text-gray-200 border-gray-400">⋮</button>
 
-            <div x-show="open" x-cloak x-transition
-              class="absolute right-0 mt-1 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20">
-              <button @click="$dispatch('open-modal-modal-bedengan', { 
-                                                              mode: 'edit', 
-                                                              action: `/plots/edit/${plot.id}`, 
-                                                              data: {...plot} 
-                                                          }); open = false"
-                class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
-                ✏️ Edit
-              </button>
-              <form :action="`/plots/delete/${plot.id}`" method="POST"
-                class="m-0 border-t border-stroke dark:border-strokedark">
-                @csrf @method('DELETE')
-
-                <!-- Tombol Trigger untuk menghapus data spesifik -->
-                <button type="submit" @click.prevent="$dispatch('open-modal', {
-                                name: 'global-confirm',
-                                title: `Hapus Bedengan ${plot.plot_name}?`,
-                                message: `Apakah Anda yakin ingin menghapus bedengan ${plot.plot_name} ini? Data tidak dapat dikembalikan.`,
-                                confirmText: 'Ya, Hapus',
-                                confirmTheme: 'danger',
-                                onConfirm: () => $event.target.closest('form').submit()
-                            })"
-                  class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
-                  🗑️ Hapus
+              <div x-show="open" x-cloak x-transition
+                class="absolute right-0 mt-1 w-32 rounded border border-stroke bg-white shadow-lg dark:border-strokedark dark:bg-boxdark z-20">
+                <button @click="$dispatch('open-modal-modal-bedengan', { 
+                                                                mode: 'edit', 
+                                                                action: `/plots/edit/${plot.id}`, 
+                                                                data: {...plot} 
+                                                            }); open = false"
+                  class="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-brand-100 hover:text-brand-700 dark:text-gray-200 dark:hover:bg-brand-700 dark:bg-brand-900">
+                  ✏️ Edit
                 </button>
+                <form :action="`/plots/delete/${plot.id}`" method="POST"
+                  class="m-0 border-t border-stroke dark:border-strokedark">
+                  @csrf @method('DELETE')
 
-              </form>
+                  <!-- Tombol Trigger untuk menghapus data spesifik -->
+                  <button type="submit" @click.prevent="$dispatch('open-modal', {
+                                  name: 'global-confirm',
+                                  title: `Hapus Bedengan ${plot.plot_name}?`,
+                                  message: `Apakah Anda yakin ingin menghapus bedengan ${plot.plot_name} ini? Data tidak dapat dikembalikan.`,
+                                  confirmText: 'Ya, Hapus',
+                                  confirmTheme: 'danger',
+                                  onConfirm: () => $event.target.closest('form').submit()
+                              })"
+                    class="block w-full text-left px-4 py-2 text-sm text-error-500 hover:bg-error-100 dark:text-error-100 dark:hover:bg-error-500 dark:bg-error-900">
+                    🗑️ Hapus
+                  </button>
+
+                </form>
+              </div>
             </div>
-          </div>
+          </template>
 
           <!-- Visual Tanah Bedengan: Sedang Ditanami -->
           <template x-if="plot.status === 'terisi'">
@@ -196,12 +198,12 @@
 
       <div class="flex items-center gap-1">
         <button @click="prevPage()" :disabled="currentPage === 1" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                   border-gray-200 bg-transparent text-gray-400
-                                   hover:border-brand-500 hover:text-brand-600
-                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                   dark:border-gray-700 dark:text-gray-500
-                                   dark:hover:border-brand-500 dark:hover:text-brand-400
-                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                     border-gray-200 bg-transparent text-gray-400
+                                     hover:border-brand-500 hover:text-brand-600
+                                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                     dark:border-gray-700 dark:text-gray-500
+                                     dark:hover:border-brand-500 dark:hover:text-brand-400
+                                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-left text-xs"></i>
         </button>
 
@@ -209,19 +211,19 @@
           <button @click="goToPage(page)"
             class="flex h-8 w-8 items-center justify-center rounded border text-sm font-medium transition"
             :class="currentPage === page
-                                ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
-                                : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
+                                  ? 'border-brand-600 bg-brand-600 text-white shadow-sm'
+                                  : 'border-gray-200 bg-transparent text-gray-600 hover:border-brand-500 hover:text-brand-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-brand-500 dark:hover:text-brand-400'"
             x-text="page" x-text="page">
           </button>
         </template>
 
         <button @click="nextPage()" :disabled="currentPage === totalPages" class="flex h-8 w-8 items-center justify-center rounded border transition
-                                   border-gray-200 bg-transparent text-gray-400
-                                   hover:border-brand-500 hover:text-brand-600
-                                   disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
-                                   dark:border-gray-700 dark:text-gray-500
-                                   dark:hover:border-brand-500 dark:hover:text-brand-400
-                                   dark:disabled:border-gray-800 dark:disabled:text-gray-700">
+                                     border-gray-200 bg-transparent text-gray-400
+                                     hover:border-brand-500 hover:text-brand-600
+                                     disabled:border-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed
+                                     dark:border-gray-700 dark:text-gray-500
+                                     dark:hover:border-brand-500 dark:hover:text-brand-400
+                                     dark:disabled:border-gray-800 dark:disabled:text-gray-700">
           <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
