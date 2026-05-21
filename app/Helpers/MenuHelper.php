@@ -9,7 +9,7 @@ class MenuHelper
     return [
       [
         'icon' => 'pohon',
-        'name' => 'Pohon',
+        'name' => 'Tanaman',
         'path' => '/plants'
       ],
       [
@@ -48,7 +48,7 @@ class MenuHelper
     return [
       [
         'icon' => 'panen',
-        'name' => 'Panen',
+        'name' => 'Stok Panen',
         'path' => '/harvests'
       ]
     ];

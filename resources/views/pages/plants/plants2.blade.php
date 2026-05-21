@@ -7,15 +7,15 @@
     <!-- 1. Header & Search -->
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Data Pohon</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Kelola data pohon, nama, dan satuan.</p>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Data Tanaman</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Kelola data tanaman, nama, dan satuan.</p>
       </div>
 
       <div class="relative w-full sm:w-72 xl:w-96">
         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
           <i class="fa-solid fa-search"></i>
         </span>
-        <input type="text" x-model="search" placeholder="Cari nama pohon..."
+        <input type="text" x-model="search" placeholder="Cari nama tanaman..."
           class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-white/3 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800">
       </div>
     </div>
@@ -25,7 +25,7 @@
       <div class="mb-6 flex">
         <button @click="$dispatch('open-modal-modal-plants', { mode: 'add', action: '/plants' })"
           class="rounded bg-brand-600 dark:bg-brand-900 px-4 py-2 font-medium text-white hover:bg-brand-700 dark:hover:bg-brand-700 transition">
-          <i class="fa-solid fa-plus"></i> Tambah Pohon
+          <i class="fa-solid fa-plus"></i> Tambah Tanaman
         </button>
       </div>
     </template>
@@ -58,7 +58,7 @@
       </div>
       <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data tidak ditemukan</h3>
       <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 text-center">
-        Pohon dengan kata kunci tersebut tidak ada.
+        Tanaman dengan kata kunci tersebut tidak ada.
       </p>
       <button @click="search = ''" class="mt-4 text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">
         Bersihkan Pencarian
@@ -69,7 +69,7 @@
     <div x-data="{ formToSubmit: null, /* variabel lain Anda... */ }"
       @confirmed-delete-plant.window="if(formToSubmit) formToSubmit.submit()"
       class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3" x-show="paginatedPlants.length > 0">
-      <!-- Looping Array Data Pohon Menggunakan x-for -->
+      <!-- Looping Array Data Tanaman Menggunakan x-for -->
       <template x-for="plant in paginatedPlants" :key="plant.id">
         <div
           class="relative rounded-xl bg-white border dark:bg-brand-green-bg p-6 shadow-default transition hover:-translate-y-1 hover:shadow-lg border-gray-400">
@@ -129,8 +129,8 @@
                   <!-- Tombol Trigger untuk menghapus data spesifik -->
                   <button type="submit" @click.prevent="$dispatch('open-modal', {
                             name: 'global-confirm',
-                            title: `Hapus Pohon ${plant.plant_name}?`,
-                            message: `Apakah Anda yakin ingin menghapus pohon ${plant.plant_name} ini? Data tidak dapat dikembalikan.`,
+                            title: `Hapus Tanaman ${plant.plant_name}?`,
+                            message: `Apakah Anda yakin ingin menghapus tanaman ${plant.plant_name} ini? Data tidak dapat dikembalikan.`,
                             confirmText: 'Ya, Hapus',
                             confirmTheme: 'danger',
                             onConfirm: () => $event.target.closest('form').submit()
@@ -197,14 +197,14 @@
     <!-- 3. Definisi Form & Panggil Komponen Modal -->
     @php
       $plantFields = [
-        ['name' => 'plant_name', 'label' => 'Nama Pohon', 'type' => 'text', 'placeholder' => 'Masukkan nama pohon'],
+        ['name' => 'plant_name', 'label' => 'Nama Tanaman', 'type' => 'text', 'placeholder' => 'Masukkan nama tanaman'],
         ['name' => 'harvest_time', 'label' => 'Waktu Panen (Hari)', 'type' => 'number', 'placeholder' => 'Misal: 90 (artinya 90 Hari)'],
         ['name' => 'unit', 'label' => 'Satuan', 'type' => 'select', 'options' => ['Ikat' => 'Ikat', 'Kg' => 'Kilogram']],
-        // ['name' => 'status', 'label' => 'Status Pohon', 'type' => 'radio', 'options' => ['aktif' => 'Aktif', 'nonaktif' => 'Nonaktif']]
+        // ['name' => 'status', 'label' => 'Status Tanaman', 'type' => 'radio', 'options' => ['aktif' => 'Aktif', 'nonaktif' => 'Nonaktif']]
       ];
     @endphp
 
-    <x-ui.modal-form id="modal-plants" title="Data Pohon" action="/plants/add" :fields="$plantFields" />
+    <x-ui.modal-form id="modal-plants" title="Data Tanaman" action="/plants/add" :fields="$plantFields" />
 
     <!-- Taruh di luar / bawah looping Alpine Anda -->
     <x-ui.confirm-dialog name="global-confirm" />

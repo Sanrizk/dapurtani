@@ -13,13 +13,13 @@ class PlantController extends Controller
   public function index()
   {
     $plants = Plant::all();
-    $title = 'Pohon | Dapurtani';
+    $title = 'Tanaman | Dapurtani';
     return view('pages.plants.plants2', compact('plants', 'title'));
   }
   public function index2()
   {
     $plants = Plant::all();
-    $title = 'Pohon | Dapurtani';
+    $title = 'Tanaman | Dapurtani';
     return view('pages.plants.plants2', compact('plants', 'title'));
   }
 
