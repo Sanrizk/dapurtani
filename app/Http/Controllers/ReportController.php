@@ -5,18 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\HarvestReport;
+use App\Models\Harvest;
+use App\Models\Plant;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-  public function index(Request $request)
-  {
-    $filters = [
-      'bulan_mulai' => $request->query('bulan_mulai'),
-      'bulan_selesai' => $request->query('bulan_selesai'),
-      'tahun' => $request->query('tahun'),
-      'tanaman' => $request->query('tanaman'),
-    ];
 
-    return Excel::download(new HarvestReport($filters), 'laporan-tanaman-dapurtani.xlsx');
+  public function index()
+  {
+    $title = 'Laporan | Dapurtani';
+    $harvests = Harvest::with('cultivate.plant')->orderBy('datetime', 'desc')->get();
+
+    $data = $harvests->map(function ($harvest, $index) {
+      $cultivate = $harvest->cultivate;
+      $plant = $cultivate ? $cultivate->plant : null;
+
+      return [
+        'no' => $index + 1,
+        'tanggal' => Carbon::parse($harvest->datetime)->locale('id')->translatedFormat('d F Y'),
+        'nama' => $plant->plant_name ?? '-',
+        'jumlah' => $harvest->qty,
+        'satuan' => $plant->unit,
+        'bulan' => (int) Carbon::parse($harvest->datetime)->format('m'),
+        'tahun' => (int) Carbon::parse($harvest->datetime)->format('Y'),
+        'batch' => 'Batch ' . $harvest->batch,
+      ];
+    });
+
+    $plants = Plant::all();
+    return view('pages.report', compact('title', 'data', 'plants'));
+
   }
+
 }

@@ -11,7 +11,6 @@ use App\Http\Controllers\WaterController;
 use App\Http\Controllers\FertilizeController;
 use App\Http\Controllers\ConsumeController;
 use App\Http\Controllers\ReportController;
-
 // calender pages
 Route::get('/calendar', function () {
     return view('pages.calender', ['title' => 'Calendar']);
@@ -144,12 +143,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/profile/password', [AuthController::class, 'updatePassword']);
 
-    Route::get('/reports', function() {
-        $title = 'Laporan | Dapurtani';
-        return view('pages.report', compact('title'));
-    });
+    Route::get('/reports', [ReportController::class, 'index']);
 
-    Route::get('/reports/excel', [ReportController::class, 'index']);
+    Route::get('/reports/excel', [ReportController::class, 'filterUpload']);
 });
 
 
