@@ -85,7 +85,7 @@
                         Keep me logged in
                       </label>
                     </div>
-                    <a href="/reset-password" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 text-sm">
+                    <a href="/reset-password" onclick="alert('Silahkan Hubungi Pengurus!'); return false;" class="text-brand-500 hover:text-brand-600 dark:text-brand-400 text-sm">
                       Forgot password?
                     </a>
                   </div>

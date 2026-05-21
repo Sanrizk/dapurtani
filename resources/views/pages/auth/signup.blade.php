@@ -15,13 +15,17 @@
                 Enter your email, username, and password to sign up!
               </p>
             </div>
+            @if($errors->has('username') || $errors->has('email'))
+              <div class="mb-4">
+                <x-ui.alert variant="error" title="Daftar Gagal"
+                  message="{{ implode(' dan ', array_filter([$errors->first('username'), $errors->first('email')])) }}"
+                  :showLink="false" />
+              </div>
+            @endif
             <div>
               <form action="/register" method="POST">
                 @csrf
                 <div class="space-y-5">
-                  @error('email')
-                    <x-ui.alert variant="error" title="Daftar Gagal" :message="$message" :showLink="false" />
-                  @enderror
                   <!-- Fullname -->
                   <div>
                     <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">

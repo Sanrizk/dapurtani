@@ -59,8 +59,8 @@ class AuthController extends Controller
       'full_name' => ['required', 'string', 'max:255'],
       'username' => ['required', 'string', 'max:255', 'unique:users,username'],
       'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-      'password' => ['required', 'string', 'min:8'], // Bisa ditambahkan 'confirmed' jika ada input konfirmasi password
-      'role' => ['required', 'in:pengurus,siswa,admin'], // Memastikan role sesuai dengan option di HTML
+      'password' => ['required', 'string', 'min:8'], 
+      'role' => ['required', 'in:pengurus,siswa,admin'], 
     ], [
       'email.unique' => 'Email ini sudah terdaftar.',
       'username.unique' => 'Username ini sudah dipakai.',
@@ -71,7 +71,7 @@ class AuthController extends Controller
       'full_name' => $validatedData['full_name'],
       'username' => $validatedData['username'],
       'email' => $validatedData['email'],
-      'password' => Hash::make($validatedData['password']), // WAJIB di-hash demi keamanan
+      'password' => Hash::make($validatedData['password']),
       'role' => $validatedData['role'],
     ]);
 
