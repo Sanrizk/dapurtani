@@ -67,15 +67,25 @@
     <!-- Header -->
     <div class="flex justify-between items-center no-print">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Laporan Pergerakan Tanaman</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">Filter dan pratinjau siklus data dari tanam hingga panen.</p>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Laporan Hasil Panen</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Filter dan pratinjau</p>
       </div>
     </div>
 
     <!-- Card Filter -->
     <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 no-print">
       <form @submit.prevent="tampilkanPreview()" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <!-- Tipe Data -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipe Data</label>
+            <select x-model="filter.tipe"
+              class="w-full border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:border-emerald-500 focus:ring-emerald-500 border p-2.5 bg-gray-50 dark:bg-gray-700 dark:text-white">
+              <option value="semua">Semua</option>
+              <option value="panen">Panen</option>
+              <option value="penggunaan">Penggunaan</option>
+            </select>
+          </div>
 
           <!-- Bulan Mulai -->
           <div>
@@ -179,6 +189,9 @@
                 Tanggal</th>
               <th
                 class="border-b-2 border-gray-300 dark:border-gray-600 px-4 py-3 text-sm font-semibold print:border-gray-800">
+                Tipe</th>
+              <th
+                class="border-b-2 border-gray-300 dark:border-gray-600 px-4 py-3 text-sm font-semibold print:border-gray-800">
                 Nama Tanaman</th>
               <th
                 class="border-b-2 border-gray-300 dark:border-gray-600 px-4 py-3 text-sm font-semibold print:border-gray-800 text-right">
@@ -197,6 +210,13 @@
                 <td
                   class="border-b border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 print:border-gray-400"
                   x-text="item.tanggal"></td>
+                <td
+                  class="border-b border-gray-200 dark:border-gray-700 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 print:border-gray-400"
+                  x-text="item.tipe"><span x-text="item.tipe" :class="item.tipe === 'panen'
+                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300'
+                  : 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300'"
+                    class="px-2 py-0.5 rounded-full text-xs font-semibold capitalize">
+                  </span></td>
                 <td
                   class="border-b border-gray-200 dark:border-gray-700 px-4 py-3 text-sm font-medium text-gray-800 dark:text-white print:border-gray-400"
                   x-text="item.nama"></td>
@@ -248,7 +268,8 @@
           bulanMulai: '5',
           bulanSelesai: '8',
           tahun: '2026',
-          tanaman: 'semua'
+          tanaman: 'semua',
+          tipe: 'semua'
         },
         dataPreview: [],
         hasData: false,
@@ -266,9 +287,10 @@
             return;
           }
 
-          const semuaData = @json($data);
+          const semuaData = @json($newdata);
 
           this.dataPreview = semuaData.filter(item => {
+            if (this.filter.tipe !== 'semua' && item.tipe !== this.filter.tipe) return false;
             if (this.filter.tanaman !== 'semua' && item.nama !== this.filter.tanaman) return false;
             if (item.bulan && item.tahun) {
               if (item.bulan < this.filter.bulanMulai) return false;

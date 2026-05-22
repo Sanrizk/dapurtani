@@ -10,13 +10,14 @@ class ConsumeController extends Controller
 {
   public function store(Request $request, Harvest $harvest)
   {
+    $request['harvest_id'] = $harvest->id;
+
     // Validasi input
     $request->validate([
       'datetime' => 'required|date_format:Y-m-d\TH:i',
-      'qty' => 'required|integer|min:1',
+      'qty' => 'required|integer|min:1|max:' . $harvest->qty,
     ]);
 
-    $request['harvest_id'] = $harvest->id;
     $request['batch'] = $harvest->batch;
 
     // Simpan ke database

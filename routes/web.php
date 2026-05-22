@@ -143,7 +143,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/profile/password', [AuthController::class, 'updatePassword']);
 
-    Route::get('/reports', [ReportController::class, 'index']);
+    Route::get('/reports', [ReportController::class, 'index'])->middleware('role:pengurus,admin');
 
     Route::get('/reports/excel', [ReportController::class, 'filterUpload']);
 });
