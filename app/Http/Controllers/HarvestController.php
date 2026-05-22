@@ -104,7 +104,7 @@ class HarvestController extends Controller
 
       return [
         'id' => $stock->id,
-        'icon' => '🌱', // Bisa disesuaikan dinamis nanti
+        'icon' => '🍅', // Bisa disesuaikan dinamis nanti
         'plant_name' => $plant->plant_name ?? '-',
 
         // Mengambil dari kolom fisik
